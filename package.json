@@ -1,0 +1,24 @@
+{
+  "name": "cfapp",
+  "version": "0.1.0",
+  "description": "A command line tool to push and pull Cloudflow apps",
+  "main": "bin/cfapp.js",
+  "bin": {
+    "cfapp": "bin/cfapp.js"
+  },
+  "scripts": {},
+  "author": "Hybrid Software",
+  "license": "MPL-2.0",
+  "dependencies": {
+    "async": "^2.1.5",
+    "cloudflow-api": "^1.1.0",
+    "lodash": "^4.17.4",
+    "minimist": "^1.2.0",
+    "mkdirp": "^0.5.1",
+    "request": "^2.79.0"
+  },
+  "repository": {
+    "type" : "git",
+    "url" : "https://github.com/nixps/cfapp.git"
+  }
+}

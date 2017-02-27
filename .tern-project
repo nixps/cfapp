@@ -1,0 +1,20 @@
+{
+  "ecmaVersion": 6,
+  "libs": [],
+  "loadEagerly": [
+    "node_modules/cloudflow-api/lib/*.js"
+  ],
+  "plugins": {
+    "node": {
+      "dontLoad": "",
+      "load": "",
+      "modules": ""
+    },
+    "doc_comment": {
+      "fullDocs": true,
+      "strong": true
+    },
+    "node_resolve": {},
+    "commonjs": {}
+  }
+}
