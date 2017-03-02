@@ -22,6 +22,7 @@ var uploadFiles = require('../lib/uploadFiles.js');
 var uploadWorkflows = require('../lib/uploadWorkflows.js');
 var downloadFiles = require('../lib/downloadFiles.js');
 var downloadWorkflows = require('../lib/downloadWorkflows.js');
+var expandPaths = require('../lib/expandPaths.js');
 
 // If no parameters are passed, show the command-line usage
 if (_.isEmpty(parameters._) && _.keys(parameters).length === 1) {
@@ -86,7 +87,15 @@ if (_.isEmpty(parameters.install) === false) {
 
     // Adding the files
     var files = projectJSON.files;
-    uploadFiles(api, parameters, files);
+    var expandedFiles = expandPaths.fs(files, parameters.app);
+    console.log(expandedFiles);
+    uploadFiles(api, parameters, expandedFiles);
+
+    // var apps = api.application.list(['name', 'equal to', projectJSON.name]).results;
+    // if (apps.length > 0) {
+    //     api.application.delete(apps[0]._id);
+    // }
+    // api.application.create(projectJSON);
 } else if (_.isEmpty(parameters.download) === false) {
     // Download the Cloudflow application
     console.log('downloading app resources for "%s"', projectJSON.name);
@@ -105,5 +114,6 @@ if (_.isEmpty(parameters.install) === false) {
 
     // Adding the files
     var files = projectJSON.files;
-    downloadFiles(api, parameters, files);
+    var expandedFiles = expandPaths.remote(files, api);
+    downloadFiles(api, parameters, expandedFiles);
 }

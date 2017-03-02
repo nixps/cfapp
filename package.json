@@ -1,7 +1,7 @@
 {
   "name": "cfapp",
-  "version": "0.1.0",
-  "description": "A command line tool to push and pull Cloudflow apps",
+  "version": "0.2.1",
+  "description": "A command line tool to install and download Cloudflow Applications",
   "main": "bin/cfapp.js",
   "bin": {
     "cfapp": "bin/cfapp.js"
