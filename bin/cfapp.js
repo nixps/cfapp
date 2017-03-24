@@ -95,6 +95,7 @@ if (_.isEmpty(parameters.install) === false) {
     // if (apps.length > 0) {
     //     api.application.delete(apps[0]._id);
     // }
+    // projectJSON.expandedFiles = expandedFiles;
     // api.application.create(projectJSON);
 } else if (_.isEmpty(parameters.download) === false) {
     // Download the Cloudflow application
