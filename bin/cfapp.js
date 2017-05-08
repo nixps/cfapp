@@ -11,7 +11,7 @@
 
 'use strict';
 
-var parameters = require('minimist')(process.argv.slice(2));
+var cmdParameters = require('minimist')(process.argv.slice(2));
 var _ = require('lodash');
 var cloudflowAPI = require('cloudflow-api');
 var fs = require('fs');
@@ -23,98 +23,99 @@ var uploadWorkflows = require('../lib/uploadWorkflows.js');
 var downloadFiles = require('../lib/downloadFiles.js');
 var downloadWorkflows = require('../lib/downloadWorkflows.js');
 var expandPaths = require('../lib/expandPaths.js');
+var findCFApps = require('../lib/findCFApps.js')
 
 // If no parameters are passed, show the command-line usage
-if (_.isEmpty(parameters._) && _.keys(parameters).length === 1) {
+if (_.isEmpty(cmdParameters._) && _.keys(cmdParameters).length === 1) {
     showUsage();
     return;
 }
 
 // If no install or download parameter is passed show the command-line usage
-if (_.isEmpty(parameters.install) && _.isEmpty(parameters.download)) {
+if (_.isEmpty(cmdParameters.install) && _.isEmpty(cmdParameters.download)) {
     showUsage();
     return;
 }
 
 // Set the project app file path and the application root
-var cfAppFile = '';
-var cfAppRoot = '';
-if (_.isEmpty(parameters.install) === false) {
-    cfAppFile = parameters.install + '/project.cfapp';
-    cfAppRoot = parameters.install;
+var cfApps = [];
+if (_.isEmpty(cmdParameters.install) === false) {
+    cfApps = findCFApps(cmdParameters.install);
 }
-else if (_.isEmpty(parameters.download) === false) {
-    cfAppFile = parameters.download + '/project.cfapp';
-    cfAppRoot = parameters.download;
+else if (_.isEmpty(cmdParameters.download) === false) {
+    cfApps = findCFApps(cmdParameters.download);
 }
 
-// Read the project file
-var projectFile = fs.readFileSync(cfAppFile, 'utf8');
-var projectJSON = JSON.parse(projectFile);
+function processCFApp(cfApp, cmdParameters) {
+    // Read the project file
+    var projectFile = fs.readFileSync(cfApp.projectFile, 'utf8');
+    var projectJSON = JSON.parse(projectFile);
 
-// Merge all the settings
-var parameters = _.extend({
-    host: 'http://localhost:9090',  // The url of the target Cloudflow
-    login: 'admin',                 // The login of the target Cloudflow
-    password: '',                   // The password of the target Cloudflow
-    app: cfAppRoot,                 // The root of the app
-    overwrite: false,               // Overwrite existing flows or files
-    install: '',                    // The path of the application to install
-    download: ''                    // The path where the application should be downloaded
-}, {
-    host: projectJSON.host,
-    login: projectJSON.login,
-    password: projectJSON.password
-}, parameters);
+    // Merge all the settings
+    var parameters = _.extend({
+        host: projectJSON.host || 'http://localhost:9090',  // The url of the target Cloudflow
+        login: projectJSON.login || 'admin',                // The login of the target Cloudflow
+        password: projectJSON.password || '',               // The password of the target Cloudflow
+        overwrite: false,                                   // Overwrite existing flows or files
+        install: '',                                        // The path of the application to install
+        download: ''                                        // The path where the application should be downloaded
+    }, cmdParameters);
 
+    parameters.app = cfApp.appRoot;
 
-console.log('Cloudflow: %s', parameters.host);
-console.log('user: %s', parameters.login);
+    console.log('application: %s', parameters.app);
+    console.log('Cloudflow: %s', parameters.host);
+    console.log('user: %s', parameters.login);
 
-// Get a Cloudflow API for the remote host and set the session
-var api = cloudflowAPI.getSyncAPI(parameters.host);
-var session = api.auth.create_session(parameters.login, parameters.password).session;
-api.m_session = session;
+    // Get a Cloudflow API for the remote host and set the session
+    var api = cloudflowAPI.getSyncAPI(parameters.host);
+    var session = api.auth.create_session(parameters.login, parameters.password).session;
+    api.m_session = session;
 
-// Install or download the application
-if (_.isEmpty(parameters.install) === false) {
-    // Install the Cloudflow application
-    console.log('installing app "%s"', projectJSON.name);
+    // Install or download the application
+    if (_.isEmpty(parameters.install) === false || _.isEmpty(parameters.upload) === false) {
+        // Install the Cloudflow application
+        console.log('installing app "%s"', projectJSON.name);
 
-    // Adding workflows for this app
-    var workflows = projectJSON.workflows;
-    uploadWorkflows(api, parameters, workflows);
+        // Adding workflows for this app
+        var workflows = projectJSON.workflows;
+        uploadWorkflows(api, parameters, workflows);
 
-    // Adding the files
-    var files = projectJSON.files;
-    var expandedFiles = expandPaths.fs(files, parameters.app);
-    console.log(expandedFiles);
-    uploadFiles(api, parameters, expandedFiles);
+        // Adding the files
+        var files = projectJSON.files;
+        var expandedFiles = expandPaths.fs(files, parameters.app);
+        console.log(expandedFiles);
+        uploadFiles(api, parameters, expandedFiles);
 
-    // var apps = api.application.list(['name', 'equal to', projectJSON.name]).results;
-    // if (apps.length > 0) {
-    //     api.application.delete(apps[0]._id);
-    // }
-    // projectJSON.expandedFiles = expandedFiles;
-    // api.application.create(projectJSON);
-} else if (_.isEmpty(parameters.download) === false) {
-    // Download the Cloudflow application
-    console.log('downloading app resources for "%s"', projectJSON.name);
+        // var apps = api.application.list(['name', 'equal to', projectJSON.name]).results;
+        // if (apps.length > 0) {
+        //     api.application.delete(apps[0]._id);
+        // }
+        // projectJSON.expandedFiles = expandedFiles;
+        // api.application.create(projectJSON);
+    } else if (_.isEmpty(parameters.download) === false) {
+        // Download the Cloudflow application
+        console.log('downloading app resources for "%s"', projectJSON.name);
 
-    if (fs.existsSync(parameters.app + "/workflows") === false) {
-        fs.mkdirSync(parameters.app + "/workflows");
+        if (fs.existsSync(parameters.app + "/workflows") === false) {
+            fs.mkdirSync(parameters.app + "/workflows");
+        }
+
+        if (fs.existsSync(parameters.app + "/files") === false) {
+            fs.mkdirSync(parameters.app + "/files");
+        }
+
+        // Adding workflows for this app
+        var workflows = projectJSON.workflows;
+        downloadWorkflows(api, parameters, workflows);
+
+        // Adding the files
+        var files = projectJSON.files;
+        var expandedFiles = expandPaths.remote(files, api);
+        downloadFiles(api, parameters, expandedFiles);
     }
+}
 
-    if (fs.existsSync(parameters.app + "/files") === false) {
-        fs.mkdirSync(parameters.app + "/files");
-    }
-
-    // Adding workflows for this app
-    var workflows = projectJSON.workflows;
-    downloadWorkflows(api, parameters, workflows);
-
-    // Adding the files
-    var files = projectJSON.files;
-    var expandedFiles = expandPaths.remote(files, api);
-    downloadFiles(api, parameters, expandedFiles);
+for(const app of cfApps) {
+    processCFApp(app, cmdParameters);
 }
