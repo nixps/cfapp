@@ -32,7 +32,7 @@ if (_.isEmpty(cmdParameters._) && _.keys(cmdParameters).length === 1) {
 }
 
 // If no install or download parameter is passed show the command-line usage
-if (_.isEmpty(cmdParameters.install) && _.isEmpty(cmdParameters.download)) {
+if (_.isEmpty(cmdParameters.install) && _.isEmpty(cmdParameters.download) && _.isEmpty(cmdParameters.upload)) {
     showUsage();
     return;
 }
@@ -41,6 +41,9 @@ if (_.isEmpty(cmdParameters.install) && _.isEmpty(cmdParameters.download)) {
 var cfApps = [];
 if (_.isEmpty(cmdParameters.install) === false) {
     cfApps = findCFApps(cmdParameters.install);
+}
+else if (_.isEmpty(cmdParameters.upload) === false) {
+    cfApps = findCFApps(cmdParameters.upload);
 }
 else if (_.isEmpty(cmdParameters.download) === false) {
     cfApps = findCFApps(cmdParameters.download);
