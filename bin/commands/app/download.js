@@ -7,16 +7,41 @@
  *
  */
 
-
 'use strict';
+
+const { apps } = require('../../../lib/cfapp');
 
 module.exports = {
     command: 'download [directory]',
     desc: 'Downloads an app from a Cloudflow installation to directory',
     builder: function(yargs) {
-        yargs.example('$0 app download /app_path/', 'downloads the app described in /app_path/project.cfapp');
+        yargs
+            .example('$0 app download', 'downloads the app in the current directory')
+            .example('$0 app download /app_path/', 'downloads the app described in /app_path/project.cfapp')
+            .option('overwrite', {
+                describe: 'force overwriting files',
+                default: false
+            })
+            .option('host', {
+                describe: 'overrides the host address of the project.cfapp file'
+            })
+            .option('login', {
+                describe: 'overrides the login of the project.cfapp file'
+            })
+            .option('password', {
+                describe: 'overrides the passowrd of the project.cfapp file'
+            });
     },
-    handler: function() {
-        console.log('[exec] list the cloudflow builds');
+    handler: function(argv) {
+        const options = {
+            overwrite: argv.overwrite,
+            host: argv.host,
+            login: argv.login,
+            password: argv.password
+        };
+
+        const directory = argv.directory || '.';
+
+        apps.download(directory, options);
     }
 };

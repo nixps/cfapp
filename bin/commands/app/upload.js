@@ -7,16 +7,40 @@
  *
  */
 
-
 'use strict';
+
+const { apps } = require('../../../lib/cfapp');
 
 module.exports = {
     command: 'upload [directory]',
     desc: 'Uploads an app to a Cloudflow installation',
     builder: function(yargs) {
-        yargs.example('$0 app upload /app_path/', 'uploads the app described in /app_path/project.cfapp to Cloudflow');
+        yargs.example('$0 app upload', 'uploads the app in the current directory')
+            .example('$0 app upload /app_path/', 'uploads the app described in /app_path/project.cfapp to Cloudflow')
+            .option('overwrite', {
+                describe: 'force overwriting files',
+                default: false
+            })
+            .option('host', {
+                describe: 'overrides the host address of the project.cfapp file'
+            })
+            .option('login', {
+                describe: 'overrides the login of the project.cfapp file'
+            })
+            .option('password', {
+                describe: 'overrides the passowrd of the project.cfapp file'
+            });
     },
-    handler: function() {
-        console.log('[exec] list the cloudflow builds');
+    handler: function(argv) {
+        const options = {
+            overwrite: argv.overwrite,
+            host: argv.host,
+            login: argv.login,
+            password: argv.password
+        };
+
+        const directory = argv.directory || '.';
+
+        apps.upload(directory, options);
     }
 };

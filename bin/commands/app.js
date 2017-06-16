@@ -14,7 +14,9 @@ module.exports = {
     command: 'app <command>',
     desc: 'Installs and downloads Cloudflow Apps',
     builder: function(yargs) {
-        return yargs.commandDir('app');
+        return yargs
+            .commandDir('app')
+            .demand(1);
     },
     handler: function() {}
 };
