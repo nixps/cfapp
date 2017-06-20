@@ -6,7 +6,9 @@
   "bin": {
     "cfapp": "bin/cfapp.js"
   },
-  "scripts": {},
+  "scripts": {
+      "test": "mocha"
+  },
   "author": "Hybrid Software",
   "license": "MPL-2.0",
   "dependencies": {
