@@ -42,6 +42,9 @@ module.exports = {
 
         const directory = argv.directory || '.';
 
-        apps.download(directory, options);
+        // parse and stringify to get rid of 'undefined' values
+        apps.download(directory, JSON.parse(JSON.stringify(options))).catch(function(error) {
+            console.log(error);
+        });
     }
 };

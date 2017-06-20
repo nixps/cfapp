@@ -1,0 +1,16 @@
+{
+    "name": "DemoApp3",
+    "host": "http://localhost:9090/",
+    "login": "admin",
+    "password": "admin",
+    "description": "A demo application",
+
+    "files": [
+        "cloudflow://PP_FILE_STORE/DemoApp3/images/",
+        "cloudflow://PP_FILE_STORE/DemoApp3/index.html"
+    ],
+
+    "workflows": [
+        "ProcessOrder3"
+    ]
+}

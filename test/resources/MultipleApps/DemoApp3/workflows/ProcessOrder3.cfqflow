@@ -1,0 +1,95 @@
+{
+	"document_type":	"application/vnd.nixps-whitepaper+json",
+	"_id":	"58cffac22b00001b00000003",
+	"birth":	"2017-03-20T15:52:34Z",
+	"name":	"ProcessOrder3",
+	"run_state":	"ready",
+	"save_id":	"69e34688-dfe4-43ee-924d-bd7bcd91548d",
+	"modification":	"2017-03-20T15:53:06Z",
+	"nodes":	[{
+			"collar":	"com.nixps.quantum.unhandled_problem.0",
+			"title":	"Unhandled Problem",
+			"parameters":	{
+				"delay":	3600
+			},
+			"connectors":	[{
+					"id":	"input",
+					"label":	"Input",
+					"type":	"input"
+				}, {
+					"id":	"failure",
+					"label":	"Failure",
+					"type":	"error",
+					"collar":	"com.nixps.quantum.conductor.0"
+				}],
+			"selected":	false,
+			"x":	1369,
+			"y":	634,
+			"id":	"d68fb55b-2432-84f2-56ae-627bab2b0125"
+		}, {
+			"collar":	"com.nixps.quantum.start_from_form.0",
+			"title":	"Start From Form",
+			"parameters":	{
+				"name":	"input",
+				"workable_name":	[{
+						"type":	"com.nixps.quantum.value.0",
+						"value":	""
+					}],
+				"jacket_name":	[{
+						"type":	"com.nixps.quantum.value.0",
+						"value":	""
+					}],
+				"jacket_id":	[{
+						"type":	"com.nixps.quantum.value.0",
+						"value":	""
+					}],
+				"priority":	50,
+				"access_for_scopes":	"",
+				"scope_from_user":	false,
+				"work_servers":	[]
+			},
+			"connectors":	[{
+					"id":	"success",
+					"label":	"Success",
+					"type":	"output",
+					"collar":	"com.nixps.quantum.conductor.0"
+				}, {
+					"id":	"failure",
+					"label":	"Failure",
+					"type":	"error",
+					"collar":	"com.nixps.quantum.conductor.0"
+				}],
+			"selected":	false,
+			"x":	166,
+			"y":	278,
+			"id":	"82b646d5-b60c-bcd8-dd7b-5607b45a82ac"
+		}, {
+			"collar":	"com.nixps.quantum.end.0",
+			"title":	"End",
+			"parameters":	{
+				"delay":	1000,
+				"delete_jacket":	false
+			},
+			"connectors":	[{
+					"id":	"input",
+					"label":	"Input",
+					"type":	"input"
+				}],
+			"selected":	false,
+			"x":	399,
+			"y":	298,
+			"id":	"584223c5-ebad-fca3-2fc9-b266c5f60044"
+		}],
+	"comments":	[],
+	"connections":	[{
+			"id":	"a046d148-5daf-04c7-4c7b-053e5b95f088",
+			"from":	{
+				"node":	"82b646d5-b60c-bcd8-dd7b-5607b45a82ac",
+				"connector":	"success"
+			},
+			"to":	{
+				"node":	"584223c5-ebad-fca3-2fc9-b266c5f60044",
+				"connector":	"input"
+			}
+		}]
+}

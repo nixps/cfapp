@@ -20,5 +20,11 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/nixps/cfapp.git"
+  },
+  "devDependencies": {
+    "chai": "^4.0.2",
+    "mocha": "^3.4.2",
+    "mock-require": "^2.0.2",
+    "nock": "^9.0.13"
   }
 }
