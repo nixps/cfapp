@@ -242,7 +242,7 @@ describe('cfapp tests', function() {
                     const uploadedFiles = [];
                     getFileUploadMock(uploadedFiles, 4);
 
-                    return cfapp.apps.upload('./resources/DemoApp/').then(function() {
+                    return cfapp.apps.upload(__dirname + '/resources/DemoApp/').then(function() {
                         const uploadedWhitepapers = apiMock.mockDelegate.uploadedWhitepapers;
                         assert.equal(uploadedFiles.length, 4, 'all files should be uploaded');
                         assert.equal(uploadedWhitepapers.length, 1, 'all whitepapers should be uploaded');
@@ -264,7 +264,7 @@ describe('cfapp tests', function() {
                     const uploadedFiles = [];
                     getFileUploadMock(uploadedFiles, 4);
 
-                    return cfapp.apps.upload('./resources/DemoApp/').then(function() {
+                    return cfapp.apps.upload(__dirname + '/resources/DemoApp/').then(function() {
                         const uploadedWhitepapers = apiMock.mockDelegate.uploadedWhitepapers;
                         assert.equal(uploadedFiles.length, 4, 'all files should be uploaded');
                         assert.equal(uploadedWhitepapers.length, 0, 'no whitepapers should be uploaded');
@@ -285,7 +285,7 @@ describe('cfapp tests', function() {
                     const uploadedFiles = [];
                     getFileUploadMock(uploadedFiles, 2);
 
-                    return cfapp.apps.upload('./resources/DemoApp/').then(function() {
+                    return cfapp.apps.upload(__dirname + '/resources/DemoApp/').then(function() {
                         const uploadedWhitepapers = apiMock.mockDelegate.uploadedWhitepapers;
                         assert.equal(uploadedFiles.length, 2, 'all files should be uploaded');
                         assert.equal(uploadedWhitepapers.length, 1, 'all whitepapers should be uploaded');
@@ -308,7 +308,7 @@ describe('cfapp tests', function() {
                     const uploadedFiles = [];
                     getFileUploadMock(uploadedFiles, 4);
 
-                    return cfapp.apps.upload('./resources/DemoApp/', {
+                    return cfapp.apps.upload(__dirname + '/resources/DemoApp/', {
                         overwrite: true
                     }).then(function() {
                         const uploadedWhitepapers = apiMock.mockDelegate.uploadedWhitepapers;
@@ -334,7 +334,7 @@ describe('cfapp tests', function() {
                     const uploadedFiles = [];
                     getFileUploadMock(uploadedFiles, 4);
 
-                    return cfapp.apps.upload('./resources/DemoApp/', {
+                    return cfapp.apps.upload(__dirname + '/resources/DemoApp/', {
                         overwrite: true
                     }).then(function() {
                         const uploadedWhitepapers = apiMock.mockDelegate.uploadedWhitepapers;
@@ -362,7 +362,7 @@ describe('cfapp tests', function() {
                     const uploadedFiles = [];
                     getFileUploadMock(uploadedFiles, 12);
 
-                    return cfapp.apps.upload('./resources/MultipleApps/').then(function() {
+                    return cfapp.apps.upload(__dirname + '/resources/MultipleApps/').then(function() {
                         const uploadedWhitepapers = apiMock.mockDelegate.uploadedWhitepapers;
                         assert.equal(uploadedFiles.length, 12, 'all files should be uploaded');
                         assert.equal(uploadedWhitepapers.length, 3, 'all whitepapers should be uploaded');
@@ -466,8 +466,8 @@ describe('cfapp tests', function() {
             };
 
             after(function() {
-                if (fs.existsSync('./downloadTest')) {
-                    remove.removeSync('./downloadTest');
+                if (fs.existsSync(__dirname + '/downloadTest')) {
+                    remove.removeSync(__dirname + '/downloadTest');
                 }
             });
 
@@ -477,13 +477,13 @@ describe('cfapp tests', function() {
                 const downloadedFiles = [];
                 getFileDownloadMock(downloadedFiles, 3);
 
-                if (fs.existsSync('./downloadTest') === true) {
-                    remove.removeSync('./downloadTest');
+                if (fs.existsSync(__dirname + '/downloadTest') === true) {
+                    remove.removeSync(__dirname + '/downloadTest');
                 }
-                mkdirp.sync('./downloadTest/DownloadApp');
-                fs.writeFileSync('./downloadTest/DownloadApp/project.cfapp', JSON.stringify(projectCFApp));
+                mkdirp.sync(__dirname + '/downloadTest/DownloadApp');
+                fs.writeFileSync(__dirname + '/downloadTest/DownloadApp/project.cfapp', JSON.stringify(projectCFApp));
 
-                return cfapp.apps.download('./downloadTest/DownloadApp').then(function() {
+                return cfapp.apps.download(__dirname + '/downloadTest/DownloadApp').then(function() {
                     const mockDelegate = apiMock.mockDelegate;
                     assert.equal(mockDelegate.downloadedWhitepapers.length, 2, 'not all whitepapers were downloaded');
                     assert.includeMembers(mockDelegate.downloadedWhitepapers, [
@@ -526,20 +526,20 @@ describe('cfapp tests', function() {
                     ]
                 };
 
-                if (fs.existsSync('./downloadTest') === true) {
-                    remove.removeSync('./downloadTest');
+                if (fs.existsSync(__dirname + '/downloadTest') === true) {
+                    remove.removeSync(__dirname + '/downloadTest');
                 }
-                mkdirp.sync('./downloadTest/DownloadApp');
-                fs.writeFileSync('./downloadTest/DownloadApp/project.cfapp', JSON.stringify(projectCFApp));
+                mkdirp.sync(__dirname + '/downloadTest/DownloadApp');
+                fs.writeFileSync(__dirname + '/downloadTest/DownloadApp/project.cfapp', JSON.stringify(projectCFApp));
 
-                return cfapp.apps.download('./downloadTest/DownloadApp').then(function() {
+                return cfapp.apps.download(__dirname + '/downloadTest/DownloadApp').then(function() {
                     // Reset the mock delegate
                     nock.cleanAll();
                     apiMock.mockDelegate = new ExistingSingleAppDelegate();
                     const downloadedFiles = [];
                     getFileDownloadMock(downloadedFiles, 1);
 
-                    return cfapp.apps.download('./downloadTest/DownloadApp').then(function() {
+                    return cfapp.apps.download(__dirname + '/downloadTest/DownloadApp').then(function() {
                         const mockDelegate = apiMock.mockDelegate;
                         assert.equal(mockDelegate.downloadedWhitepapers.length, 0, 'no whitepapers should be downloaded');
                         assert.equal(downloadedFiles.length, 0, 'no files should be downloaded');
@@ -556,20 +556,20 @@ describe('cfapp tests', function() {
                 const downloadedFiles = [];
                 getFileDownloadMock(downloadedFiles, 3);
 
-                if (fs.existsSync('./downloadTest') === true) {
-                    remove.removeSync('./downloadTest');
+                if (fs.existsSync(__dirname + '/downloadTest') === true) {
+                    remove.removeSync(__dirname + '/downloadTest');
                 }
-                mkdirp.sync('./downloadTest/DownloadApp');
-                fs.writeFileSync('./downloadTest/DownloadApp/project.cfapp', JSON.stringify(projectCFApp));
+                mkdirp.sync(__dirname + '/downloadTest/DownloadApp');
+                fs.writeFileSync(__dirname + '/downloadTest/DownloadApp/project.cfapp', JSON.stringify(projectCFApp));
 
-                return cfapp.apps.download('./downloadTest/DownloadApp').then(function() {
+                return cfapp.apps.download(__dirname + '/downloadTest/DownloadApp').then(function() {
                     // Reset the mock delegate
                     nock.cleanAll();
                     apiMock.mockDelegate = new ExistingSingleAppDelegate();
                     const downloadedFiles = [];
                     getFileDownloadMock(downloadedFiles, 3);
 
-                    return cfapp.apps.download('./downloadTest/DownloadApp', {
+                    return cfapp.apps.download(__dirname + '/downloadTest/DownloadApp', {
                         overwrite: true
                     }).then(function() {
                         const mockDelegate = apiMock.mockDelegate;
