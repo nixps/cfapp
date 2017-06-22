@@ -1,15 +1,15 @@
 {
   "name": "cfapp",
-  "version": "0.2.7",
+  "version": "0.2.8",
   "description": "A command line tool to install and download Cloudflow Applications",
   "main": "lib/cfapp.js",
   "bin": {
     "cfapp": "bin/cfapp.js"
   },
   "scripts": {
-      "test": "mocha",
-      "preversion": "npm test",
-      "postversion": "git push && git push --tags"
+    "test": "mocha",
+    "preversion": "npm test",
+    "postversion": "git push && git push --tags"
   },
   "author": "Hybrid Software",
   "license": "MPL-2.0",
