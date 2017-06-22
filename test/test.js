@@ -148,6 +148,12 @@ class APIMock {
                         results: mockDelegate.existingFolders(query)
                     };
                 }
+            },
+
+            application: {
+                list: function() {
+                    throw new Error('Unknown command');
+                }
             }
         };
     }

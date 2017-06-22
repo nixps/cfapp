@@ -10,15 +10,16 @@
 'use strict';
 
 const { apps } = require('../../../lib/cfapp');
+const cloudflowAPI = require('cloudflow-api');
 
 module.exports = {
-    command: 'upload [directory]',
-    desc: 'Uploads an app to a Cloudflow installation',
+    command: 'update [directory]',
+    desc: 'Updates an app to a Cloudflow installation',
     builder: function(yargs) {
-        yargs.example('$0 app upload', 'uploads the app in the current directory')
-            .example('$0 app upload /app_path/', 'uploads the app described in /app_path/project.cfapp to Cloudflow')
-            .option('overwrite', {
-                describe: 'force overwriting files',
+        yargs.example('$0 app update', 'updates the app in the current directory')
+            .example('$0 app update /app_path/', 'uploads the app described in /app_path/project.cfapp to Cloudflow')
+            .option('force', {
+                describe: 'forces updating in case of downgrade or no version is specified',
                 default: false
             })
             .option('host', {
@@ -33,16 +34,26 @@ module.exports = {
     },
     handler: function(argv) {
         const options = {
-            overwrite: argv.overwrite,
+            force: argv.force,
             host: argv.host,
             login: argv.login,
             password: argv.password
         };
 
+        // Check if we can list applications
+        const api = cloudflowAPI.getSyncAPI(options.host);
+        var session = api.auth.create_session(options.login, options.password).session;
+        api.m_session = session;
+
+        if (apps.canRegisterApps(api) === false) {
+            console.log(`no support for application updates this Cloudflow build b${api.portal.version().build}`);
+            return;
+        }
+
         const directory = argv.directory || '.';
 
         // parse and stringify to get rid of 'undefined' values
-        apps.upload(directory, JSON.parse(JSON.stringify(options))).catch(function(error) {
+        apps.update(directory, JSON.parse(JSON.stringify(options))).catch(function(error) {
             console.log(error);
         });
     }

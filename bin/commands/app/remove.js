@@ -10,17 +10,14 @@
 'use strict';
 
 const { apps } = require('../../../lib/cfapp');
+const cloudflowAPI = require('cloudflow-api');
 
 module.exports = {
-    command: 'upload [directory]',
-    desc: 'Uploads an app to a Cloudflow installation',
+    command: 'remove [app_name]',
+    desc: 'Removes an app from the remote Cloudflow',
     builder: function(yargs) {
-        yargs.example('$0 app upload', 'uploads the app in the current directory')
-            .example('$0 app upload /app_path/', 'uploads the app described in /app_path/project.cfapp to Cloudflow')
-            .option('overwrite', {
-                describe: 'force overwriting files',
-                default: false
-            })
+        yargs
+            .example('$0 app remove TheApp', 'removes the application "TheApp" from http://localhost:9090')
             .option('host', {
                 describe: 'overrides the host address of the project.cfapp file'
             })
@@ -28,22 +25,27 @@ module.exports = {
                 describe: 'overrides the login of the project.cfapp file'
             })
             .option('password', {
-                describe: 'overrides the password of the project.cfapp file'
+                describe: 'overrides the passowrd of the project.cfapp file'
             });
     },
     handler: function(argv) {
         const options = {
-            overwrite: argv.overwrite,
             host: argv.host,
             login: argv.login,
             password: argv.password
         };
 
-        const directory = argv.directory || '.';
+        // Check if we can list applications
+        const api = cloudflowAPI.getSyncAPI(options.host);
+        var session = api.auth.create_session(options.login, options.password).session;
+        api.m_session = session;
+
+        if (apps.canRegisterApps(api) === false) {
+            console.log(`no support for application removal this Cloudflow build b${api.portal.version().build}`);
+            return;
+        }
 
         // parse and stringify to get rid of 'undefined' values
-        apps.upload(directory, JSON.parse(JSON.stringify(options))).catch(function(error) {
-            console.log(error);
-        });
+        apps.remove(argv.app_name, JSON.parse(JSON.stringify(options)));
     }
 };
