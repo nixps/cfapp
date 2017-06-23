@@ -27,7 +27,7 @@ class ExistingWhitepapersDelegate extends APIMockDelegate {
 
 class ExistingFilesDelegate extends APIMockDelegate {
     existingAssets(query) {
-        if (query[2] === 'cloudflow://PP_FILE_STORE/DemoApp/images//win.png') {
+        if (query[2] === 'cloudflow://PP_FILE_STORE/DemoApp/images/win.png') {
             return [{
                 _id: 'I exist',
                 cloudflow: {
@@ -35,7 +35,7 @@ class ExistingFilesDelegate extends APIMockDelegate {
                 }
             }];
         }
-        else if (query[2] === 'cloudflow://PP_FILE_STORE/DemoApp/images//mac.png') {
+        else if (query[2] === 'cloudflow://PP_FILE_STORE/DemoApp/images/mac.png') {
             return [{
                 _id: 'I exist too',
                 cloudflow: {
@@ -78,9 +78,9 @@ function uploadTests() {
                 assert.equal(uploadedWhitepapers.length, 1, 'all whitepapers should be uploaded');
                 assert.equal(uploadedWhitepapers[0].name, 'ProcessOrder', 'whitepaper "ProcessOrder" missing');
                 assert.includeMembers(uploadedFiles, [
-                    'cloudflow://PP_FILE_STORE/DemoApp/images//linux.jpg',
-                    'cloudflow://PP_FILE_STORE/DemoApp/images//mac.png',
-                    'cloudflow://PP_FILE_STORE/DemoApp/images//win.png',
+                    'cloudflow://PP_FILE_STORE/DemoApp/images/linux.jpg',
+                    'cloudflow://PP_FILE_STORE/DemoApp/images/mac.png',
+                    'cloudflow://PP_FILE_STORE/DemoApp/images/win.png',
                     'cloudflow://PP_FILE_STORE/DemoApp/index.html'
                 ], 'the files were not all uploaded');
 
@@ -99,9 +99,9 @@ function uploadTests() {
                 assert.equal(uploadedFiles.length, 4, 'all files should be uploaded');
                 assert.equal(uploadedWhitepapers.length, 0, 'no whitepapers should be uploaded');
                 assert.includeMembers(uploadedFiles, [
-                    'cloudflow://PP_FILE_STORE/DemoApp/images//linux.jpg',
-                    'cloudflow://PP_FILE_STORE/DemoApp/images//mac.png',
-                    'cloudflow://PP_FILE_STORE/DemoApp/images//win.png',
+                    'cloudflow://PP_FILE_STORE/DemoApp/images/linux.jpg',
+                    'cloudflow://PP_FILE_STORE/DemoApp/images/mac.png',
+                    'cloudflow://PP_FILE_STORE/DemoApp/images/win.png',
                     'cloudflow://PP_FILE_STORE/DemoApp/index.html'
                 ], 'the files were not all uploaded');
 
@@ -121,7 +121,7 @@ function uploadTests() {
                 assert.equal(uploadedWhitepapers.length, 1, 'all whitepapers should be uploaded');
                 assert.equal(uploadedWhitepapers[0].name, 'ProcessOrder', 'whitepaper "ProcessOrder" missing');
                 assert.includeMembers(uploadedFiles, [
-                    'cloudflow://PP_FILE_STORE/DemoApp/images//linux.jpg',
+                    'cloudflow://PP_FILE_STORE/DemoApp/images/linux.jpg',
                     'cloudflow://PP_FILE_STORE/DemoApp/index.html'
                 ], 'the files were not all uploaded');
 
@@ -148,9 +148,9 @@ function uploadTests() {
                 assert.equal(uploadedWhitepapers.length, 1, 'all whitepapers should be uploaded');
                 assert.equal(uploadedWhitepapers[0].name, 'ProcessOrder', 'whitepaper "ProcessOrder" missing');
                 assert.includeMembers(uploadedFiles, [
-                    'cloudflow://PP_FILE_STORE/DemoApp/images//linux.jpg',
-                    'cloudflow://PP_FILE_STORE/DemoApp/images//mac.png',
-                    'cloudflow://PP_FILE_STORE/DemoApp/images//win.png',
+                    'cloudflow://PP_FILE_STORE/DemoApp/images/linux.jpg',
+                    'cloudflow://PP_FILE_STORE/DemoApp/images/mac.png',
+                    'cloudflow://PP_FILE_STORE/DemoApp/images/win.png',
                     'cloudflow://PP_FILE_STORE/DemoApp/index.html'
                 ], 'the files were not all uploaded');
 
@@ -174,9 +174,9 @@ function uploadTests() {
                 assert.equal(uploadedWhitepapers.length, 1, 'all whitepapers should be uploaded');
                 assert.equal(uploadedWhitepapers[0].name, 'ProcessOrder', 'whitepaper "ProcessOrder" missing');
                 assert.includeMembers(uploadedFiles, [
-                    'cloudflow://PP_FILE_STORE/DemoApp/images//linux.jpg',
-                    'cloudflow://PP_FILE_STORE/DemoApp/images//mac.png',
-                    'cloudflow://PP_FILE_STORE/DemoApp/images//win.png',
+                    'cloudflow://PP_FILE_STORE/DemoApp/images/linux.jpg',
+                    'cloudflow://PP_FILE_STORE/DemoApp/images/mac.png',
+                    'cloudflow://PP_FILE_STORE/DemoApp/images/win.png',
                     'cloudflow://PP_FILE_STORE/DemoApp/index.html'
                 ], 'the files were not all uploaded');
 
@@ -202,17 +202,17 @@ function uploadTests() {
                     'ProcessOrder3'
                 ], 'the workflows were not all uploaded');
                 assert.includeMembers(uploadedFiles, [
-                    'cloudflow://PP_FILE_STORE/DemoApp1/images//linux.jpg',
-                    'cloudflow://PP_FILE_STORE/DemoApp1/images//mac.png',
-                    'cloudflow://PP_FILE_STORE/DemoApp1/images//win.png',
+                    'cloudflow://PP_FILE_STORE/DemoApp1/images/linux.jpg',
+                    'cloudflow://PP_FILE_STORE/DemoApp1/images/mac.png',
+                    'cloudflow://PP_FILE_STORE/DemoApp1/images/win.png',
                     'cloudflow://PP_FILE_STORE/DemoApp1/index.html',
-                    'cloudflow://PP_FILE_STORE/DemoApp2/images//linux.jpg',
-                    'cloudflow://PP_FILE_STORE/DemoApp2/images//mac.png',
-                    'cloudflow://PP_FILE_STORE/DemoApp2/images//win.png',
+                    'cloudflow://PP_FILE_STORE/DemoApp2/images/linux.jpg',
+                    'cloudflow://PP_FILE_STORE/DemoApp2/images/mac.png',
+                    'cloudflow://PP_FILE_STORE/DemoApp2/images/win.png',
                     'cloudflow://PP_FILE_STORE/DemoApp2/index.html',
-                    'cloudflow://PP_FILE_STORE/DemoApp3/images//linux.jpg',
-                    'cloudflow://PP_FILE_STORE/DemoApp3/images//mac.png',
-                    'cloudflow://PP_FILE_STORE/DemoApp3/images//win.png',
+                    'cloudflow://PP_FILE_STORE/DemoApp3/images/linux.jpg',
+                    'cloudflow://PP_FILE_STORE/DemoApp3/images/mac.png',
+                    'cloudflow://PP_FILE_STORE/DemoApp3/images/win.png',
                     'cloudflow://PP_FILE_STORE/DemoApp3/index.html'
                 ], 'the files were not all uploaded');
 

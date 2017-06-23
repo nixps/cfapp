@@ -46,7 +46,7 @@ function getFileDownloadMock(downloadedFiles, expected) {
 function downloadTests() {
     class ExistingSingleAppDelegate extends APIMockDelegate {
         existingAssets(query) {
-            if (query[2] === 'cloudflow://PP_FILE_STORE/DownloadApp/images//win.png') {
+            if (query[2] === 'cloudflow://PP_FILE_STORE/DownloadApp/images/win.png') {
                 return [{
                     _id: 'I exist',
                     cloudflow: {
@@ -54,7 +54,7 @@ function downloadTests() {
                     }
                 }];
             }
-            else if (query[2] === 'cloudflow://PP_FILE_STORE/DownloadApp/images//mac.png') {
+            else if (query[2] === 'cloudflow://PP_FILE_STORE/DownloadApp/images/mac.png') {
                 return [{
                     _id: 'I exist too',
                     cloudflow: {
