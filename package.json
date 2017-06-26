@@ -1,6 +1,6 @@
 {
   "name": "cfapp",
-  "version": "0.2.8",
+  "version": "0.3.0",
   "description": "A command line tool to install and download Cloudflow Applications",
   "main": "lib/cfapp.js",
   "bin": {
@@ -8,7 +8,6 @@
   },
   "scripts": {
     "test": "mocha ./test",
-
     "preversion": "npm test",
     "postversion": "git push && git push --tags"
   },
