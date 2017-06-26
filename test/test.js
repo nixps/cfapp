@@ -26,6 +26,6 @@ describe('cfapp tests', function() {
 
         describe('upload', require('./spec/appUpload'));
         describe('download', require('./spec/appDownload'));
-
+        describe('list', require('./spec/appList'));
     });
 });

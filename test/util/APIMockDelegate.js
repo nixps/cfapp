@@ -77,6 +77,10 @@ class APIMockDelegate {
     whitepaperDownloaded(whitepaper) {
         this._downloadedWhitepapers.push(whitepaper);
     }
+
+    applicationList() {
+        throw new Error('Unknown command');
+    }
 }
 
 module.exports = APIMockDelegate;

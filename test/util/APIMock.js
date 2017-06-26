@@ -81,7 +81,7 @@ class APIMock {
 
             application: {
                 list: function() {
-                    throw new Error('Unknown command');
+                    return mockDelegate.applicationList();
                 }
             }
         };
