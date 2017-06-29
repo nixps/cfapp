@@ -117,12 +117,6 @@ class ExistingSingleAppDelegate extends APIMockDelegate {
             workflows: [
                 'Workflow1',
                 'Workflow2'
-            ],
-
-            installedFiles: [
-                'cloudflow://PP_FILE_STORE/DownloadApp/images/mac.png',
-                'cloudflow://PP_FILE_STORE/DownloadApp/images/win.png',
-                'cloudflow://PP_FILE_STORE/DownloadApp/index.html'
             ]
         }];
     }
