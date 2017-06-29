@@ -79,7 +79,7 @@ function downloadTests() {
             return [];
         }
 
-        get existingWhitepapers() {
+        existingWhitepapers() {
             return [ {
                 _id: 'Workflow1',
                 name: 'Workflow1'

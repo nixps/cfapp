@@ -15,11 +15,18 @@
 class APIMockDelegate {
     constructor() {
         this._createSessionRequest = null;
-        this._uploadedWhitepapers = [];
-        this._deletedWhitepapers = [];
-        this._downloadedWhitepapers = [];
-        this._deletedFiles = [];
+        this.uploadedWhitepapers = [];
+        this.deletedWhitepapers = [];
+        this.downloadedWhitepapers = [];
+        this.deletedFiles = [];
         this._host = 'http://localhost:9090';
+
+        this.createdApplications = [];
+        this.deletedApplications = [];
+    }
+
+    get supportsApplications() {
+        return false;
     }
 
     get host() {
@@ -35,22 +42,14 @@ class APIMockDelegate {
     }
 
     whitepaperUploaded(whitepaper) {
-        this._uploadedWhitepapers.push(whitepaper);
-    }
-
-    get uploadedWhitepapers() {
-        return this._uploadedWhitepapers;
+        this.uploadedWhitepapers.push(whitepaper);
     }
 
     whitepaperDeleted(whitepaper) {
-        this._deletedWhitepapers.push(whitepaper);
+        this.deletedWhitepapers.push(whitepaper);
     }
 
-    get deletedWhitepapers() {
-        return this._deletedWhitepapers;
-    }
-
-    get existingWhitepapers() {
+    existingWhitepapers(/*query*/) {
         return [];
     }
 
@@ -62,24 +61,36 @@ class APIMockDelegate {
         return [];
     }
 
-    get deletedFiles() {
-        return this._deletedFiles;
-    }
-
     fileDeleted(file) {
-        this._deletedFiles.push(file);
-    }
-
-    get downloadedWhitepapers() {
-        return this._downloadedWhitepapers;
+        this.deletedFiles.push(file);
     }
 
     whitepaperDownloaded(whitepaper) {
-        this._downloadedWhitepapers.push(whitepaper);
+        this.downloadedWhitepapers.push(whitepaper);
     }
 
     applicationList() {
-        throw new Error('Unknown command');
+        if (! this.supportsApplications) {
+            throw new Error('Unknown command');
+        }
+
+        return [];
+    }
+
+    applicationCreated(app) {
+        if (! this.supportsApplications) {
+            throw new Error('Unknown command');
+        }
+
+        this.createdApplications.push(app);
+    }
+
+    applicationDeleted(appID) {
+        if (! this.supportsApplications) {
+            throw new Error('Unknown command');
+        }
+
+        this.deletedApplications.push(appID);
     }
 }
 

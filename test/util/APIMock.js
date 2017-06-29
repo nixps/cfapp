@@ -41,9 +41,9 @@ class APIMock {
             },
 
             whitepaper: {
-                list: function() {
+                list: function(query) {
                     return {
-                        results: mockDelegate.existingWhitepapers
+                        results: mockDelegate.existingWhitepapers(query)
                     };
                 },
 
@@ -79,9 +79,19 @@ class APIMock {
                 }
             },
 
-            application: {
-                list: function() {
-                    return mockDelegate.applicationList();
+            registry: {
+                cfapp: {
+                    list: function(query) {
+                        return {
+                            results: mockDelegate.applicationList(query)
+                        };
+                    },
+                    create: function(app) {
+                        mockDelegate.applicationCreated(app);
+                    },
+                    delete: function(appid) {
+                        mockDelegate.applicationDeleted(appid);
+                    }
                 }
             }
         };

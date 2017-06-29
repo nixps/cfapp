@@ -21,17 +21,15 @@ function listTests() {
 
     class ApplicationSupportDelegate extends APIMockDelegate {
         applicationList() {
-            return {
-                results: [{
-                    name: 'hello',
-                    version: '0.0.1',
-                    description: 'test'
-                },{
-                    name: 'world',
-                    version: '0.0.2',
-                    description: 'test2'
-                }]
-            };
+            return [{
+                name: 'hello',
+                version: '0.0.1',
+                description: 'test'
+            },{
+                name: 'world',
+                version: '0.0.2',
+                description: 'test2'
+            }];
         }
     }
 

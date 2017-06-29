@@ -23,9 +23,10 @@ describe('cfapp tests', function() {
     });
 
     describe('cfapp application module', function() {
-
         describe('upload', require('./spec/appUpload'));
         describe('download', require('./spec/appDownload'));
         describe('list', require('./spec/appList'));
+        describe('remove', require('./spec/appRemove'));
+        describe('update', require('./spec/appUpdate'));
     });
 });

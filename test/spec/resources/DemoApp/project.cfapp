@@ -1,6 +1,6 @@
 {
     "name": "DemoApp",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "host": "http://localhost:9090/",
     "login": "admin",
     "password": "admin",

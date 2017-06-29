@@ -18,7 +18,7 @@ const cfapp = require('../../lib/cfapp');
 
 
 class ExistingWhitepapersDelegate extends APIMockDelegate {
-    get existingWhitepapers() {
+    existingWhitepapers() {
         return [ {
             name: 'ProcessOrder'
         }];
@@ -219,6 +219,75 @@ function uploadTests() {
                 assert(nock.isDone(), 'expected requests not performed');
             });
         });
+    });
+
+    describe('application versioning', function() {
+
+        it('should register the application in the repository if Cloudflow supports it', function() {
+            class ApplicationSupportDelegate extends APIMockDelegate {
+                get supportsApplications() {
+                    return true;
+                }
+
+                applicationList() {
+                    return [];
+                }
+            }
+
+            apiMock.mockDelegate = new ApplicationSupportDelegate();
+
+            const uploadedFiles = [];
+            getFileUploadMock(uploadedFiles, 4);
+
+            return cfapp.apps.upload(__dirname + '/resources/DemoApp/', {
+                overwrite: true
+            }).then(function() {
+                const uploadedWhitepapers = apiMock.mockDelegate.uploadedWhitepapers;
+                assert.equal(uploadedFiles.length, 4, 'all files should be uploaded');
+                assert.equal(uploadedWhitepapers.length, 1, 'all whitepapers should be uploaded');
+                assert.equal(uploadedWhitepapers[0].name, 'ProcessOrder', 'whitepaper "ProcessOrder" missing');
+                assert.includeMembers(uploadedFiles, [
+                    'cloudflow://PP_FILE_STORE/DemoApp/images/linux.jpg',
+                    'cloudflow://PP_FILE_STORE/DemoApp/images/mac.png',
+                    'cloudflow://PP_FILE_STORE/DemoApp/images/win.png',
+                    'cloudflow://PP_FILE_STORE/DemoApp/index.html'
+                ], 'the files were not all uploaded');
+                assert.equal(apiMock.mockDelegate.createdApplications.length, 1, 'one application should be registered');
+                assert.equal(apiMock.mockDelegate.createdApplications[0].name, 'DemoApp', 'app name should be present');
+                assert.equal(apiMock.mockDelegate.createdApplications[0].version, '0.0.2', 'app version should be present');
+
+                assert(nock.isDone(), 'expected requests not performed');
+            });
+        });
+
+        it('should not update if there is already an application registered', function() {
+            class ApplicationSupportDelegate extends APIMockDelegate {
+                applicationList() {
+                    return [{
+                        name: 'DemoApp',
+                        version: '0.0.2'
+                    }];
+                }
+            }
+
+            apiMock.mockDelegate = new ApplicationSupportDelegate();
+
+            const uploadedFiles = [];
+            getFileUploadMock(uploadedFiles, 0);
+
+            return cfapp.apps.upload(__dirname + '/resources/DemoApp/', {
+                overwrite: true
+            }).then(function() {
+                assert.isNotOk(true, 'this function should have failed');
+            }).catch(function(error) {
+                assert.match(error, /The application DemoApp is already installed/, 'an error should be returned');
+                const uploadedWhitepapers = apiMock.mockDelegate.uploadedWhitepapers;
+                assert.equal(uploadedFiles.length, 0, 'no files should be uploaded');
+                assert.equal(uploadedWhitepapers.length, 0, 'no whitepapers should be uploaded');
+                assert.equal(apiMock.mockDelegate.createdApplications.length, 0, 'no application should be registered');
+            });
+        });
+
     });
 }
 
