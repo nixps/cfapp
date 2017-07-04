@@ -10,13 +10,13 @@
 
 'use strict';
 
-module.exports = {
-    command: 'config <command>',
-    desc: 'Set configuration variables (login mycloudflow, install dirs...)',
-    builder: function(yargs) {
-        return yargs
-            .commandDir('config')
-            .demand(1);
-    },
-    handler: function() {}
-};
+// module.exports = {
+//     command: 'config <command>',
+//     desc: 'Set configuration variables (login mycloudflow, install dirs...)',
+//     builder: function(yargs) {
+//         return yargs
+//             .commandDir('config')
+//             .demand(1);
+//     },
+//     handler: function() {}
+// };

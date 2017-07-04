@@ -11,23 +11,23 @@
 
 const { apps } = require('../../../lib/cfapp');
 
-module.exports = {
-    command: 'init [directory]',
-    desc: 'Creates a default project.cfapp in the specified directory',
-    builder: function(yargs) {
-        yargs.example('$0 app init /app_path/', 'creates the /app_path/project.cfapp file')
-            .option('overwrite', {
-                describe: 'force overwriting files',
-                default: false
-            });
-    },
-    handler: function(argv) {
-        const options = {
-            overwrite: argv.overwrite
-        };
-
-        const directory = argv.directory || '.';
-
-        apps.init(directory, options);
-    }
-};
+// module.exports = {
+//     command: 'init [directory]',
+//     desc: 'Creates a default project.cfapp in the specified directory',
+//     builder: function(yargs) {
+//         yargs.example('$0 app init /app_path/', 'creates the /app_path/project.cfapp file')
+//             .option('overwrite', {
+//                 describe: 'force overwriting files',
+//                 default: false
+//             });
+//     },
+//     handler: function(argv) {
+//         const options = {
+//             overwrite: argv.overwrite
+//         };
+//
+//         const directory = argv.directory || '.';
+//
+//         apps.init(directory, options);
+//     }
+// };
