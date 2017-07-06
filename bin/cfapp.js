@@ -52,7 +52,7 @@ if (argv._[0]) {
             process.exit(1);
         }
     }
-    if (argv._[0] === 'install' || argv._[0] === 'upload'  || argv._[0] === 'download') {
+    else if (argv._[0] === 'install' || argv._[0] === 'upload'  || argv._[0] === 'download') {
         // This is already caught elsewere
     }
     else {
