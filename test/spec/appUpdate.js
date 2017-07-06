@@ -148,6 +148,11 @@ class NoInstalledAppsDelegate extends APIMockDelegate {
     }
 }
 
+class AppRegistryNotSupportedDelegate extends APIMockDelegate {
+    get supportsApplications() {
+        return false;
+    }
+}
 
 class DemoApp002InstalledDelegate extends APIMockDelegate {
     get supportsApplications() {
@@ -288,6 +293,52 @@ function updateTests() {
                 ], 'not all files were deleted');
 
                 assert(nock.isDone(), 'expected requests not performed');
+            });
+        });
+
+        it('should throw an error when the application registry does not exist', function() {
+            const apiMockDelegate = new AppRegistryNotSupportedDelegate();
+            apiMock.mockDelegate = apiMockDelegate;
+
+            const uploadedFiles = [];
+            getFileUploadMock(uploadedFiles, 0);
+
+            return cfapp.apps.update(`${__dirname}/resources/DemoApp`, {
+                host: 'http://localhost:9090',
+                login: 'admin',
+                password: 'admin',
+                force: true
+            }).then(function() {
+                assert.isNotOk('cfapp app update does not throw an error when Cloudflow has no support for the cfapp registry');
+            }).catch(function(error) {
+                assert.match(error, /no support for application updates/, 'should show an appropriate error message');
+                assert.equal(apiMockDelegate.deletedWhitepapers.length, 0, 'no whitepaper should be deleted');
+                assert.equal(apiMockDelegate.deletedFiles.length, 0, 'no files should be deleted');
+                assert.equal(apiMockDelegate.uploadedWhitepapers.length, 0, 'no whitepaper should be uploaded');
+                assert.equal(uploadedFiles.length, 0, 'no files should be uploaded');
+            });
+        });
+
+        it('should throw an error when the application registry does not exist for multiple updates', function() {
+            const apiMockDelegate = new AppRegistryNotSupportedDelegate();
+            apiMock.mockDelegate = apiMockDelegate;
+
+            const uploadedFiles = [];
+            getFileUploadMock(uploadedFiles, 0);
+
+            return cfapp.apps.update(`${__dirname}/resources/MultipleApps`, {
+                host: 'http://localhost:9090',
+                login: 'admin',
+                password: 'admin',
+                force: true
+            }).then(function() {
+                assert.isNotOk('cfapp app update does not throw an error when Cloudflow has no support for the cfapp registry');
+            }).catch(function(error) {
+                assert.match(error, /no support for application updates/, 'should show an appropriate error message');
+                assert.equal(apiMockDelegate.deletedWhitepapers.length, 0, 'no whitepaper should be deleted');
+                assert.equal(apiMockDelegate.deletedFiles.length, 0, 'no files should be deleted');
+                assert.equal(apiMockDelegate.uploadedWhitepapers.length, 0, 'no whitepaper should be uploaded');
+                assert.equal(uploadedFiles.length, 0, 'no files should be uploaded');
             });
         });
 

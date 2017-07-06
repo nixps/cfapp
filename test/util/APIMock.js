@@ -93,6 +93,14 @@ class APIMock {
                         mockDelegate.applicationDeleted(appid);
                     }
                 }
+            },
+
+            portal: {
+                version: function() {
+                    return {
+                        build: 'cloudflow_version'
+                    };
+                }
             }
         };
     }

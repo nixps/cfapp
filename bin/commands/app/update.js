@@ -40,16 +40,6 @@ module.exports = {
             password: argv.password
         };
 
-        // Check if we can list applications
-        const api = cloudflowAPI.getSyncAPI(options.host);
-        var session = api.auth.create_session(options.login, options.password).session;
-        api.m_session = session;
-
-        if (apps.canRegisterApps(api) === false) {
-            console.log(`no support for application updates this Cloudflow build b${api.portal.version().build}`);
-            return;
-        }
-
         const directory = argv.directory || '.';
 
         // parse and stringify to get rid of 'undefined' values
