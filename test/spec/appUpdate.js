@@ -190,6 +190,65 @@ class DemoApp002InstalledDelegate extends APIMockDelegate {
 }
 
 
+class DemoAppNoVersionInstalledDelegate extends ExistingSingleAppDelegate {
+    constructor() {
+        super();
+
+        this.mockData = {
+            assets: [{
+                _id: 'I exist',
+                cloudflow: {
+                    file: 'cloudflow://PP_FILE_STORE/DemoApp/images/linux.png'
+                }
+            },{
+                _id: 'I exist',
+                cloudflow: {
+                    file: 'cloudflow://PP_FILE_STORE/DemoApp/images/win.png'
+                }
+            },{
+                _id: 'I exist as well',
+                cloudflow: {
+                    file: 'cloudflow://PP_FILE_STORE/DemoApp/index.html'
+                }
+            },{
+                _id: 'I exist too',
+                cloudflow: {
+                    file: 'cloudflow://PP_FILE_STORE/DemoApp/images/mac.png'
+                }
+            }],
+
+            whitepapers: [{
+                _id: 'Workflow1',
+                name: 'Workflow1'
+            }, {
+                _id: 'Workflow2',
+                name: 'Workflow2'
+            }],
+
+            cfapps: [{
+                _id: 'DemoAppID',
+                name: 'DemoApp',
+                host: 'http://localhost:9090',
+                login: 'admin',
+                password: 'admin',
+                description: 'A test for downloading an application',
+
+                files: [
+                    'cloudflow://PP_FILE_STORE/DemoApp/images/',
+                    'cloudflow://PP_FILE_STORE/DemoApp/index.html',
+                ],
+
+                workflows: [
+                    'Workflow1',
+                    'Workflow2'
+                ]
+            }]
+
+        };
+    }
+}
+
+
 function updateTests() {
     describe('default parameters', function() {
         it('should return an error message if the app is not installed', function() {
@@ -319,26 +378,64 @@ function updateTests() {
             });
         });
 
-        it('should throw an error when the application registry does not exist for multiple updates', function() {
-            const apiMockDelegate = new AppRegistryNotSupportedDelegate();
+        it('should throw an error when a non-versioned application has been installed and no force is passed', function() {
+            const apiMockDelegate = new DemoAppNoVersionInstalledDelegate();
             apiMock.mockDelegate = apiMockDelegate;
 
             const uploadedFiles = [];
             getFileUploadMock(uploadedFiles, 0);
 
-            return cfapp.apps.update(`${__dirname}/resources/MultipleApps`, {
+            return cfapp.apps.update(`${__dirname}/resources/DemoApp`, {
+                host: 'http://localhost:9090',
+                login: 'admin',
+                password: 'admin'
+            }).then(function() {
+                assert.isNotOk('cfapp app update does not throw an error when Cloudflow has no support for the cfapp registry');
+            }).catch(function(error) {
+                assert.match(error, /invalid version for REMOTE DemoApp, force to update/, 'should show an appropriate error message');
+                assert.equal(apiMockDelegate.deletedWhitepapers.length, 0, 'no whitepaper should be deleted');
+                assert.equal(apiMockDelegate.deletedFiles.length, 0, 'no files should be deleted');
+                assert.equal(apiMockDelegate.uploadedWhitepapers.length, 0, 'no whitepaper should be uploaded');
+                assert.equal(uploadedFiles.length, 0, 'no files should be uploaded');
+            });
+        });
+
+        it('should update when a non-versioned application has been installed and force is passed', function() {
+            const apiMockDelegate = new DemoAppNoVersionInstalledDelegate();
+            apiMock.mockDelegate = apiMockDelegate;
+
+            const uploadedFiles = [];
+            getFileUploadMock(uploadedFiles, 4);
+
+            return cfapp.apps.update(`${__dirname}/resources/DemoApp`, {
                 host: 'http://localhost:9090',
                 login: 'admin',
                 password: 'admin',
                 force: true
             }).then(function() {
-                assert.isNotOk('cfapp app update does not throw an error when Cloudflow has no support for the cfapp registry');
-            }).catch(function(error) {
-                assert.match(error, /no support for application updates/, 'should show an appropriate error message');
-                assert.equal(apiMockDelegate.deletedWhitepapers.length, 0, 'no whitepaper should be deleted');
-                assert.equal(apiMockDelegate.deletedFiles.length, 0, 'no files should be deleted');
-                assert.equal(apiMockDelegate.uploadedWhitepapers.length, 0, 'no whitepaper should be uploaded');
-                assert.equal(uploadedFiles.length, 0, 'no files should be uploaded');
+                assert.equal(apiMockDelegate.deletedWhitepapers.length, 2, 'not all whitepapers were deleted');
+                assert.includeMembers(apiMockDelegate.deletedWhitepapers, [
+                    'Workflow1',
+                    'Workflow2'
+                ], 'not all whitepapers were deleted');
+                assert.equal(apiMockDelegate.deletedFiles.length, 4, 'not all files were deleted');
+                assert.includeMembers(apiMockDelegate.deletedFiles, [
+                    'cloudflow://PP_FILE_STORE/DemoApp/images/mac.png',
+                    'cloudflow://PP_FILE_STORE/DemoApp/images/win.png',
+                    'cloudflow://PP_FILE_STORE/DemoApp/images/linux.png',
+                    'cloudflow://PP_FILE_STORE/DemoApp/index.html'
+                ], 'not all files were deleted');
+                assert.equal(apiMockDelegate.uploadedWhitepapers.length, 1, 'not all whitepapers were uploaded');
+                assert.equal(apiMockDelegate.uploadedWhitepapers[0].name, 'ProcessOrder', 'not all whitepapers were uploaded');
+                assert.equal(uploadedFiles.length, 4, 'not all files were deleted');
+                assert.includeMembers(uploadedFiles, [
+                    'cloudflow://PP_FILE_STORE/DemoApp/images/mac.png',
+                    'cloudflow://PP_FILE_STORE/DemoApp/images/win.png',
+                    'cloudflow://PP_FILE_STORE/DemoApp/images/linux.jpg',
+                    'cloudflow://PP_FILE_STORE/DemoApp/index.html'
+                ], 'not all files were deleted');
+
+                assert(nock.isDone(), 'expected requests not performed');
             });
         });
 
