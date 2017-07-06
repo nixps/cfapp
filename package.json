@@ -15,7 +15,7 @@
   "license": "MPL-2.0",
   "dependencies": {
     "async": "^2.1.5",
-    "cloudflow-api": "^1.2.0",
+    "cloudflow-api": "^1.2.4",
     "columnify": "^1.5.4",
     "lodash": "^4.17.4",
     "mkdirp": "^0.5.1",
