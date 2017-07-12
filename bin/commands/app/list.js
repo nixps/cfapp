@@ -24,13 +24,18 @@ module.exports = {
             })
             .option('password', {
                 describe: 'overrides the password of the project.cfapp file'
+            })
+            .option('json', {
+                describe: 'returns a json representation of the list of cfapps',
+                default: false
             });
     },
     handler: function(argv) {
         const options = {
             host: argv.host,
             login: argv.login,
-            password: argv.password
+            password: argv.password,
+            json: argv.json
         };
 
         const serverURL = argv.host || 'http://localhost:9090';
@@ -48,6 +53,12 @@ module.exports = {
         // parse and stringify to get rid of 'undefined' values
         try {
             const appList = apps.list(serverURL, JSON.parse(JSON.stringify(options)));
+
+            if (options.json === true) {
+                console.log(appList);
+                return;
+            }
+
             const appListTable = appList.map((app) => {
                 return {
                     name: app.name,
