@@ -20,6 +20,7 @@ const os = require('os');
 const APIMockDelegate = require('../util/APIMockDelegate');
 const cfapp = require('../../lib/cfapp');
 const apiMock = require('cloudflow-api');
+const JSONOutputStream = require('../../lib/util/JSONOutputStream');
 
 
 function getFileDownloadMock(downloadedFiles, expected) {
@@ -123,6 +124,7 @@ function downloadTests() {
     });
 
     it('download a single application', function() {
+        const outputStream = new JSONOutputStream();
         apiMock.mockDelegate = new ExistingSingleAppDelegate();
 
         const downloadedFiles = [];
@@ -134,7 +136,7 @@ function downloadTests() {
         mkdirp.sync(__dirname + '/downloadTest/DownloadApp');
         fs.writeFileSync(__dirname + '/downloadTest/DownloadApp/project.cfapp', JSON.stringify(projectCFApp));
 
-        return cfapp.apps.download(__dirname + '/downloadTest/DownloadApp').then(function() {
+        return cfapp.apps.download(__dirname + '/downloadTest/DownloadApp', {}, outputStream).then(function() {
             const mockDelegate = apiMock.mockDelegate;
             assert.equal(mockDelegate.downloadedWhitepapers.length, 2, 'not all whitepapers were downloaded');
             assert.includeMembers(mockDelegate.downloadedWhitepapers, [
@@ -154,6 +156,7 @@ function downloadTests() {
     });
 
     it('should not overwrite', function() {
+        const outputStream = new JSONOutputStream();
         apiMock.mockDelegate = new ExistingSingleAppDelegate();
 
         const downloadedFiles = [];
@@ -183,14 +186,14 @@ function downloadTests() {
         mkdirp.sync(__dirname + '/downloadTest/DownloadApp');
         fs.writeFileSync(__dirname + '/downloadTest/DownloadApp/project.cfapp', JSON.stringify(projectCFApp));
 
-        return cfapp.apps.download(__dirname + '/downloadTest/DownloadApp').then(function() {
+        return cfapp.apps.download(__dirname + '/downloadTest/DownloadApp', {}, outputStream).then(function() {
             // Reset the mock delegate
             nock.cleanAll();
             apiMock.mockDelegate = new ExistingSingleAppDelegate();
             const downloadedFiles = [];
             getFileDownloadMock(downloadedFiles, 1);
 
-            return cfapp.apps.download(__dirname + '/downloadTest/DownloadApp').then(function() {
+            return cfapp.apps.download(__dirname + '/downloadTest/DownloadApp', {}, outputStream).then(function() {
                 const mockDelegate = apiMock.mockDelegate;
                 assert.equal(mockDelegate.downloadedWhitepapers.length, 0, 'no whitepapers should be downloaded');
                 assert.equal(downloadedFiles.length, 0, 'no files should be downloaded');
@@ -202,6 +205,7 @@ function downloadTests() {
 
 
     it('should overwrite when the flag is set', function() {
+        const outputStream = new JSONOutputStream();
         apiMock.mockDelegate = new ExistingSingleAppDelegate();
 
         const downloadedFiles = [];
@@ -213,7 +217,7 @@ function downloadTests() {
         mkdirp.sync(__dirname + '/downloadTest/DownloadApp');
         fs.writeFileSync(__dirname + '/downloadTest/DownloadApp/project.cfapp', JSON.stringify(projectCFApp));
 
-        return cfapp.apps.download(__dirname + '/downloadTest/DownloadApp').then(function() {
+        return cfapp.apps.download(__dirname + '/downloadTest/DownloadApp', {}, outputStream).then(function() {
             // Reset the mock delegate
             nock.cleanAll();
             apiMock.mockDelegate = new ExistingSingleAppDelegate();
@@ -222,7 +226,7 @@ function downloadTests() {
 
             return cfapp.apps.download(__dirname + '/downloadTest/DownloadApp', {
                 overwrite: true
-            }).then(function() {
+            }, outputStream).then(function() {
                 const mockDelegate = apiMock.mockDelegate;
                 assert.equal(mockDelegate.downloadedWhitepapers.length, 2, 'not all whitepapers were downloaded');
                 assert.includeMembers(mockDelegate.downloadedWhitepapers, [

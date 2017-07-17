@@ -15,6 +15,7 @@ const { assert } = require('chai');
 const APIMockDelegate = require('../util/APIMockDelegate');
 const apiMock = require('cloudflow-api');
 const cfapp = require('../../lib/cfapp');
+const JSONOutputStream = require('../../lib/util/JSONOutputStream');
 
 class ExistingSingleAppDelegate extends APIMockDelegate {
     constructor() {
@@ -252,6 +253,7 @@ class DemoAppNoVersionInstalledDelegate extends ExistingSingleAppDelegate {
 function updateTests() {
     describe('default parameters', function() {
         it('should return an error message if the app is not installed', function() {
+            const outputStream = new JSONOutputStream();
             const apiMockDelegate = new NoInstalledAppsDelegate();
             apiMock.mockDelegate = apiMockDelegate;
 
@@ -259,12 +261,13 @@ function updateTests() {
                 host: 'http://localhost:9090',
                 login: 'admin',
                 password: 'admin'
-            }).catch(function(error) {
+            }, outputStream).catch(function(error) {
                 assert.match(error, /application DemoApp is not installed/, 'should show an appropriate error message');
             });
         });
 
         it('should return an error if the remote version is newer or the same', function() {
+            const outputStream = new JSONOutputStream();
             const apiMockDelegate = new DemoApp002InstalledDelegate();
             apiMock.mockDelegate = apiMockDelegate;
 
@@ -272,12 +275,13 @@ function updateTests() {
                 host: 'http://localhost:9090',
                 login: 'admin',
                 password: 'admin'
-            }).catch(function(error) {
+            }, outputStream).catch(function(error) {
                 assert.match(error, /LOCAL version 0.0.2 <= REMOTE version 0.0.2, force to update/, 'an appropriate error message should be shown');
             });
         });
 
         it('should update an app if the remote version is older', function() {
+            const outputStream = new JSONOutputStream();
             const uploadedFiles = [];
             getFileUploadMock(uploadedFiles, 4);
 
@@ -288,7 +292,7 @@ function updateTests() {
                 host: 'http://localhost:9090',
                 login: 'admin',
                 password: 'admin'
-            }).then(function() {
+            }, outputStream).then(function() {
                 assert.equal(apiMockDelegate.deletedWhitepapers.length, 2, 'not all whitepapers were deleted');
                 assert.includeMembers(apiMockDelegate.deletedWhitepapers, [
                     'Workflow1',
@@ -316,6 +320,7 @@ function updateTests() {
         });
 
         it('should update an app if the remote version is newer and force is passed', function() {
+            const outputStream = new JSONOutputStream();
             const uploadedFiles = [];
             getFileUploadMock(uploadedFiles, 4);
 
@@ -328,7 +333,7 @@ function updateTests() {
                 login: 'admin',
                 password: 'admin',
                 force: true
-            }).then(function() {
+            }, outputStream).then(function() {
                 assert.equal(apiMockDelegate.deletedWhitepapers.length, 2, 'not all whitepapers were deleted');
                 assert.includeMembers(apiMockDelegate.deletedWhitepapers, [
                     'Workflow1',
@@ -356,6 +361,7 @@ function updateTests() {
         });
 
         it('should throw an error when the application registry does not exist', function() {
+            const outputStream = new JSONOutputStream();
             const apiMockDelegate = new AppRegistryNotSupportedDelegate();
             apiMock.mockDelegate = apiMockDelegate;
 
@@ -367,7 +373,7 @@ function updateTests() {
                 login: 'admin',
                 password: 'admin',
                 force: true
-            }).then(function() {
+            }, outputStream).then(function() {
                 assert.isNotOk('cfapp app update does not throw an error when Cloudflow has no support for the cfapp registry');
             }).catch(function(error) {
                 assert.match(error, /no support for application updates/, 'should show an appropriate error message');
@@ -379,6 +385,7 @@ function updateTests() {
         });
 
         it('should throw an error when a non-versioned application has been installed and no force is passed', function() {
+            const outputStream = new JSONOutputStream();
             const apiMockDelegate = new DemoAppNoVersionInstalledDelegate();
             apiMock.mockDelegate = apiMockDelegate;
 
@@ -389,7 +396,7 @@ function updateTests() {
                 host: 'http://localhost:9090',
                 login: 'admin',
                 password: 'admin'
-            }).then(function() {
+            }, outputStream).then(function() {
                 assert.isNotOk('cfapp app update does not throw an error when Cloudflow has no support for the cfapp registry');
             }).catch(function(error) {
                 assert.match(error, /invalid version for REMOTE DemoApp, force to update/, 'should show an appropriate error message');
@@ -401,6 +408,7 @@ function updateTests() {
         });
 
         it('should update when a non-versioned application has been installed and force is passed', function() {
+            const outputStream = new JSONOutputStream();
             const apiMockDelegate = new DemoAppNoVersionInstalledDelegate();
             apiMock.mockDelegate = apiMockDelegate;
 
@@ -412,7 +420,7 @@ function updateTests() {
                 login: 'admin',
                 password: 'admin',
                 force: true
-            }).then(function() {
+            }, outputStream).then(function() {
                 assert.equal(apiMockDelegate.deletedWhitepapers.length, 2, 'not all whitepapers were deleted');
                 assert.includeMembers(apiMockDelegate.deletedWhitepapers, [
                     'Workflow1',

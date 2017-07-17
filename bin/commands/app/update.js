@@ -11,6 +11,8 @@
 
 const { apps } = require('../../../lib/cfapp');
 const cloudflowAPI = require('cloudflow-api');
+const ConsoleOutputStream = require('../../../lib/util/ConsoleOutputStream');
+const JSONOutputStream = require('../../../lib/util/JSONOutputStream');
 
 module.exports = {
     command: 'update [directory]',
@@ -30,6 +32,10 @@ module.exports = {
             })
             .option('password', {
                 describe: 'overrides the password of the project.cfapp file'
+            })
+            .option('json', {
+                describe: 'outputs the result as JSON',
+                default: false
             });
     },
     handler: function(argv) {
@@ -42,9 +48,29 @@ module.exports = {
 
         const directory = argv.directory || '.';
 
+        let outputStream = new ConsoleOutputStream();
+        if (argv.json === true) {
+            outputStream = new JSONOutputStream();
+        }
+
         // parse and stringify to get rid of 'undefined' values
-        apps.update(directory, JSON.parse(JSON.stringify(options))).catch(function(error) {
-            console.log(error);
+        apps.update(directory, JSON.parse(JSON.stringify(options)), outputStream).then(function() {
+            if (argv.json === true) {
+                console.log(outputStream.lines);
+            }
+        }).catch(function(error) {
+            if (argv.json === true) {
+                console.log({
+                    lines: outputStream.outputLines,
+                    error: {
+                        message: error.toString(),
+                        code: error.errorCode
+                    }
+                });
+            }
+            else {
+                console.log(error.stack);
+            }
         });
     }
 };

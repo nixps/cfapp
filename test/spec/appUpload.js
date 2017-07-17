@@ -15,6 +15,7 @@ const nock = require('nock');
 const APIMockDelegate = require('../util/APIMockDelegate');
 const apiMock = require('cloudflow-api');
 const cfapp = require('../../lib/cfapp');
+const JSONOutputStream = require('../../lib/util/JSONOutputStream');
 
 
 class ExistingWhitepapersDelegate extends APIMockDelegate {
@@ -67,12 +68,13 @@ function getFileUploadMock(uploadedFiles, expected) {
 function uploadTests() {
     describe('default parameters', function() {
         it('nothing exists: should upload a single application completely', function() {
+            const outputStream = new JSONOutputStream();
             apiMock.mockDelegate = new APIMockDelegate();
 
             const uploadedFiles = [];
             getFileUploadMock(uploadedFiles, 4);
 
-            return cfapp.apps.upload(__dirname + '/resources/DemoApp/').then(function() {
+            return cfapp.apps.upload(__dirname + '/resources/DemoApp/', {}, outputStream).then(function() {
                 const uploadedWhitepapers = apiMock.mockDelegate.uploadedWhitepapers;
                 assert.equal(uploadedFiles.length, 4, 'all files should be uploaded');
                 assert.equal(uploadedWhitepapers.length, 1, 'all whitepapers should be uploaded');
@@ -89,12 +91,13 @@ function uploadTests() {
         });
 
         it('existing workflow: should skip the workflow', function() {
+            const outputStream = new JSONOutputStream();
             apiMock.mockDelegate = new ExistingWhitepapersDelegate();
 
             const uploadedFiles = [];
             getFileUploadMock(uploadedFiles, 4);
 
-            return cfapp.apps.upload(__dirname + '/resources/DemoApp/').then(function() {
+            return cfapp.apps.upload(__dirname + '/resources/DemoApp/', {}, outputStream).then(function() {
                 const uploadedWhitepapers = apiMock.mockDelegate.uploadedWhitepapers;
                 assert.equal(uploadedFiles.length, 4, 'all files should be uploaded');
                 assert.equal(uploadedWhitepapers.length, 0, 'no whitepapers should be uploaded');
@@ -110,12 +113,13 @@ function uploadTests() {
         });
 
         it('existing files: should skip 2 files', function() {
+            const outputStream = new JSONOutputStream();
             apiMock.mockDelegate = new ExistingFilesDelegate();
 
             const uploadedFiles = [];
             getFileUploadMock(uploadedFiles, 2);
 
-            return cfapp.apps.upload(__dirname + '/resources/DemoApp/').then(function() {
+            return cfapp.apps.upload(__dirname + '/resources/DemoApp/', {}, outputStream).then(function() {
                 const uploadedWhitepapers = apiMock.mockDelegate.uploadedWhitepapers;
                 assert.equal(uploadedFiles.length, 2, 'all files should be uploaded');
                 assert.equal(uploadedWhitepapers.length, 1, 'all whitepapers should be uploaded');
@@ -133,6 +137,7 @@ function uploadTests() {
 
     describe('overwrite parameter', function() {
         it('existing workflow: should overwrite the workflow', function() {
+            const outputStream = new JSONOutputStream();
             apiMock.mockDelegate = new ExistingWhitepapersDelegate();
 
             const uploadedFiles = [];
@@ -140,7 +145,7 @@ function uploadTests() {
 
             return cfapp.apps.upload(__dirname + '/resources/DemoApp/', {
                 overwrite: true
-            }).then(function() {
+            }, outputStream).then(function() {
                 const uploadedWhitepapers = apiMock.mockDelegate.uploadedWhitepapers;
                 const deletedWhitepapers = apiMock.mockDelegate.deletedWhitepapers;
                 assert.equal(uploadedFiles.length, 4, 'all files should be uploaded');
@@ -159,6 +164,7 @@ function uploadTests() {
         });
 
         it('existing files: should overwrite 2 files', function() {
+            const outputStream = new JSONOutputStream();
             apiMock.mockDelegate = new ExistingFilesDelegate();
 
             const uploadedFiles = [];
@@ -166,7 +172,7 @@ function uploadTests() {
 
             return cfapp.apps.upload(__dirname + '/resources/DemoApp/', {
                 overwrite: true
-            }).then(function() {
+            }, outputStream).then(function() {
                 const uploadedWhitepapers = apiMock.mockDelegate.uploadedWhitepapers;
                 const deletedFiles = apiMock.mockDelegate.deletedFiles;
                 assert.equal(deletedFiles.length, 2, '2 files should be deleted');
@@ -187,12 +193,13 @@ function uploadTests() {
 
     describe('multiple apps', function() {
         it('nothing exists: should upload a all the applications completely', function() {
+            const outputStream = new JSONOutputStream();
             apiMock.mockDelegate = new APIMockDelegate();
 
             const uploadedFiles = [];
             getFileUploadMock(uploadedFiles, 12);
 
-            return cfapp.apps.upload(__dirname + '/resources/MultipleApps/').then(function() {
+            return cfapp.apps.upload(__dirname + '/resources/MultipleApps/', {}, outputStream).then(function() {
                 const uploadedWhitepapers = apiMock.mockDelegate.uploadedWhitepapers;
                 assert.equal(uploadedFiles.length, 12, 'all files should be uploaded');
                 assert.equal(uploadedWhitepapers.length, 3, 'all whitepapers should be uploaded');
@@ -224,6 +231,7 @@ function uploadTests() {
     describe('application versioning', function() {
 
         it('should register the application in the repository if Cloudflow supports it', function() {
+            const outputStream = new JSONOutputStream();
             class ApplicationSupportDelegate extends APIMockDelegate {
                 get supportsApplications() {
                     return true;
@@ -241,7 +249,7 @@ function uploadTests() {
 
             return cfapp.apps.upload(__dirname + '/resources/DemoApp/', {
                 overwrite: true
-            }).then(function() {
+            }, outputStream).then(function() {
                 const uploadedWhitepapers = apiMock.mockDelegate.uploadedWhitepapers;
                 assert.equal(uploadedFiles.length, 4, 'all files should be uploaded');
                 assert.equal(uploadedWhitepapers.length, 1, 'all whitepapers should be uploaded');
@@ -261,6 +269,7 @@ function uploadTests() {
         });
 
         it('should not update if there is already an application registered', function() {
+            const outputStream = new JSONOutputStream();
             class ApplicationSupportDelegate extends APIMockDelegate {
                 applicationList() {
                     return [{
@@ -277,7 +286,7 @@ function uploadTests() {
 
             return cfapp.apps.upload(__dirname + '/resources/DemoApp/', {
                 overwrite: true
-            }).then(function() {
+            }, outputStream).then(function() {
                 assert.isNotOk(true, 'this function should have failed');
             }).catch(function(error) {
                 assert.match(error, /The application DemoApp is already installed/, 'an error should be returned');

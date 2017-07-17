@@ -14,6 +14,7 @@ const { assert } = require('chai');
 const APIMockDelegate = require('../util/APIMockDelegate');
 const apiMock = require('cloudflow-api');
 const cfapp = require('../../lib/cfapp');
+const JSONOutputStream = require('../../lib/util/JSONOutputStream');
 
 class ExistingSingleAppDelegate extends APIMockDelegate {
     get supportsApplications() {
@@ -132,6 +133,7 @@ class NoInstalledAppsDelegate extends APIMockDelegate {
 function removeTests() {
     describe('default parameters', function() {
         it('should remove an existing app', function() {
+            const outputStream = new JSONOutputStream();
             const apiMockDelegate = new ExistingSingleAppDelegate();
             apiMock.mockDelegate = apiMockDelegate;
 
@@ -139,7 +141,7 @@ function removeTests() {
                 host: 'http://localhost:9090',
                 login: 'admin',
                 password: 'admin'
-            });
+            }, outputStream);
 
             assert.includeMembers(apiMockDelegate.deletedFiles, [
                 'cloudflow://PP_FILE_STORE/DownloadApp/images/mac.png',
@@ -156,6 +158,7 @@ function removeTests() {
         });
 
         it('should give an error when the app does not exist', function() {
+            const outputStream = new JSONOutputStream();
             const apiMockDelegate = new NoInstalledAppsDelegate();
             apiMock.mockDelegate = apiMockDelegate;
 
@@ -164,7 +167,7 @@ function removeTests() {
                     host: 'http://localhost:9090',
                     login: 'admin',
                     password: 'admin'
-                });
+                }, outputStream);
             }, 'application DownloadApp is not installed', 'should show an appropriate error message');
         });
 
