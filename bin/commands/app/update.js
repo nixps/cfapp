@@ -60,13 +60,13 @@ module.exports = {
             }
         }).catch(function(error) {
             if (argv.json === true) {
-                console.log({
+                console.log(JSON.stringify({
                     lines: outputStream.outputLines,
                     error: {
                         message: error.toString(),
                         code: error.errorCode
                     }
-                });
+                }));
             }
             else {
                 console.log(error.stack);

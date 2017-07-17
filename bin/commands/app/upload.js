@@ -55,17 +55,19 @@ module.exports = {
         // parse and stringify to get rid of 'undefined' values
         apps.upload(directory, JSON.parse(JSON.stringify(options)), outputStream).then(function() {
             if (argv.json === true) {
-                console.log(outputStream.lines);
+                console.log(JSON.stringify({
+                    lines: outputStream.lines
+                }));
             }
         }).catch(function(error) {
             if (argv.json === true) {
-                console.log({
+                console.log(JSON.stringify({
                     lines: outputStream.outputLines,
                     error: {
                         message: error.toString(),
                         code: error.errorCode
                     }
-                });
+                }));
             }
             else {
                 console.log(error.stack);

@@ -55,7 +55,7 @@ module.exports = {
             const appList = apps.list(serverURL, JSON.parse(JSON.stringify(options)));
 
             if (options.json === true) {
-                console.log(appList);
+                console.log(JSON.stringify(appList));
                 return;
             }
 
