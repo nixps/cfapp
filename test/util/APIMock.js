@@ -28,6 +28,7 @@ class APIMock {
 
             auth: {
                 create_session: function(login, password) {
+                    mockDelegate.sessionCreated(login, password);
                     return {
                         session: `session_${login}_${password}`
                     };

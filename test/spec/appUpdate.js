@@ -127,9 +127,8 @@ class ExistingSingleAppDelegate extends APIMockDelegate {
     }
 }
 
-function getFileUploadMock(uploadedFiles, expected) {
-    const uploadFileURLRegex = /portal.cgi\?asset=upload_file&session=session_admin_admin&url=(.*)&create_folders=true/;
-
+function getFileUploadMock(uploadedFiles, expected, session = 'session_admin_admin') {
+    const uploadFileURLRegex = new RegExp(`portal.cgi\\?asset=upload_file&session=${session}&url=(.*)&create_folders=true`);
     nock('http://localhost:9090')
         .post(uploadFileURLRegex, function(/*body*/) {
             return true;
@@ -447,6 +446,24 @@ function updateTests() {
             });
         });
 
+        it('should use the password from the cfapp file', function() {
+            const outputStream = new JSONOutputStream();
+            const apiMockDelegate = new ExistingSingleAppDelegate();
+            apiMock.mockDelegate = apiMockDelegate;
+
+            const uploadedFiles = [];
+            getFileUploadMock(uploadedFiles, 4, 'session_admin_admin_dfe');
+
+            return cfapp.apps.update(`${__dirname}/resources/DemoAppPass`, {
+                force: true
+            }, outputStream).then(function() {
+                const createdSessions = apiMockDelegate.createdSessions;
+                for(let session of createdSessions) {
+                    assert.equal(session.login, 'admin', 'cfapp logged in with wrong login');
+                    assert.equal(session.password, 'admin_dfe', 'cfapp logged in with wrong password');
+                }
+            });
+        });
     });
 }
 

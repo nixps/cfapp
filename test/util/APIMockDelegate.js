@@ -20,6 +20,7 @@ class APIMockDelegate {
         this.downloadedWhitepapers = [];
         this.deletedFiles = [];
         this._host = 'http://localhost:9090';
+        this.createdSessions = [];
 
         this.createdApplications = [];
         this.deletedApplications = [];
@@ -91,6 +92,13 @@ class APIMockDelegate {
         }
 
         this.deletedApplications.push(appID);
+    }
+
+    sessionCreated(login, password) {
+        this.createdSessions.push({
+            login: login,
+            password: password
+        });
     }
 }
 
