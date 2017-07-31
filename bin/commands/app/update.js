@@ -56,7 +56,9 @@ module.exports = {
         // parse and stringify to get rid of 'undefined' values
         apps.update(directory, JSON.parse(JSON.stringify(options)), outputStream).then(function() {
             if (argv.json === true) {
-                console.log(outputStream.lines);
+                console.log(JSON.stringify({
+                    lines: outputStream.outputLines
+                }));
             }
         }).catch(function(error) {
             if (argv.json === true) {

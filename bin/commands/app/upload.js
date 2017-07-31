@@ -56,7 +56,7 @@ module.exports = {
         apps.upload(directory, JSON.parse(JSON.stringify(options)), outputStream).then(function() {
             if (argv.json === true) {
                 console.log(JSON.stringify({
-                    lines: outputStream.lines
+                    lines: outputStream.outputLines
                 }));
             }
         }).catch(function(error) {
