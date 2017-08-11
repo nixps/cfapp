@@ -35,8 +35,10 @@ module.exports = {
             password: argv.password
         };
 
+        const serverURL = argv.host || 'http://localhost:9090';
+
         // Check if we can list applications
-        const api = cloudflowAPI.getSyncAPI(options.host);
+        const api = cloudflowAPI.getSyncAPI(serverURL);
         var session = api.auth.create_session(options.login, options.password).session;
         api.m_session = session;
 
