@@ -31,14 +31,20 @@ Basic usage:
     # prints the help text
     cfapp
 
+    # creates a default project.cfapp file in the current directory
+    cfapp app init
+
     # installs a remote application
-    cfapp --install /path/to/the/application/
+    cfapp app upload /path/to/the/application/
+
+    # shows the help of the 'app upload' command
+    cfapp app upload --help
 
     # downloads a remote application
-    cfapp --download /path/to/the/download/location/
+    cfapp app download /path/to/the/download/location/
 
 By default cfapp will not overwrite files or workflows in the remote Cloudflow
 or on the local filesystem.  You can override this behavior with the --overwrite option:
 
     # overwrite existing files and workflows on the remote Cloudflow
-    cfapp --install /path/to/the/application/ --overwrite
+    cfapp app upload /path/to/the/application/ --overwrite

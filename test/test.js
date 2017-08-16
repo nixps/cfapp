@@ -28,5 +28,6 @@ describe('cfapp tests', function() {
         describe('list', require('./spec/appList'));
         describe('remove', require('./spec/appRemove'));
         describe('update', require('./spec/appUpdate'));
+        describe('init', require('./spec/appInit'));
     });
 });
