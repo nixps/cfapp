@@ -29,5 +29,6 @@ describe('cfapp tests', function() {
         describe('remove', require('./spec/appRemove'));
         describe('update', require('./spec/appUpdate'));
         describe('init', require('./spec/appInit'));
+        describe('project.cfapp validation', require('./spec/projectValidation'));
     });
 });
