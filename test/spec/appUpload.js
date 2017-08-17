@@ -297,6 +297,18 @@ function uploadTests() {
             });
         });
 
+        it('should show an appropriate error code when there is a syntax error in the project.cfapp', function() {
+            const outputStream = new JSONOutputStream();
+
+            assert.throws(function() {
+                return cfapp.apps.upload(__dirname + '/resources/DemoAppSyntaxError/', {}, outputStream).then(function() {
+                    assert.isNotOk(true, 'this function should have failed');
+                }).catch(function() {
+                    assert.isNotOk(true, 'this handler should not be called');
+                });
+            }, /Syntax error in project.cfapp/);
+        });
+
     });
 }
 

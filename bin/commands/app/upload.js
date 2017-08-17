@@ -13,6 +13,22 @@ const { apps } = require('../../../lib/cfapp');
 const ConsoleOutputStream = require('../../../lib/util/ConsoleOutputStream');
 const JSONOutputStream = require('../../../lib/util/JSONOutputStream');
 
+function catchError(error, outputStream, jsonFormat) {
+    if (jsonFormat === true) {
+        console.log(JSON.stringify({
+            lines: outputStream.outputLines,
+            error: {
+                message: error.toString(),
+                code: error.errorCode
+            }
+        }));
+    }
+    else {
+        console.log(error.stack);
+    }
+}
+
+
 module.exports = {
     command: 'upload [directory]',
     desc: 'Uploads an app to a Cloudflow installation',
@@ -53,25 +69,19 @@ module.exports = {
         }
 
         // parse and stringify to get rid of 'undefined' values
-        apps.upload(directory, JSON.parse(JSON.stringify(options)), outputStream).then(function() {
-            if (argv.json === true) {
-                console.log(JSON.stringify({
-                    lines: outputStream.outputLines
-                }));
-            }
-        }).catch(function(error) {
-            if (argv.json === true) {
-                console.log(JSON.stringify({
-                    lines: outputStream.outputLines,
-                    error: {
-                        message: error.toString(),
-                        code: error.errorCode
-                    }
-                }));
-            }
-            else {
-                console.log(error.stack);
-            }
-        });
+        try {
+            apps.upload(directory, JSON.parse(JSON.stringify(options)), outputStream).then(function() {
+                if (argv.json === true) {
+                    console.log(JSON.stringify({
+                        lines: outputStream.outputLines
+                    }));
+                }
+            }).catch(function(error) {
+                catchError(error, outputStream, argv.json);
+            });
+        }
+        catch(error) {
+            catchError(error, outputStream, argv.json);
+        }
     }
 };
