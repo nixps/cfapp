@@ -296,7 +296,9 @@ function uploadTests() {
                 assert.equal(apiMock.mockDelegate.createdApplications.length, 0, 'no application should be registered');
             });
         });
+    });
 
+    describe('project.cfapp syntax and validation errors', function() {
         it('should show an appropriate error code when there is a syntax error in the project.cfapp', function() {
             const outputStream = new JSONOutputStream();
 
@@ -309,7 +311,19 @@ function uploadTests() {
             }, /Syntax error in project.cfapp/);
         });
 
+        it('should show an appropriate error code when the project.cfapp does not validate', function() {
+            const outputStream = new JSONOutputStream();
+
+            assert.throws(function() {
+                return cfapp.apps.upload(__dirname + '/resources/DemoAppValidationError/', {}, outputStream).then(function() {
+                    assert.isNotOk(true, 'this function should have failed');
+                }).catch(function() {
+                    assert.isNotOk(true, 'this handler should not be called');
+                });
+            }, /Invalid project.cfapp/);
+        });
     });
+
 }
 
 module.exports = uploadTests;
