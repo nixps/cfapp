@@ -320,7 +320,7 @@ function uploadTests() {
                 }).catch(function() {
                     assert.isNotOk(true, 'this handler should not be called');
                 });
-            }, /Invalid project.cfapp/);
+            }, /^Invalid project.cfapp/);
         });
     });
 
