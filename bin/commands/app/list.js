@@ -20,6 +20,7 @@ module.exports = {
         yargs.example('$0 app list --login admin --password admin', 'lists all of installed Cloudflow Applications on http://localhost:9090')
             .example('$0 app list --host http://my.server.com:9090 --login admin --password admin', 'lists all installed Cloudflow Applications on http://my.server.com:9090')
             .option('login', {
+                alias: 'user',
                 describe: 'overrides the login of the project.cfapp file'
             })
             .option('password', {

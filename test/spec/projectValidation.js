@@ -10,7 +10,7 @@
 'use strict';
 
 const { assert } = require('chai');
-const validate = require('../../lib/apps/validateProjectCFApp')
+const validate = require('../../lib/apps/validateProjectCFApp');
 
 const project = {
     'name': 'hello',

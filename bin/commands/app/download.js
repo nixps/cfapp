@@ -26,6 +26,7 @@ module.exports = {
                 describe: 'overrides the host address of the project.cfapp file'
             })
             .option('login', {
+                alias: 'user',
                 describe: 'overrides the login of the project.cfapp file'
             })
             .option('password', {
