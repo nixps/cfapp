@@ -20,6 +20,10 @@ class APIMock {
         this.mockDelegate = new APIMockDelegate();
     }
 
+    getAsyncAPI() {
+        return this.getSyncAPI();
+    }
+
     getSyncAPI() {
         let mockDelegate = this.mockDelegate;
 
@@ -27,80 +31,124 @@ class APIMock {
             m_address: 'http://localhost:9090/portal.cgi',
 
             auth: {
-                create_session: function(login, password) {
+                create_session: function(login, password, cb) {
                     mockDelegate.sessionCreated(login, password);
-                    return {
+                    const result = {
                         session: `session_${login}_${password}`
                     };
+
+                    if (cb) {
+                        cb(result);
+                    }
+                    return result;
                 }
             },
 
             file: {
-                delete_file: function(file) {
+                delete_file: function(file, cb) {
+                    if (cb) {
+                        cb();
+                    }
                     mockDelegate.fileDeleted(file);
                 }
             },
 
             whitepaper: {
-                list: function(query) {
-                    return {
+                list: function(query, not_used, cb) {
+                    const result = {
                         results: mockDelegate.existingWhitepapers(query)
                     };
+                    if (cb) {
+                        cb(result);
+                    }
+                    return result;
                 },
 
-                upload: function(whitepaper) {
+                upload: function(whitepaper, cb) {
                     mockDelegate.whitepaperUploaded(whitepaper);
+                    if (cb) {
+                        cb();
+                    }
                 },
 
-                delete: function(whitepaper) {
+                delete: function(whitepaper, cb) {
                     mockDelegate.whitepaperDeleted(whitepaper);
+                    if (cb) {
+                        cb();
+                    }
                 },
 
-                download: function(whitepaper) {
+                download: function(whitepaper, cb) {
                     mockDelegate.whitepaperDownloaded(whitepaper);
-                    return {
+                    const result = {
                         contents: 'contents'
                     };
+                    if (cb) {
+                        cb(result);
+                    }
+                    return result;
                 }
             },
 
             asset: {
-                list: function(query) {
-                    return {
+                list: function(query, not_used, cb) {
+                    const result = {
                         results: mockDelegate.existingAssets(query)
                     };
+                    if (cb) {
+                        cb(result);
+                    }
+                    return result;
                 }
             },
 
             folder: {
-                list: function(query) {
-                    return {
+                list: function(query, cb) {
+                    const result = {
                         results: mockDelegate.existingFolders(query)
                     };
+                    if (cb) {
+                        cb(result);
+                    }
+                    return result;
                 }
             },
 
             registry: {
                 cfapp: {
-                    list: function(query) {
-                        return {
+                    list: function(query, cb) {
+                        const result = {
                             results: mockDelegate.applicationList(query)
                         };
+                        if (cb) {
+                            cb(result);
+                        }
+                        return result;
                     },
-                    create: function(app) {
+                    create: function(app, cb) {
                         mockDelegate.applicationCreated(app);
+                        if (cb) {
+                            cb();
+                        }
                     },
-                    delete: function(appid) {
+                    delete: function(appid, cb) {
                         mockDelegate.applicationDeleted(appid);
+                        if (cb) {
+                            cb();
+                        }
                     }
                 }
             },
 
             portal: {
-                version: function() {
-                    return {
+                version: function(cb) {
+                    const result = {
                         build: 'cloudflow_version'
                     };
+                    if (cb) {
+                        cb(result);
+                    }
+                    return result;
                 }
             }
         };

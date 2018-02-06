@@ -137,24 +137,24 @@ function removeTests() {
             const apiMockDelegate = new ExistingSingleAppDelegate();
             apiMock.mockDelegate = apiMockDelegate;
 
-            cfapp.apps.remove('DownloadApp', {
+            return cfapp.apps.remove('DownloadApp', {
                 host: 'http://localhost:9090',
                 login: 'admin',
                 password: 'admin'
-            }, outputStream);
-
-            assert.includeMembers(apiMockDelegate.deletedFiles, [
-                'cloudflow://PP_FILE_STORE/DownloadApp/images/mac.png',
-                'cloudflow://PP_FILE_STORE/DownloadApp/images/win.png',
-                'cloudflow://PP_FILE_STORE/DownloadApp/index.html'
-            ], 'not all the installed files were removed');
-            assert.includeMembers(apiMockDelegate.deletedWhitepapers, [
-                'Workflow1',
-                'Workflow2'
-            ], 'not all the installed workflows were removed');
-            assert.includeMembers(apiMockDelegate.deletedApplications, [
-                'DownloadAppID'
-            ], 'the app was not removed from the application registry');
+            }, outputStream).then(function() {
+                assert.includeMembers(apiMockDelegate.deletedFiles, [
+                    'cloudflow://PP_FILE_STORE/DownloadApp/images/mac.png',
+                    'cloudflow://PP_FILE_STORE/DownloadApp/images/win.png',
+                    'cloudflow://PP_FILE_STORE/DownloadApp/index.html'
+                ], 'not all the installed files were removed');
+                assert.includeMembers(apiMockDelegate.deletedWhitepapers, [
+                    'Workflow1',
+                    'Workflow2'
+                ], 'not all the installed workflows were removed');
+                assert.includeMembers(apiMockDelegate.deletedApplications, [
+                    'DownloadAppID'
+                ], 'the app was not removed from the application registry');
+            });
         });
 
         it('should give an error when the app does not exist', function() {
