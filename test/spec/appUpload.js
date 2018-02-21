@@ -324,6 +324,61 @@ function uploadTests() {
         });
     });
 
+
+    describe('Missing file/workflow error', function() {
+        it('should show an appropriate error code when a file is missing in a cfapp', function() {
+            const outputStream = new JSONOutputStream();
+            class MissingFileDelegate extends APIMockDelegate {
+                applicationList() {
+                    return [];
+                }
+            }
+
+            apiMock.mockDelegate = new MissingFileDelegate();
+
+            const uploadedFiles = [];
+            getFileUploadMock(uploadedFiles, 0);
+
+            return cfapp.apps.upload(__dirname + '/resources/DemoAppMissingFileError/', {}, outputStream).then(function() {
+                assert.isNotOk(true, 'this function should have failed');
+            }).catch(function(error) {
+                assert.match(error, /^Error: Cannot find file/, 'an error should be returned');
+                assert.equal(error.errorCode, 'CFAPPERR012', 'the right error code should be returned');
+
+                const uploadedWhitepapers = apiMock.mockDelegate.uploadedWhitepapers;
+                assert.equal(uploadedFiles.length, 0, 'no files should be uploaded');
+                assert.equal(uploadedWhitepapers.length, 0, 'no whitepapers should be uploaded');
+                assert.equal(apiMock.mockDelegate.createdApplications.length, 0, 'no application should be registered');
+            });
+        });
+
+        it('should show an appropriate error code when a workflow is missing in a cfapp', function() {
+            const outputStream = new JSONOutputStream();
+            class MissingWorkflowDelegate extends APIMockDelegate {
+                applicationList() {
+                    return [];
+                }
+            }
+
+            apiMock.mockDelegate = new MissingWorkflowDelegate();
+
+            const uploadedFiles = [];
+            getFileUploadMock(uploadedFiles, 0);
+
+            return cfapp.apps.upload(__dirname + '/resources/DemoAppMissingWorkflowError/', {}, outputStream).then(function() {
+                assert.isNotOk(true, 'this function should have failed');
+            }).catch(function(error) {
+                assert.match(error, /^Error: Cannot find workflow/, 'an error should be returned');
+                assert.equal(error.errorCode, 'CFAPPERR013', 'the right error code should be returned');
+
+                const uploadedWhitepapers = apiMock.mockDelegate.uploadedWhitepapers;
+                assert.equal(uploadedFiles.length, 0, 'no files should be uploaded');
+                assert.equal(uploadedWhitepapers.length, 0, 'no whitepapers should be uploaded');
+                assert.equal(apiMock.mockDelegate.createdApplications.length, 0, 'no application should be registered');
+            });
+        });
+    });
+
 }
 
 module.exports = uploadTests;
