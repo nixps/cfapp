@@ -21,6 +21,26 @@ class ExistingSingleAppDelegate extends APIMockDelegate {
         return true;
     }
 
+    doesExist(url) {
+        if (url === 'cloudflow://PP_FILE_STORE/DownloadApp/index.html') {
+            return {
+                exists: true,
+                is_folder: false,
+                url: url,
+                valid: true
+            };
+        } else if (url === 'cloudflow://PP_FILE_STORE/DownloadApp/images/') {
+            return {
+                exists: true,
+                is_folder: true,
+                url: url,
+                valid: true
+            };
+        }
+
+        return super.doesExist(url);
+    }
+
     existingAssets(query) {
         if (query[2] === 'cloudflow://PP_FILE_STORE/DownloadApp/images/win.png') {
             return [{
@@ -143,10 +163,11 @@ function removeTests() {
                 password: 'admin'
             }, outputStream).then(function() {
                 assert.includeMembers(apiMockDelegate.deletedFiles, [
-                    'cloudflow://PP_FILE_STORE/DownloadApp/images/mac.png',
-                    'cloudflow://PP_FILE_STORE/DownloadApp/images/win.png',
                     'cloudflow://PP_FILE_STORE/DownloadApp/index.html'
                 ], 'not all the installed files were removed');
+                assert.includeMembers(apiMockDelegate.deletedFolders, [
+                    'cloudflow://PP_FILE_STORE/DownloadApp/images/'
+                ], 'not all the installed folders were removed');
                 assert.includeMembers(apiMockDelegate.deletedWhitepapers, [
                     'Workflow1',
                     'Workflow2'

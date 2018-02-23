@@ -19,6 +19,7 @@ class APIMockDelegate {
         this.deletedWhitepapers = [];
         this.downloadedWhitepapers = [];
         this.deletedFiles = [];
+        this.deletedFolders = [];
         this._host = 'http://localhost:9090';
         this.createdSessions = [];
 
@@ -54,6 +55,15 @@ class APIMockDelegate {
         return [];
     }
 
+    doesExist(url) {
+        return {
+            exists: false,
+            is_folder: false,
+            url: url,
+            valid: true
+        };
+    }
+
     existingAssets(/*query*/) {
         return [];
     }
@@ -64,6 +74,10 @@ class APIMockDelegate {
 
     fileDeleted(file) {
         this.deletedFiles.push(file);
+    }
+
+    folderDeleted(url) {
+        this.deletedFolders.push(url);
     }
 
     whitepaperDownloaded(whitepaper) {

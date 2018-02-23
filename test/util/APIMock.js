@@ -50,6 +50,20 @@ class APIMock {
                         cb();
                     }
                     mockDelegate.fileDeleted(file);
+                },
+
+                does_exist: function(url, cb) {
+                    if (cb) {
+                        cb(mockDelegate.doesExist(url));
+                    }
+                    return mockDelegate.doesExist(url);
+                },
+
+                delete_folder: function(url, contentsOnly, cb) {
+                    if (cb) {
+                        cb();
+                    }
+                    mockDelegate.folderDeleted(url);
                 }
             },
 

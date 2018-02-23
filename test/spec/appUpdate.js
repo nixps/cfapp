@@ -84,6 +84,29 @@ class ExistingSingleAppDelegate extends APIMockDelegate {
         this.mockData.assets = this.mockData.assets.filter((e) => e.cloudflow.file !== file);
     }
 
+    folderDeleted(url) {
+        super.folderDeleted(url);
+        this.mockData.assets = this.mockData.assets.filter((e) => e.cloudflow.file.indexOf(url) === -1);
+    }
+
+    doesExist(url) {
+        let isFolder = false;
+        if (url === 'cloudflow://PP_FILE_STORE/DemoApp/images/') {
+            isFolder = true;
+        }
+        const asset = this.mockData.assets.filter((e) => e.cloudflow.file.indexOf(url) >= 0);
+        if (asset !== null) {
+            return {
+                exists: true,
+                is_folder: isFolder,
+                url: url,
+                valid: true
+            };
+        }
+
+        super.doesExist(url);
+    }
+
     existingAssets(query) {
         if (Array.isArray(query) && query.length >= 3) {
             return this.mockData.assets.filter((e) => e.cloudflow.file.match(new RegExp(query[2])));
@@ -297,13 +320,13 @@ function updateTests() {
                     'Workflow1',
                     'Workflow2'
                 ], 'not all whitepapers were deleted');
-                assert.equal(apiMockDelegate.deletedFiles.length, 4, 'not all files were deleted');
+                assert.equal(apiMockDelegate.deletedFiles.length, 1, 'not all files were deleted');
                 assert.includeMembers(apiMockDelegate.deletedFiles, [
-                    'cloudflow://PP_FILE_STORE/DemoApp/images/mac.png',
-                    'cloudflow://PP_FILE_STORE/DemoApp/images/win.png',
-                    'cloudflow://PP_FILE_STORE/DemoApp/images/linux.png',
                     'cloudflow://PP_FILE_STORE/DemoApp/index.html'
                 ], 'not all files were deleted');
+                assert.includeMembers(apiMockDelegate.deletedFolders, [
+                    'cloudflow://PP_FILE_STORE/DemoApp/images/'
+                ], 'not all folders were deleted');
                 assert.equal(apiMockDelegate.uploadedWhitepapers.length, 1, 'not all whitepapers were uploaded');
                 assert.equal(apiMockDelegate.uploadedWhitepapers[0].name, 'ProcessOrder', 'not all whitepapers were uploaded');
                 assert.equal(uploadedFiles.length, 4, 'not all files were deleted');
@@ -338,13 +361,13 @@ function updateTests() {
                     'Workflow1',
                     'Workflow2'
                 ], 'not all whitepapers were deleted');
-                assert.equal(apiMockDelegate.deletedFiles.length, 4, 'not all files were deleted');
+                assert.equal(apiMockDelegate.deletedFiles.length, 1, 'not all files were deleted');
                 assert.includeMembers(apiMockDelegate.deletedFiles, [
-                    'cloudflow://PP_FILE_STORE/DemoApp/images/mac.png',
-                    'cloudflow://PP_FILE_STORE/DemoApp/images/win.png',
-                    'cloudflow://PP_FILE_STORE/DemoApp/images/linux.png',
                     'cloudflow://PP_FILE_STORE/DemoApp/index.html'
                 ], 'not all files were deleted');
+                assert.includeMembers(apiMockDelegate.deletedFolders, [
+                    'cloudflow://PP_FILE_STORE/DemoApp/images/',
+                ], 'not all folders were deleted');
                 assert.equal(apiMockDelegate.uploadedWhitepapers.length, 1, 'not all whitepapers were uploaded');
                 assert.equal(apiMockDelegate.uploadedWhitepapers[0].name, 'ProcessOrder', 'not all whitepapers were uploaded');
                 assert.equal(uploadedFiles.length, 4, 'not all files were deleted');
@@ -425,13 +448,13 @@ function updateTests() {
                     'Workflow1',
                     'Workflow2'
                 ], 'not all whitepapers were deleted');
-                assert.equal(apiMockDelegate.deletedFiles.length, 4, 'not all files were deleted');
+                assert.equal(apiMockDelegate.deletedFiles.length, 1, 'not all files were deleted');
                 assert.includeMembers(apiMockDelegate.deletedFiles, [
-                    'cloudflow://PP_FILE_STORE/DemoApp/images/mac.png',
-                    'cloudflow://PP_FILE_STORE/DemoApp/images/win.png',
-                    'cloudflow://PP_FILE_STORE/DemoApp/images/linux.png',
                     'cloudflow://PP_FILE_STORE/DemoApp/index.html'
                 ], 'not all files were deleted');
+                assert.includeMembers(apiMockDelegate.deletedFolders, [
+                    'cloudflow://PP_FILE_STORE/DemoApp/images/'
+                ], 'not all folders were deleted');
                 assert.equal(apiMockDelegate.uploadedWhitepapers.length, 1, 'not all whitepapers were uploaded');
                 assert.equal(apiMockDelegate.uploadedWhitepapers[0].name, 'ProcessOrder', 'not all whitepapers were uploaded');
                 assert.equal(uploadedFiles.length, 4, 'not all files were deleted');
