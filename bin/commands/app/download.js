@@ -45,7 +45,7 @@ module.exports = {
 
         // parse and stringify to get rid of 'undefined' values
         apps.download(directory, JSON.parse(JSON.stringify(options))).catch(function(error) {
-            console.log(error);
+            console.log(error.message);
         });
     }
 };

@@ -46,6 +46,26 @@ function getFileDownloadMock(downloadedFiles, expected) {
 
 function downloadTests() {
     class ExistingSingleAppDelegate extends APIMockDelegate {
+        doesExist(url) {
+            console.log(url);
+            if (url === 'cloudflow://PP_FILE_STORE/DownloadApp/images/') {
+                return {
+                    exists: true,
+                    is_folder: true,
+                    url: url
+                };
+            }
+            else if (url === 'cloudflow://PP_FILE_STORE/DownloadApp/index.html') {
+                return {
+                    exists: true,
+                    is_folder: false,
+                    url: url
+                };
+            }
+
+            return super.doesExist(url);
+        }
+
         existingAssets(query) {
             if (query[2] === 'cloudflow://PP_FILE_STORE/DownloadApp/images/win.png') {
                 return [{
@@ -244,6 +264,46 @@ function downloadTests() {
         });
     });
 
+    it('should throw an error when a file that needs to be downloaded does not exist', function() {
+        class RemoteFilesDoNotExistAppDelegate extends APIMockDelegate {
+            existingAssets() {
+                return [];
+            }
+
+            existingWhitepapers() {
+                return [ {
+                    _id: 'Workflow1',
+                    name: 'Workflow1'
+                }, {
+                    _id: 'Workflow2',
+                    name: 'Workflow2'
+                }];
+            }
+
+            existingFolders() {
+                return [];
+            }
+        }
+
+        const outputStream = new JSONOutputStream();
+        apiMock.mockDelegate = new RemoteFilesDoNotExistAppDelegate();
+
+        const downloadedFiles = [];
+        getFileDownloadMock(downloadedFiles, 0);
+
+        if (fs.existsSync(__dirname + '/downloadTest') === true) {
+            remove.removeSync(__dirname + '/downloadTest');
+        }
+        mkdirp.sync(__dirname + '/downloadTest/DownloadApp');
+        fs.writeFileSync(__dirname + '/downloadTest/DownloadApp/project.cfapp', JSON.stringify(projectCFApp));
+
+        return cfapp.apps.download(__dirname + '/downloadTest/DownloadApp', {}, outputStream).then(function() {
+            assert.notOk('the promise should not resolve if a folder is missing on the remote Cloudflow');
+        }).catch(function(error) {
+            assert.equal(error.errorCode, 'CFAPPERR014');
+            assert.equal(error.message, 'Specified file does not exist "cloudflow://PP_FILE_STORE/DownloadApp/images/" on the remote Cloudflow');
+        });
+    });
 }
 
 module.exports = downloadTests;
