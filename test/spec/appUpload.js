@@ -47,6 +47,33 @@ class ExistingFilesDelegate extends APIMockDelegate {
 
         return [];
     }
+
+    doesExist(url) {
+        if (url === 'cloudflow://PP_FILE_STORE/DemoApp/images/') {
+            return {
+                exists: true,
+                is_folder: true,
+                url: url,
+                is_valid: true
+            };
+        } else if (url === 'cloudflow://PP_FILE_STORE/DemoApp/images/mac.png') {
+            return {
+                exists: true,
+                is_folder: false,
+                url: url,
+                is_valid: true
+            };
+        } else if (url === 'cloudflow://PP_FILE_STORE/DemoApp/images/win.png') {
+            return {
+                exists: true,
+                is_folder: false,
+                url: url,
+                is_valid: true
+            };
+        }
+
+        return super.doesExist(url);
+    }
 }
 
 function getFileUploadMock(uploadedFiles, expected) {

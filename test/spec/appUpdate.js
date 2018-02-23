@@ -94,8 +94,10 @@ class ExistingSingleAppDelegate extends APIMockDelegate {
         if (url === 'cloudflow://PP_FILE_STORE/DemoApp/images/') {
             isFolder = true;
         }
-        const asset = this.mockData.assets.filter((e) => e.cloudflow.file.indexOf(url) >= 0);
-        if (asset !== null) {
+        const asset = this.mockData.assets.find((e) => {
+            return e.cloudflow.file.indexOf(url) >= 0;
+        });
+        if (asset !== undefined) {
             return {
                 exists: true,
                 is_folder: isFolder,
@@ -104,7 +106,12 @@ class ExistingSingleAppDelegate extends APIMockDelegate {
             };
         }
 
-        super.doesExist(url);
+        return {
+            exists: false,
+            is_folder: isFolder,
+            url: url,
+            valid: true
+        };
     }
 
     existingAssets(query) {
