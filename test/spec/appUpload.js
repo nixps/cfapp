@@ -17,7 +17,6 @@ const apiMock = require('cloudflow-api');
 const cfapp = require('../../lib/cfapp');
 const JSONOutputStream = require('../../lib/util/JSONOutputStream');
 
-
 class ExistingWhitepapersDelegate extends APIMockDelegate {
     existingWhitepapers() {
         return [ {
@@ -403,6 +402,27 @@ function uploadTests() {
                 assert.equal(uploadedWhitepapers.length, 0, 'no whitepapers should be uploaded');
                 assert.equal(apiMock.mockDelegate.createdApplications.length, 0, 'no application should be registered');
             });
+        });
+
+        it('should show an appropriate error code when no project.cfapp file is found', function() {
+            const outputStream = new JSONOutputStream();
+            apiMock.mockDelegate = new APIMockDelegate();
+
+            const uploadedFiles = [];
+            getFileUploadMock(uploadedFiles, 0);
+
+            assert.throws(function() {
+                cfapp.apps.upload(__dirname + '/resources/MissingProjectApp/', {}, outputStream).then(function() {
+                    assert.isNotOk(true, 'this function should have failed earlier (then)');
+                }).catch(function() {
+                    assert.isNotOk(true, 'this function should have failed earlier (catch)');
+                });
+            }, /^Missing 'project\.cfapp' file/, 'an error should be returned');
+
+            const uploadedWhitepapers = apiMock.mockDelegate.uploadedWhitepapers;
+            assert.equal(uploadedFiles.length, 0, 'no files should be uploaded');
+            assert.equal(uploadedWhitepapers.length, 0, 'no whitepapers should be uploaded');
+            assert.equal(apiMock.mockDelegate.createdApplications.length, 0, 'no application should be registered');
         });
     });
 

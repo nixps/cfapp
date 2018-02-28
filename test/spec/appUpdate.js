@@ -494,6 +494,26 @@ function updateTests() {
                 }
             });
         });
+
+        it('should show an appropriate error code when no project.cfapp file is found', function() {
+            const outputStream = new JSONOutputStream();
+            const apiMockDelegate = new ExistingSingleAppDelegate();
+            apiMock.mockDelegate = apiMockDelegate;
+
+            const uploadedFiles = [];
+            getFileUploadMock(uploadedFiles, 0, 'session_admin_admin_dfe');
+
+            assert.throws(function() {
+                cfapp.apps.update(__dirname + '/resources/MissingProjectApp/', {}, outputStream).then(function() {
+                    assert.isNotOk(true, 'this function should have failed earlier (then)');
+                }).catch(function() {
+                    assert.isNotOk(true, 'this function should have failed earlier (catch)');
+                });
+            }, /^Missing 'project\.cfapp' file/, 'an error should be returned');
+
+            assert.equal(uploadedFiles.length, 0, 'no files should be uploaded');
+        });
+
     });
 }
 

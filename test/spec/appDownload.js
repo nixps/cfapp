@@ -47,7 +47,6 @@ function getFileDownloadMock(downloadedFiles, expected) {
 function downloadTests() {
     class ExistingSingleAppDelegate extends APIMockDelegate {
         doesExist(url) {
-            console.log(url);
             if (url === 'cloudflow://PP_FILE_STORE/DownloadApp/images/') {
                 return {
                     exists: true,
@@ -304,6 +303,30 @@ function downloadTests() {
             assert.equal(error.message, 'Specified file does not exist "cloudflow://PP_FILE_STORE/DownloadApp/images/" on the remote Cloudflow');
         });
     });
+
+    it('should show an appropriate error code when no project.cfapp file is found', function() {
+        const outputStream = new JSONOutputStream();
+        apiMock.mockDelegate = new ExistingSingleAppDelegate();
+
+        const downloadedFiles = [];
+        getFileDownloadMock(downloadedFiles, 0);
+
+        if (fs.existsSync(__dirname + '/downloadTest') === true) {
+            remove.removeSync(__dirname + '/downloadTest');
+        }
+        mkdirp.sync(__dirname + '/downloadTest/DownloadApp');
+
+        assert.throws(function() {
+            cfapp.apps.download(__dirname + '/downloadTest/DownloadApp/', {}, outputStream).then(function() {
+                assert.isNotOk(true, 'this function should have failed earlier (then)');
+            }).catch(function() {
+                assert.isNotOk(true, 'this function should have failed earlier (catch)');
+            });
+        }, /^Missing 'project\.cfapp' file/, 'an error should be returned');
+
+        assert.equal(downloadedFiles.length, 0, 'no files should be uploaded');
+    });
+
 }
 
 module.exports = downloadTests;
