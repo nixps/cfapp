@@ -27,21 +27,29 @@ module.exports = {
             })
             .option('password', {
                 describe: 'overrides the passowrd of the project.cfapp file'
+            })
+            .option('session', {
+                describe: 'the session key that is used for the cloudflow api calls, when passed it overrides login and password'
             });
     },
     handler: function(argv) {
         const options = {
             host: argv.host,
             login: argv.login,
-            password: argv.password
+            password: argv.password,
+            session: argv.session
         };
 
         const serverURL = argv.host || 'http://localhost:9090';
 
         // Check if we can list applications
         const api = cloudflowAPI.getSyncAPI(serverURL);
-        var session = api.auth.create_session(options.login, options.password).session;
-        api.m_session = session;
+        if (typeof options.session === 'string' && options.session.length > 0) {
+            api.m_session = options.session;
+        } else {
+            var session = api.auth.create_session(options.login, options.password).session;
+            api.m_session = session;
+        }
 
         if (apps.canRegisterApps(api) === false) {
             console.log(`no support for application removal this Cloudflow build b${api.portal.version().build}`);

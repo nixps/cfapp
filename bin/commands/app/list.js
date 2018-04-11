@@ -26,6 +26,9 @@ module.exports = {
             .option('password', {
                 describe: 'overrides the password of the project.cfapp file'
             })
+            .option('session', {
+                describe: 'the session key that is used for the cloudflow api calls, when passed it overrides login and password'
+            })
             .option('json', {
                 describe: 'returns a json representation of the list of cfapps',
                 default: false
@@ -36,6 +39,7 @@ module.exports = {
             host: argv.host,
             login: argv.login,
             password: argv.password,
+            session: argv.session,
             json: argv.json
         };
 
@@ -43,8 +47,12 @@ module.exports = {
 
         // Check if we can list applications
         const api = cloudflowAPI.getSyncAPI(serverURL);
-        var session = api.auth.create_session(options.login, options.password).session;
-        api.m_session = session;
+        if (typeof options.session === 'string' && options.session.length > 0) {
+            api.m_session = options.session;
+        } else {
+            var session = api.auth.create_session(options.login, options.password).session;
+            api.m_session = session;
+        }
 
         if (apps.canRegisterApps(api) === false) {
             console.log(`no support for application listing this Cloudflow build b${api.portal.version().build}`);

@@ -31,6 +31,9 @@ module.exports = {
             })
             .option('password', {
                 describe: 'overrides the passowrd of the project.cfapp file'
+            })
+            .option('session', {
+                describe: 'the session key that is used for the cloudflow api calls, when passed it overrides login and password'
             });
     },
     handler: function(argv) {
@@ -38,7 +41,8 @@ module.exports = {
             overwrite: argv.overwrite,
             host: argv.host,
             login: argv.login,
-            password: argv.password
+            password: argv.password,
+            session: argv.session
         };
 
         const directory = argv.directory || '.';
