@@ -118,6 +118,26 @@ function downloadTests() {
         }
     }
 
+
+    class AssetDoesExistThrowsErrorAppDelegate extends APIMockDelegate {
+        doesExist() {
+            throw new Error('Parameter Error');
+        }
+
+        existingAssets() {
+            return [ ];
+        }
+
+        existingWhitepapers() {
+            return [ ];
+        }
+
+        existingFolders() {
+            return [ ];
+        }
+    }
+
+
     const projectCFApp = {
         name: 'DownloadApp',
         host: 'http://localhost:9090',
@@ -135,6 +155,7 @@ function downloadTests() {
             'Workflow2'
         ]
     };
+
 
     after(function() {
         if (fs.existsSync(__dirname + '/downloadTest')) {
@@ -325,6 +346,41 @@ function downloadTests() {
         }, /^Missing 'project\.cfapp' file/, 'an error should be returned');
 
         assert.equal(downloadedFiles.length, 0, 'no files should be uploaded');
+    });
+
+    it('should show an appropriate error code when does_exist fails with a "Parameter Error"', function() {
+        const projectCFApp = {
+            name: 'DownloadApp',
+            host: 'http://localhost:9090',
+            login: 'admin',
+            password: 'admin',
+            description: 'A test for downloading an application',
+
+            files: [
+                'cloudflow://PP_FILE_STORE'
+            ],
+
+            workflows: [ ]
+        };
+
+        const outputStream = new JSONOutputStream();
+        apiMock.mockDelegate = new AssetDoesExistThrowsErrorAppDelegate();
+
+        if (fs.existsSync(__dirname + '/downloadTest') === true) {
+            remove.removeSync(__dirname + '/downloadTest');
+        }
+        mkdirp.sync(__dirname + '/downloadTest/DownloadApp');
+        fs.writeFileSync(__dirname + '/downloadTest/DownloadApp/project.cfapp', JSON.stringify(projectCFApp));
+
+        const downloadedFiles = [];
+        getFileDownloadMock(downloadedFiles, 0);
+
+        return cfapp.apps.download(__dirname + '/downloadTest/DownloadApp/', {}, outputStream).then(function() {
+            assert.isNotOk(true, 'this function should have failed after then');
+        }).catch(function(error) {
+            assert.equal(error.errorCode, 'CFAPPERR016', 'wrong error code is returned');
+            assert.match(error, /^Error: api\.file\.does_exist failed for path/, 'wrong error message returned');
+        });
     });
 
 }
