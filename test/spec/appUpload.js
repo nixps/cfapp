@@ -79,13 +79,11 @@ function getFileUploadMock(uploadedFiles, expected) {
     const uploadFileURLRegex = /portal.cgi\?asset=upload_file&session=session_admin_admin&url=(.*)&create_folders=true/;
 
     nock('http://localhost:9090')
-        .post(uploadFileURLRegex, function(body) {
-            console.log(body);
+        .post(uploadFileURLRegex, function(/*body*/) {
             return true;
         })
         .times(expected)
         .reply(200, function(uri) {
-            console.log(uri);
             const matches = uri.match(uploadFileURLRegex);
             if (Array.isArray(matches) && matches.length > 1) {
                 // The Cloudflow URIs are URI encoded in the upload URL
