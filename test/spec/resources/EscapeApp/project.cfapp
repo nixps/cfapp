@@ -1,0 +1,16 @@
+{
+    "name": "EscapeApp",
+    "version": "0.0.1",
+    "host": "http://localhost:9090/",
+    "login": "admin",
+    "password": "admin",
+    "description": "A demo application",
+
+    "files": [
+        "cloudflow://PP_FILE_STORE/EscapeApp/"
+    ],
+
+    "workflows": [
+        "ProcessOrder"
+    ]
+}
