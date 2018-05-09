@@ -79,14 +79,17 @@ function getFileUploadMock(uploadedFiles, expected) {
     const uploadFileURLRegex = /portal.cgi\?asset=upload_file&session=session_admin_admin&url=(.*)&create_folders=true/;
 
     nock('http://localhost:9090')
-        .post(uploadFileURLRegex, function(/*body*/) {
+        .post(uploadFileURLRegex, function(body) {
+            console.log(body);
             return true;
         })
         .times(expected)
         .reply(200, function(uri) {
+            console.log(uri);
             const matches = uri.match(uploadFileURLRegex);
             if (Array.isArray(matches) && matches.length > 1) {
-                uploadedFiles.push(matches[1]);
+                // The Cloudflow URIs are URI encoded in the upload URL
+                uploadedFiles.push(decodeURIComponent(matches[1]));
             }
         });
 }
@@ -426,6 +429,27 @@ function uploadTests() {
         });
     });
 
+    describe('escaped characters', function () {
+        it('should upload the files with the correct encoding', function () {
+            const outputStream = new JSONOutputStream();
+            apiMock.mockDelegate = new APIMockDelegate();
+
+            const uploadedFiles = [];
+            getFileUploadMock(uploadedFiles, 1);
+
+            return cfapp.apps.upload(__dirname + '/resources/EscapeApp/', {}, outputStream).then(function() {
+                const uploadedWhitepapers = apiMock.mockDelegate.uploadedWhitepapers;
+                assert.equal(uploadedFiles.length, 1, 'all files should be uploaded');
+                assert.equal(uploadedWhitepapers.length, 1, 'all whitepapers should be uploaded');
+                assert.equal(uploadedWhitepapers[0].name, 'ProcessOrder', 'whitepaper "ProcessOrder" missing');
+                assert.includeMembers(uploadedFiles, [
+                    'cloudflow://PP_FILE_STORE/EscapeApp/mg%20eclipse%20750ml%20ex%25E3%25A9%20r%25E2%25B0v%25E2%25B0%20261012.pdf',
+                ], 'the files were not all uploaded');
+
+                assert(nock.isDone(), 'expected requests not performed');
+            });
+        });
+    });
 }
 
 module.exports = uploadTests;

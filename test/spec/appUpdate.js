@@ -167,7 +167,8 @@ function getFileUploadMock(uploadedFiles, expected, session = 'session_admin_adm
         .reply(200, function(uri) {
             const matches = uri.match(uploadFileURLRegex);
             if (Array.isArray(matches) && matches.length > 1) {
-                uploadedFiles.push(matches[1]);
+                // The Cloudflow URIs are URI encoded in the upload URL
+                uploadedFiles.push(decodeURIComponent(matches[1]));
             }
         });
 }

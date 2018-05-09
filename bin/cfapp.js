@@ -14,7 +14,7 @@
 // Else use it as a command-line app
 const yargs = require('yargs');
 const packageJSON = require('../package.json');
-const commands = ['app', 'config', 'cloudflow', 'version'];
+// const commands = ['app', 'config', 'cloudflow', 'version'];
 
 const commandLineParser = yargs
     .command('install [directory]', false, function() {
@@ -30,7 +30,7 @@ const commandLineParser = yargs
         console.log(`use app download "${yargs.directory ? yargs.directory : ''}" instead`);
     })
     .command('version', 'shows the version of the cfapp tool', function() {
-    }, function(yargs) {
+    }, function(/*yargs*/) {
         console.log(packageJSON.version);
     })
     .epilog(`Version ${packageJSON.version}`)

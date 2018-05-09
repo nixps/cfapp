@@ -34,7 +34,8 @@ function getFileDownloadMock(downloadedFiles, expected) {
         .reply(200, function(uri) {
             const matches = uri.match(downloadFileURLRegex);
             if (Array.isArray(matches) && matches.length > 1) {
-                downloadedFiles.push(matches[1]);
+                // The Cloudflow URIs are URI encoded in the upload URL
+                downloadedFiles.push(decodeURIComponent(matches[1]));
             }
 
             return streamify(['1', '2', '3', os.EOF]);
