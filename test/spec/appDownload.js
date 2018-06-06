@@ -48,7 +48,14 @@ function getFileDownloadMock(downloadedFiles, expected) {
 function downloadTests() {
     class ExistingSingleAppDelegate extends APIMockDelegate {
         doesExist(url) {
-            if (url === 'cloudflow://PP_FILE_STORE/DownloadApp/images/') {
+            if (url === 'cloudflow://PP_FILE_STORE/DownloadApp/docs/') {
+                return {
+                    exists: true,
+                    is_folder: true,
+                    url: url
+                };
+            }
+            else if (url === 'cloudflow://PP_FILE_STORE/DownloadApp/images/') {
                 return {
                     exists: true,
                     is_folder: true,
@@ -62,12 +69,70 @@ function downloadTests() {
                     url: url
                 };
             }
+            else if (url === 'cloudflow://PP_FILE_STORE/DownloadApp/icon.png') {
+                return {
+                    exists: true,
+                    is_folder: false,
+                    url: url
+                };
+            }
+            else if (url === 'cloudflow://PP_FILE_STORE/DownloadApp/docs/doc.pdf') {
+                return {
+                    exists: true,
+                    is_folder: false,
+                    url: url
+                };
+            }
+            else if (url === 'cloudflow://PP_FILE_STORE/DownloadApp/docs/readme.md') {
+                return {
+                    exists: true,
+                    is_folder: false,
+                    url: url
+                };
+            }
 
             return super.doesExist(url);
         }
 
         existingAssets(query) {
-            if (query[2] === 'cloudflow://PP_FILE_STORE/DownloadApp/images/win.png') {
+            if (query[2] === 'cloudflow://PP_FILE_STORE/DownloadApp/docs/doc.pdf') {
+                return [{
+                    _id: 'I exist doc.pdf',
+                    cloudflow: {
+                        file: 'cloudflow://PP_FILE_STORE/DownloadApp/docs/doc.pdf'
+                    }
+                }];
+            }
+            else if (query[2] === 'cloudflow://PP_FILE_STORE/DownloadApp/docs/readme.md') {
+                return [{
+                    _id: 'I exist readme.md',
+                    cloudflow: {
+                        file: 'cloudflow://PP_FILE_STORE/DownloadApp/docs/readme.md'
+                    }
+                }];
+            }
+            else if (query[2] === 'cloudflow://PP_FILE_STORE/DownloadApp/docs/') {
+                return [{
+                    _id: 'I exist readme.md',
+                    cloudflow: {
+                        file: 'cloudflow://PP_FILE_STORE/DownloadApp/docs/readme.md'
+                    }
+                }, {
+                    _id: 'I exist doc.pdf',
+                    cloudflow: {
+                        file: 'cloudflow://PP_FILE_STORE/DownloadApp/docs/doc.pdf'
+                    }
+                }];
+            }
+            else if (query[2] === 'cloudflow://PP_FILE_STORE/DownloadApp/icon.png') {
+                return [{
+                    _id: 'I exist icon.png',
+                    cloudflow: {
+                        file: 'cloudflow://PP_FILE_STORE/DownloadApp/icon.png'
+                    }
+                }];
+            }
+            else if (query[2] === 'cloudflow://PP_FILE_STORE/DownloadApp/images/win.png') {
                 return [{
                     _id: 'I exist',
                     cloudflow: {
@@ -111,7 +176,10 @@ function downloadTests() {
         }
 
         existingFolders(query) {
-            if (query[2] === 'cloudflow://PP_FILE_STORE/DownloadApp/images/') {
+            if (query[2] === 'cloudflow://PP_FILE_STORE/DownloadApp/docs/') {
+                return [ 'docs' ];
+            }
+            else if (query[2] === 'cloudflow://PP_FILE_STORE/DownloadApp/images/') {
                 return [ 'images' ];
             }
 
@@ -381,6 +449,60 @@ function downloadTests() {
         }).catch(function(error) {
             assert.equal(error.errorCode, 'CFAPPERR016', 'wrong error code is returned');
             assert.match(error, /^Error: api\.file\.does_exist failed for path/, 'wrong error message returned');
+        });
+    });
+
+    it('download a single application with icon and documentation', function() {
+        const projectWithIconAndDocumentationCFApp = {
+            name: 'DownloadApp',
+            host: 'http://localhost:9090',
+            login: 'admin',
+            password: 'admin',
+            description: 'A test for downloading an application',
+            icon: 'cloudflow://PP_FILE_STORE/DownloadApp/icon.png',
+            documentation: 'cloudflow://PP_FILE_STORE/DownloadApp/docs/',
+            files: [
+                'cloudflow://PP_FILE_STORE/DownloadApp/images/',
+                'cloudflow://PP_FILE_STORE/DownloadApp/index.html',
+            ],
+
+            workflows: [
+                'Workflow1',
+                'Workflow2'
+            ]
+        };
+
+        const outputStream = new JSONOutputStream();
+        apiMock.mockDelegate = new ExistingSingleAppDelegate();
+
+        const downloadedFiles = [];
+        getFileDownloadMock(downloadedFiles, 6);
+
+        if (fs.existsSync(__dirname + '/downloadTest') === true) {
+            remove.removeSync(__dirname + '/downloadTest');
+        }
+        mkdirp.sync(__dirname + '/downloadTest/DownloadApp');
+        fs.writeFileSync(__dirname + '/downloadTest/DownloadApp/project.cfapp', JSON.stringify(projectWithIconAndDocumentationCFApp));
+
+        return cfapp.apps.download(__dirname + '/downloadTest/DownloadApp', {}, outputStream).then(function() {
+            const mockDelegate = apiMock.mockDelegate;
+            assert.equal(mockDelegate.downloadedWhitepapers.length, 2, 'not all whitepapers were downloaded');
+            assert.includeMembers(mockDelegate.downloadedWhitepapers, [
+                'Workflow1',
+                'Workflow2'
+            ], 'not all whitepapers were downloaded');
+            assert.includeMembers(downloadedFiles, [
+                'cloudflow://PP_FILE_STORE/DownloadApp/docs/doc.pdf',
+                'cloudflow://PP_FILE_STORE/DownloadApp/docs/readme.md',
+                'cloudflow://PP_FILE_STORE/DownloadApp/icon.png',
+                'cloudflow://PP_FILE_STORE/DownloadApp/images/win.png',
+                'cloudflow://PP_FILE_STORE/DownloadApp/images/mac.png',
+                'cloudflow://PP_FILE_STORE/DownloadApp/index.html'
+            ], 'not all files were downloaded');
+            assert.equal(downloadedFiles.length, 6, 'not all files were downloaded');
+            assert(nock.isDone(), 'expected requests not performed');
+
+            // TODO: assert file structure too
         });
     });
 

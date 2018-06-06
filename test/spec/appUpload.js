@@ -160,6 +160,29 @@ function uploadTests() {
             });
         });
 
+        it('app icon and documentation', function() {
+            const outputStream = new JSONOutputStream();
+            apiMock.mockDelegate = new ExistingFilesDelegate();
+
+            const uploadedFiles = [];
+            getFileUploadMock(uploadedFiles, 4);
+
+            return cfapp.apps.upload(__dirname + '/resources/DemoAppWithIconAndDocs/', {}, outputStream).then(function() {
+                const uploadedWhitepapers = apiMock.mockDelegate.uploadedWhitepapers;
+                assert.equal(uploadedFiles.length, 4, 'all files should be uploaded');
+                assert.equal(uploadedWhitepapers.length, 1, 'all whitepapers should be uploaded');
+                assert.equal(uploadedWhitepapers[0].name, 'ProcessOrder', 'whitepaper "ProcessOrder" missing');
+                assert.includeMembers(uploadedFiles, [
+                    'cloudflow://PP_FILE_STORE/DemoApp/images/linux.jpg',
+                    'cloudflow://PP_FILE_STORE/DemoApp/index.html',
+                    'cloudflow://PP_FILE_STORE/DemoApp/docs/readme.md',
+                    'cloudflow://PP_FILE_STORE/DemoApp/icon.png'
+                ], 'the files were not all uploaded');
+
+                assert(nock.isDone(), 'expected requests not performed');
+            });
+        });
+
     });
 
     describe('overwrite parameter', function() {
@@ -351,7 +374,6 @@ function uploadTests() {
         });
     });
 
-
     describe('Missing file/workflow error', function() {
         it('should show an appropriate error code when a file is missing in a cfapp', function() {
             const outputStream = new JSONOutputStream();
@@ -448,6 +470,7 @@ function uploadTests() {
             });
         });
     });
+
 }
 
 module.exports = uploadTests;

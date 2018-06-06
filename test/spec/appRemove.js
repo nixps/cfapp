@@ -37,6 +37,22 @@ class ExistingSingleAppDelegate extends APIMockDelegate {
                 valid: true
             };
         }
+        else if (url === 'cloudflow://PP_FILE_STORE/DownloadApp/docs/') {
+            return {
+                exists: true,
+                is_folder: true,
+                url: url,
+                valid: true
+            };
+        }
+        else if (url === 'cloudflow://PP_FILE_STORE/DownloadApp/icon.png') {
+            return {
+                exists: true,
+                is_folder: false,
+                url: url,
+                valid: true
+            };
+        }
 
         return super.doesExist(url);
     }
@@ -50,7 +66,7 @@ class ExistingSingleAppDelegate extends APIMockDelegate {
                 }
             }];
         }
-        if (query[2] === 'cloudflow://PP_FILE_STORE/DownloadApp/index.html') {
+        else if (query[2] === 'cloudflow://PP_FILE_STORE/DownloadApp/index.html') {
             return [{
                 _id: 'I exist as well',
                 cloudflow: {
@@ -65,7 +81,32 @@ class ExistingSingleAppDelegate extends APIMockDelegate {
                     file: 'cloudflow://PP_FILE_STORE/DownloadApp/images/mac.png'
                 }
             }];
-        } else if (query[2] === 'cloudflow://PP_FILE_STORE/DownloadApp/images/') {
+        }
+        else if (query[2] === 'cloudflow://PP_FILE_STORE/DownloadApp/docs/doc.pdf') {
+            return [{
+                _id: 'I exist too',
+                cloudflow: {
+                    file: 'cloudflow://PP_FILE_STORE/DownloadApp/docs/doc.pdf'
+                }
+            }];
+        }
+        else if (query[2] === 'cloudflow://PP_FILE_STORE/DownloadApp/docs/readme.md') {
+            return [{
+                _id: 'I exist too',
+                cloudflow: {
+                    file: 'cloudflow://PP_FILE_STORE/DownloadApp/docs/readme.md'
+                }
+            }];
+        }
+        else if (query[2] === 'cloudflow://PP_FILE_STORE/DownloadApp/icon.png') {
+            return [{
+                _id: 'I exist too',
+                cloudflow: {
+                    file: 'cloudflow://PP_FILE_STORE/DownloadApp/icon.png'
+                }
+            }];
+        }
+        else if (query[2] === 'cloudflow://PP_FILE_STORE/DownloadApp/images/') {
             // Get the assets in the image folder
             return [{
                 _id: 'I exist',
@@ -76,6 +117,20 @@ class ExistingSingleAppDelegate extends APIMockDelegate {
                 _id: 'I exist too',
                 cloudflow: {
                     file: 'cloudflow://PP_FILE_STORE/DownloadApp/images/mac.png'
+                }
+            }];
+        }
+        else if (query[2] === 'cloudflow://PP_FILE_STORE/DownloadApp/docs/') {
+            // Get the assets in the docs folder
+            return [{
+                _id: 'I exist',
+                cloudflow: {
+                    file: 'cloudflow://PP_FILE_STORE/DownloadApp/docs/readme.md'
+                }
+            }, {
+                _id: 'I exist too',
+                cloudflow: {
+                    file: 'cloudflow://PP_FILE_STORE/DownloadApp/docs/doc.pdf'
                 }
             }];
         }
@@ -112,23 +167,52 @@ class ExistingSingleAppDelegate extends APIMockDelegate {
         if (query[2] === 'cloudflow://PP_FILE_STORE/DownloadApp/images/') {
             return [ 'images' ];
         }
+        else if (query[2] === 'cloudflow://PP_FILE_STORE/DownloadApp/docs/') {
+            return [ 'docs' ];
+        }
 
         return [];
     }
 
     applicationList(query) {
-        if (query[2] !== 'DownloadApp') {
+        if (query[2] !== 'DownloadApp' &&
+            query[2] !== 'DownloadAppWithIconAndDocs') {
             return [];
         }
 
+        if (query[2] === 'DownloadApp') {
+            return [{
+                _id: 'DownloadAppID',
+                name: 'DownloadApp',
+                host: 'http://localhost:9090',
+                version: '0.0.1',
+                login: 'admin',
+                password: 'admin',
+                description: 'A test for downloading an application',
+
+                files: [
+                    'cloudflow://PP_FILE_STORE/DownloadApp/images/',
+                    'cloudflow://PP_FILE_STORE/DownloadApp/index.html',
+                ],
+
+                workflows: [
+                    'Workflow1',
+                    'Workflow2'
+                ]
+            }];
+        }
+
         return [{
-            _id: 'DownloadAppID',
-            name: 'DownloadApp',
+            _id: 'DownloadAppWithIconAndDocsID',
+            name: 'DownloadAppWithIconAndDocs',
             host: 'http://localhost:9090',
             version: '0.0.1',
             login: 'admin',
             password: 'admin',
             description: 'A test for downloading an application',
+
+            icon: 'cloudflow://PP_FILE_STORE/DownloadApp/icon.png',
+            documentation: 'cloudflow://PP_FILE_STORE/DownloadApp/docs/',
 
             files: [
                 'cloudflow://PP_FILE_STORE/DownloadApp/images/',
@@ -174,6 +258,34 @@ function removeTests() {
                 ], 'not all the installed workflows were removed');
                 assert.includeMembers(apiMockDelegate.deletedApplications, [
                     'DownloadAppID'
+                ], 'the app was not removed from the application registry');
+            });
+        });
+
+        it('should remove an existing app with icons and documentation', function() {
+            const outputStream = new JSONOutputStream();
+            const apiMockDelegate = new ExistingSingleAppDelegate();
+            apiMock.mockDelegate = apiMockDelegate;
+
+            return cfapp.apps.remove('DownloadAppWithIconAndDocs', {
+                host: 'http://localhost:9090',
+                login: 'admin',
+                password: 'admin'
+            }, outputStream).then(function() {
+                assert.includeMembers(apiMockDelegate.deletedFiles, [
+                    'cloudflow://PP_FILE_STORE/DownloadApp/index.html',
+                    'cloudflow://PP_FILE_STORE/DownloadApp/icon.png',
+                ], 'not all the installed files were removed');
+                assert.includeMembers(apiMockDelegate.deletedFolders, [
+                    'cloudflow://PP_FILE_STORE/DownloadApp/images/',
+                    'cloudflow://PP_FILE_STORE/DownloadApp/docs/'
+                ], 'not all the installed folders were removed');
+                assert.includeMembers(apiMockDelegate.deletedWhitepapers, [
+                    'Workflow1',
+                    'Workflow2'
+                ], 'not all the installed workflows were removed');
+                assert.includeMembers(apiMockDelegate.deletedApplications, [
+                    'DownloadAppWithIconAndDocsID'
                 ], 'the app was not removed from the application registry');
             });
         });
