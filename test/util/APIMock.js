@@ -45,7 +45,7 @@ class APIMock {
             },
 
             file: {
-                delete_file: function(file, cb) {
+                delete_file_with_options: function(file, options, cb) {
                     if (cb) {
                         cb();
                     }
@@ -59,7 +59,7 @@ class APIMock {
                     return mockDelegate.doesExist(url);
                 },
 
-                delete_folder: function(url, contentsOnly, cb) {
+                delete_folder_with_options: function(url, options, cb) {
                     if (cb) {
                         cb();
                     }
