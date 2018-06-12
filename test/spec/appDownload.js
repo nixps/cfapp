@@ -48,7 +48,16 @@ function getFileDownloadMock(downloadedFiles, expected) {
 function downloadTests() {
     class ExistingSingleAppDelegate extends APIMockDelegate {
         doesExist(url) {
-            if (url === 'cloudflow://PP_FILE_STORE/DownloadApp/docs/') {
+            if (url === 'cloudflow://PP_FILE_STORE/DownloadApp/test/' ||
+                url === 'cloudflow://PP_FILE_STORE/DownloadApp/test') {
+                return {
+                    exists: true,
+                    is_folder: true,
+                    url: url
+                };
+            }
+            else if (url === 'cloudflow://PP_FILE_STORE/DownloadApp/docs/' ||
+                url === 'cloudflow://PP_FILE_STORE/DownloadApp/docs') {
                 return {
                     exists: true,
                     is_folder: true,
@@ -111,7 +120,8 @@ function downloadTests() {
                     }
                 }];
             }
-            else if (query[2] === 'cloudflow://PP_FILE_STORE/DownloadApp/docs/') {
+            else if (query[2] === 'cloudflow://PP_FILE_STORE/DownloadApp/docs/'
+                || query[2] === 'cloudflow://PP_FILE_STORE/DownloadApp/docs') {
                 return [{
                     _id: 'I exist readme.md',
                     cloudflow: {
@@ -176,7 +186,11 @@ function downloadTests() {
         }
 
         existingFolders(query) {
-            if (query[2] === 'cloudflow://PP_FILE_STORE/DownloadApp/docs/') {
+            if (query[2] === 'cloudflow://PP_FILE_STORE/DownloadApp/test/' ||
+                query[2] === 'cloudflow://PP_FILE_STORE/DownloadApp/test') {
+                return [ 'test' ];
+            } else if (query[2] === 'cloudflow://PP_FILE_STORE/DownloadApp/docs/' ||
+                query[2] === 'cloudflow://PP_FILE_STORE/DownloadApp/docs') {
                 return [ 'docs' ];
             }
             else if (query[2] === 'cloudflow://PP_FILE_STORE/DownloadApp/images/') {
@@ -506,6 +520,55 @@ function downloadTests() {
         });
     });
 
+    it('empty folders and documentation folder should end with a directory separator in project.cfapp', function() {
+        const projectWithIconAndDocumentationCFApp = {
+            name: 'DownloadApp',
+            host: 'http://localhost:9090',
+            login: 'admin',
+            password: 'admin',
+            description: 'A test for downloading an application',
+            documentation: 'cloudflow://PP_FILE_STORE/DownloadApp/docs',
+            files: [
+                'cloudflow://PP_FILE_STORE/DownloadApp/test',
+                'cloudflow://PP_FILE_STORE/DownloadApp/index.html',
+            ],
+            workflows: []
+        };
+
+        const outputStream = new JSONOutputStream();
+        apiMock.mockDelegate = new ExistingSingleAppDelegate();
+
+        const downloadedFiles = [];
+        getFileDownloadMock(downloadedFiles, 3);
+
+        if (fs.existsSync(__dirname + '/downloadTest') === true) {
+            remove.removeSync(__dirname + '/downloadTest');
+        }
+        mkdirp.sync(__dirname + '/downloadTest/DownloadApp');
+        fs.writeFileSync(__dirname + '/downloadTest/DownloadApp/project.cfapp', JSON.stringify(projectWithIconAndDocumentationCFApp));
+
+        return cfapp.apps.download(__dirname + '/downloadTest/DownloadApp', {}, outputStream).then(function() {
+            const mockDelegate = apiMock.mockDelegate;
+            assert.equal(mockDelegate.downloadedWhitepapers.length, 0, 'not all whitepapers were downloaded');
+            assert.includeMembers(mockDelegate.downloadedWhitepapers, [], 'not all whitepapers were downloaded');
+            assert.includeMembers(downloadedFiles, [
+                'cloudflow://PP_FILE_STORE/DownloadApp/docs/doc.pdf',
+                'cloudflow://PP_FILE_STORE/DownloadApp/docs/readme.md',
+                'cloudflow://PP_FILE_STORE/DownloadApp/index.html'
+            ], 'not all files were downloaded');
+            assert.equal(downloadedFiles.length, 3, 'not all files were downloaded');
+            assert(nock.isDone(), 'expected requests not performed');
+
+            const fileContents = fs.readFileSync(__dirname + '/downloadTest/DownloadApp/project.cfapp', 'utf8');
+            let projectCFApp = null;
+            assert.doesNotThrow(function () {
+                projectCFApp = JSON.parse(fileContents);
+            }, SyntaxError, /.*/, `file output is not parsable: ${fileContents}`);
+            assert.equal(projectCFApp.documentation, 'cloudflow://PP_FILE_STORE/DownloadApp/docs/', 'error in project.cfapp: ');
+            assert.equal(projectCFApp.files[0], 'cloudflow://PP_FILE_STORE/DownloadApp/test/');
+            assert.equal(projectCFApp.files[1], 'cloudflow://PP_FILE_STORE/DownloadApp/index.html');
+        });
+    });
 }
 
 module.exports = downloadTests;

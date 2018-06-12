@@ -471,6 +471,33 @@ function uploadTests() {
         });
     });
 
+    describe('empty folders', function () {
+        it('empty folders should not return an error and be created', function () {
+            const outputStream = new JSONOutputStream();
+            apiMock.mockDelegate = new APIMockDelegate();
+
+            const uploadedFiles = [];
+            getFileUploadMock(uploadedFiles, 1);
+
+            return cfapp.apps.upload(__dirname + '/resources/DemoAppEmptyFolder/', {}, outputStream).then(function() {
+                const uploadedWhitepapers = apiMock.mockDelegate.uploadedWhitepapers;
+                assert.equal(uploadedFiles.length, 1, 'all files should be uploaded');
+                assert.equal(uploadedWhitepapers.length, 1, 'all whitepapers should be uploaded');
+                assert.equal(uploadedWhitepapers[0].name, 'ProcessOrder', 'whitepaper "ProcessOrder" missing');
+                assert.includeMembers(uploadedFiles, [
+                    'cloudflow://PP_FILE_STORE/DemoApp/index.html',
+                ], 'the files were not all uploaded');
+
+                const createdFolders = apiMock.mockDelegate.createdFolders;
+                assert.includeMembers(createdFolders, [
+                    'cloudflow://PP_FILE_STORE/DemoApp/images/',
+                    'cloudflow://PP_FILE_STORE/DemoApp/docs/'
+                ], 'the empty folders were not created');
+
+                assert(nock.isDone(), 'expected requests not performed');
+            });
+        });
+    });
 }
 
 module.exports = uploadTests;

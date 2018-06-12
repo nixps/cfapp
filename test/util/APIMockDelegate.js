@@ -25,6 +25,7 @@ class APIMockDelegate {
 
         this.createdApplications = [];
         this.deletedApplications = [];
+        this.createdFolders = [];
     }
 
     get supportsApplications() {
@@ -113,6 +114,10 @@ class APIMockDelegate {
             login: login,
             password: password
         });
+    }
+
+    folderCreated (folder) {
+        this.createdFolders.push(folder);
     }
 }
 

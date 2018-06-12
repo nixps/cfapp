@@ -64,6 +64,20 @@ class APIMock {
                         cb();
                     }
                     mockDelegate.folderDeleted(url);
+                },
+
+                create_folder: function (inside, folder, cb) {
+                    const parts = folder.split('/');
+                    const encodedParts = parts.map(p => encodeURIComponent(p));
+                    const createdFolder = inside + encodedParts.join('/');
+
+                    if (cb) {
+                        cb({
+                            created_folder: createdFolder
+                        });
+                    }
+
+                    mockDelegate.folderCreated(createdFolder);
                 }
             },
 
