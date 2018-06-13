@@ -120,6 +120,15 @@ class APIMock {
 
             asset: {
                 list: function(query, not_used, cb) {
+                    if (Array.isArray(query) === false) {
+                        throw new Error('asset.list: query that is passed is not an array');
+                    }
+                    query.forEach((element) => {
+                        if (typeof element !== 'string') {
+                            throw new Error('asset.list: element of query that is passed is not a string');
+                        }
+                    });
+
                     const result = {
                         results: mockDelegate.existingAssets(query)
                     };
