@@ -10,6 +10,23 @@
 'use strict';
 
 const { apps } = require('../../../lib/cfapp');
+const ConsoleOutputStream = require('../../../lib/util/ConsoleOutputStream');
+const JSONOutputStream = require('../../../lib/util/JSONOutputStream');
+
+function catchError(error, outputStream, jsonFormat) {
+    if (jsonFormat === true) {
+        console.log(JSON.stringify({
+            lines: outputStream.outputLines,
+            error: {
+                message: error.toString(),
+                code: error.errorCode
+            }
+        }));
+    }
+    else {
+        console.log(error.stack);
+    }
+}
 
 module.exports = {
     command: 'download [directory]',
@@ -47,9 +64,20 @@ module.exports = {
 
         const directory = argv.directory || '.';
 
+        let outputStream = new ConsoleOutputStream();
+        if (argv.json === true) {
+            outputStream = new JSONOutputStream();
+        }
+
         // parse and stringify to get rid of 'undefined' values
-        apps.download(directory, JSON.parse(JSON.stringify(options))).catch(function(error) {
-            console.log(error.message);
+        apps.download(directory, JSON.parse(JSON.stringify(options)), outputStream).then(function () {
+            if (argv.json === true) {
+                console.log(JSON.stringify({
+                    lines: outputStream.outputLines
+                }));
+            }
+        }).catch(function(error) {
+            catchError(error, outputStream, argv.json);
         });
     }
 };
