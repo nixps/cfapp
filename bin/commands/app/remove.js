@@ -11,6 +11,23 @@
 
 const { apps } = require('../../../lib/cfapp');
 const cloudflowAPI = require('cloudflow-api');
+const ConsoleOutputStream = require('../../../lib/util/ConsoleOutputStream');
+const JSONOutputStream = require('../../../lib/util/JSONOutputStream');
+
+function catchError(error, outputStream, jsonFormat) {
+    if (jsonFormat === true) {
+        console.log(JSON.stringify({
+            lines: outputStream.outputLines,
+            error: {
+                message: error.toString(),
+                code: error.errorCode
+            }
+        }));
+    }
+    else {
+        console.log(error.stack);
+    }
+}
 
 module.exports = {
     command: 'remove [app_name]',
@@ -51,12 +68,36 @@ module.exports = {
             api.m_session = session;
         }
 
+        let outputStream = new ConsoleOutputStream();
+        if (argv.json === true) {
+            outputStream = new JSONOutputStream();
+        }
+
         if (apps.canRegisterApps(api) === false) {
             console.log(`no support for application removal this Cloudflow build b${api.portal.version().build}`);
             return;
         }
 
         // parse and stringify to get rid of 'undefined' values
-        apps.remove(argv.app_name, JSON.parse(JSON.stringify(options)));
+        apps.remove(argv.app_name, JSON.parse(JSON.stringify(options)), outputStream).then(function() {
+            if (argv.json === true) {
+                console.log(JSON.stringify({
+                    lines: outputStream.outputLines
+                }));
+            }
+        }).catch(function(error) {
+            if (argv.json === true) {
+                console.log(JSON.stringify({
+                    lines: outputStream.outputLines,
+                    error: {
+                        message: error.toString(),
+                        code: error.errorCode
+                    }
+                }));
+            }
+            else {
+                console.log(error.stack);
+            }
+        });
     }
 };
