@@ -517,6 +517,9 @@ function downloadTests() {
             assert(nock.isDone(), 'expected requests not performed');
 
             // TODO: assert file structure too
+            const projectCFApp = fs.readFileSync(__dirname + '/downloadTest/DownloadApp/project.cfapp');
+            const projectCFAppJSON = JSON.parse(projectCFApp);
+            assert.equal(projectCFAppJSON.documentation, 'cloudflow://PP_FILE_STORE/DownloadApp/docs/', 'The documentation field should not be changed');
         });
     });
 
