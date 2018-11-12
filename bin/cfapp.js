@@ -42,22 +42,22 @@ const commandLineParser = yargs
 const argv = commandLineParser.argv;
 
 // Check if the command was parsed correctly
-if (argv._[0]) {
-    if (argv._[0] === 'app' && argv._[1]) {
-        const subcommand = argv._[1];
-        if (['download', 'upload', 'list', 'init', 'remove', 'update'].indexOf(subcommand) < 0) {
-            // If we arrive here, the command was not processed, unknown command
-            console.log('Unknown command');
-            commandLineParser.showHelp();
-            process.exit(1);
-        }
-    }
-    else if (argv._[0] === 'install' || argv._[0] === 'upload'  || argv._[0] === 'download') {
-        // This is already caught elsewere
-    }
-    else {
-        console.log('Unknown command');
-        commandLineParser.showHelp();
-        process.exit(1);
-    }
-}
+// if (argv._[0]) {
+//     if (argv._[0] === 'app' && argv._[1]) {
+//         const subcommand = argv._[1];
+//         if (['download', 'upload', 'list', 'init', 'remove', 'update'].indexOf(subcommand) < 0) {
+//             // If we arrive here, the command was not processed, unknown command
+//             console.log('Unknown command');
+//             commandLineParser.showHelp();
+//             process.exit(1);
+//         }
+//     }
+//     else if (argv._[0] === 'install' || argv._[0] === 'upload'  || argv._[0] === 'download') {
+//         // This is already caught elsewere
+//     }
+//     else {
+//         console.log('Unknown command');
+//         commandLineParser.showHelp();
+//         process.exit(1);
+//     }
+// }
