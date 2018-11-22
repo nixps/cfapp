@@ -367,6 +367,36 @@ function downloadTests() {
         });
     });
 
+    it('should throw an error when a workflow that needs to be downloaded does not exist', function() {
+        class RemoteWorkflowsMissingAppDelegate extends ExistingSingleAppDelegate {
+            existingWhitepapers() {
+                return [ {
+                    _id: 'Workflow1',
+                    name: 'Workflow1'
+                }];
+            }
+        }
+
+        const outputStream = new JSONOutputStream();
+        apiMock.mockDelegate = new RemoteWorkflowsMissingAppDelegate();
+
+        const downloadedFiles = [];
+        getFileDownloadMock(downloadedFiles, 3);
+
+        if (fs.existsSync(__dirname + '/downloadTest') === true) {
+            remove.removeSync(__dirname + '/downloadTest');
+        }
+        mkdirp.sync(__dirname + '/downloadTest/DownloadApp');
+        fs.writeFileSync(__dirname + '/downloadTest/DownloadApp/project.cfapp', JSON.stringify(projectCFApp));
+
+        return cfapp.apps.download(__dirname + '/downloadTest/DownloadApp', {}, outputStream).then(function() {
+            assert.notOk('the promise should not resolve if a folder is missing on the remote Cloudflow');
+        }).catch(function(error) {
+            assert.equal(error.errorCode, 'CFAPPERR018');
+            assert.equal(error.message, 'Specified workflow "Workflow2" does not exist on the remote Cloudflow');
+        });
+    });
+
     it('should throw an error when a file that needs to be downloaded does not exist', function() {
         class RemoteFilesDoNotExistAppDelegate extends APIMockDelegate {
             existingAssets() {
@@ -407,7 +437,7 @@ function downloadTests() {
             assert.equal(error.message, 'Specified file does not exist "cloudflow://PP_FILE_STORE/DownloadApp/images/" on the remote Cloudflow');
         });
     });
-
+    
     it('should show an appropriate error code when no project.cfapp file is found', function() {
         const outputStream = new JSONOutputStream();
         apiMock.mockDelegate = new ExistingSingleAppDelegate();
