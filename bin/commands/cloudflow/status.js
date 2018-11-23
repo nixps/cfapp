@@ -11,10 +11,24 @@
 'use strict';
 
 module.exports = {
-    command: 'reset',
-    desc: 'Resets the installed Cloudflow (mongodb)',
+    command: 'status',
+    desc: 'Status report',
     builder: {},
     handler: function() {
-        console.log('[exec] list the cloudflow builds');
+        console.log(JSON.stringify(get_status(), null, 2));
     }
-};
+}
+
+function get_status()
+{
+    var systeminfo=require("../../../lib/systeminfo.js");
+
+    var os = systeminfo.get_os_info();
+    var cloudflow = systeminfo.get_cloudflow_info(os);
+    var adobe = systeminfo.get_adobe_info(os);
+    return {
+        os: os,
+        cloudflow: cloudflow,
+        adobe: adobe
+    }
+}

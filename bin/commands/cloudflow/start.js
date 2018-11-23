@@ -11,10 +11,10 @@
 'use strict';
 
 module.exports = {
-    command: 'run',
-    desc: 'Runs the installed Cloudflow',
+    command: 'start',
+    desc: 'Starts the installed Cloudflow',
     builder: {},
     handler: function() {
-        console.log('[exec] list the cloudflow builds');
+        console.log('start');
     }
 };

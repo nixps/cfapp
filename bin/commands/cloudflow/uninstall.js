@@ -11,10 +11,10 @@
 'use strict';
 
 module.exports = {
-    command: 'install <build>',
+    command: 'uninstall',
     desc: 'Installs a Cloudflow build',
     builder: {},
     handler: function() {
-        console.log('[exec] list the cloudflow builds');
+        console.log('[exec] unistall the cloudflow builds');
     }
 };
