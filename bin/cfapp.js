@@ -11,6 +11,21 @@
 
 'use strict';
 
+console.debug = function (){};
+console.verbose = function (c)
+{
+    try{
+          throw new Error
+    }catch(d){
+        var my_line=d.stack.split('\n')[2];//.trim().substring(3).replace(__dirname,'').replace(/\s\(./,' at ').replace(/\)/,'');
+        my_line=' (D) '+my_line.substring(14).replace('/Users/nickderoeck/Repos/cfapp/','');    
+        console.log((new Date()).toISOString()+my_line + ': ' + c);
+    }
+}
+
+// enable verbose logging
+console.debug=console.verbose;
+
 // Else use it as a command-line app
 const yargs = require('yargs');
 const packageJSON = require('../package.json');
