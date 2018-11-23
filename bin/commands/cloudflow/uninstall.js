@@ -11,12 +11,10 @@
 'use strict';
 
 module.exports = {
-    command: 'cloudflow <command>',
-    desc: 'Manages Cloudflow installations',
-    builder: function(yargs) {
-        return yargs
-            .commandDir('cloudflow')
-            .demand(1);
-    },
-    handler: function() {}
+    command: 'install <build>',
+    desc: 'Installs a Cloudflow build',
+    builder: {},
+    handler: function() {
+        console.log('[exec] list the cloudflow builds');
+    }
 };

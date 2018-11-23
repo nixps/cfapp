@@ -23,9 +23,6 @@ console.verbose = function (c)
     }
 }
 
-// enable verbose logging
-console.debug=console.verbose;
-
 // Else use it as a command-line app
 const yargs = require('yargs');
 const packageJSON = require('../package.json');
@@ -49,12 +46,23 @@ const commandLineParser = yargs
         console.log(packageJSON.version);
     })
     .epilog(`Version ${packageJSON.version}`)
-    .commandDir('commands')
+    .boolean('v')
+    .alias('v', 'verbose')
+    .describe('v', 'Verbose logging')
+    .alias('h','help')
     .demandCommand()
     .help();
 
-// Parse the command line
-const argv = commandLineParser.argv;
+    if (commandLineParser.argv.verbose)
+    {
+    // enable verbose logging
+    console.debug=console.verbose;
+    }
+    
+    // Parse the command line
+    const argv = commandLineParser
+    .commandDir('commands') 
+    .argv;
 
 // Check if the command was parsed correctly
 // if (argv._[0]) {
