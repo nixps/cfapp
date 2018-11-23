@@ -15,6 +15,13 @@ module.exports = {
     desc: 'Starts the installed Cloudflow',
     builder: {},
     handler: function() {
-        console.log('start');
+        var systeminfo=require("../../../lib/systeminfo.js");
+        var cloudflow = systeminfo.get_cloudflow_info();
+
+        console.log("Running " + cloudflow.version);
+        console.log("from "+cloudflow.app_folder);
+
+        const { execSync } = require('child_process'); 
+        let input = execSync(cloudflow.nucleusd+" --launchmongo");
     }
 };
