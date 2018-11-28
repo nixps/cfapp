@@ -11,35 +11,32 @@
 'use strict';
 
 module.exports = {
-    command: 'start',
-    desc: 'Starts the installed Cloudflow',
+    command: 'stop',
+    desc: 'Stops the installed Cloudflow',
     builder: {},
     handler: function() {
         var systeminfo=require("../../../lib/systeminfo.js");
         var cloudflow = systeminfo.get_cloudflow_info();
 
-        console.log("Running " + cloudflow.version);
-        console.log("from "+cloudflow.setup.app_folder);
+        console.log("Stopping " + cloudflow.version);
 
-        const { execSync } = require('child_process'); 
         try
         {
             if (cloudflow.setup.run_as_service)
             {
-                var command=cloudflow.nucleusd+" --start";
+                var command=cloudflow.nucleusd+" --stop";
                 console.log(command);
+
+                const { execSync } = require('child_process'); 
                 let input = execSync(command);
                 console.log(input.toString());
             } else
             {
-                var command=cloudflow.nucleusd+cloudflow.setup.cmd;
-                console.log(command);
-                let input = execSync(cloudflow.nucleusd+cloudflow.setup.cmd);
-                console.log(input.toString());
+                console.log("Not running as a service, this doesn't do anything...")
             }
         } catch(e)
         {
-            //console.log(e);
+            
         }
     }
 };

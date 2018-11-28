@@ -39,7 +39,9 @@ async function cloudflow_install(argv)
     var setup=
     {
         "app_folder": argv.software_folder,
-        "options": {}
+        "run_as_service": false,
+        "options": {},
+        "cmd": ""
     };
 
     // nucleusd --noservice [--json] [-i SERVER_ID] [-d DATABASE_IP[:PORT]] [-p PORT] [-s] [--launchmongo] [-g] [--ssl cert+key.pem]
@@ -50,11 +52,43 @@ async function cloudflow_install(argv)
         var option=options[idx].replace(/-/g,'');
         
         if (argv.hasOwnProperty(option))
+        {
             setup.options[options[idx]]=argv[option];
+
+            switch(option)
+            {
+                case "noservice":
+                case "launchmongo":
+                case "json":
+                case "g":           setup.cmd+=" "+options[idx];
+                                    break;
+                default:            setup.cmd+=" "+options[idx]+" "+argv[option];
+                                    break;        
+            }
+        }
     }
 
-    var cloudflow = systeminfo.put_cloudflow_info(os,setup);
+    console.debug("cmd:"+setup.cmd);
 
-    console.debug(JSON.stringify(cloudflow));
+    if (argv.hasOwnProperty("run_as_service") && argv["run_as_service"]==true)
+    {
+        setup.run_as_service=true;
+    }
+    console.debug("run_as_service: "+setup.run_as_service);
+
+    var cloudflow = systeminfo.put_cloudflow_info(os,setup,);
+
+    console.debug("cloudflow: "+JSON.stringify(cloudflow));
+    if (cloudflow.setup.run_as_service)
+    {
+        console.log("as a service ...");
+        var command=cloudflow.nucleusd+" --install"+cloudflow.setup.cmd;
+        console.log(command);
+
+        const { execSync } = require('child_process'); 
+        let input = execSync(command);
+    }
+
+    //console.debug(JSON.stringify(cloudflow));
 
 }

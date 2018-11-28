@@ -10,13 +10,13 @@
 
 'use strict';
 
-module.exports = {
-    command: 'frame <command>',
-    desc: 'Manages frame',
-    builder: function(yargs) {
-        return yargs
-            .commandDir('frame')
-            .demand(1);
-    },
-    handler: function() {}
-};
+// module.exports = {
+//     command: 'frame <command>',
+//     desc: 'Manages frame',
+//     builder: function(yargs) {
+//         return yargs
+//             .commandDir('frame')
+//             .demand(1);
+//     },
+//     handler: function() {}
+// };

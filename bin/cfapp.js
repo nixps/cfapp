@@ -18,7 +18,7 @@ console.verbose = function (c)
           throw new Error
     }catch(d){
         var my_line=d.stack.split('\n')[2];//.trim().substring(3).replace(__dirname,'').replace(/\s\(./,' at ').replace(/\)/,'');
-        my_line=' (D) '+my_line.substring(14).replace('/Users/nickderoeck/Repos/cfapp/','');    
+        my_line=' (D) '+my_line.substring(7).replace('/Users/nickderoeck/Repos/cfapp/','');    
         console.log((new Date()).toISOString()+my_line + ': ' + c);
     }
 }

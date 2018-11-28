@@ -12,9 +12,31 @@
 
 module.exports = {
     command: 'uninstall',
-    desc: 'Installs a Cloudflow build',
+    desc: 'Uninstalls the installed Cloudflow',
     builder: {},
     handler: function() {
-        console.log('[exec] unistall the cloudflow builds');
+        var systeminfo=require("../../../lib/systeminfo.js");
+        var cloudflow = systeminfo.get_cloudflow_info();
+
+        console.log("Uninstalling " + cloudflow.version);
+
+        try
+        {
+            if (cloudflow.setup.run_as_service)
+            {
+                var command=cloudflow.nucleusd+" --uninstall";
+                console.log(command);
+
+                const { execSync } = require('child_process'); 
+                let input = execSync(command);
+                console.log(input.toString());
+            } else
+            {
+                console.log("Not running as a service, this doesn't do anything...")
+            }
+        } catch(e)
+        {
+            
+        }
     }
 };

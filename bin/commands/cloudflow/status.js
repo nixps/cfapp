@@ -15,12 +15,17 @@ module.exports = {
     desc: 'Status report',
     builder: {},
     handler: function() {
-        console.log(JSON.stringify(get_status(), null, 2));
+        get_status();
     }
 }
 
 function get_status()
 {
+    var systeminfo=require("../../../lib/systeminfo.js");
+    var cloudflow = systeminfo.get_cloudflow_info();
+
+    console.log(JSON.stringify(cloudflow.status, null, 2));
+/*
     var systeminfo=require("../../../lib/systeminfo.js");
 
     var os = systeminfo.get_os_info();
@@ -31,4 +36,5 @@ function get_status()
         cloudflow: cloudflow,
         adobe: adobe
     }
+ */   
 }
