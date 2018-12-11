@@ -18,5 +18,6 @@ module.exports = {
             .commandDir('cloudflow')
             .demand(1);
     },
-    handler: function() {}
+    handler: function() {
+    }
 };

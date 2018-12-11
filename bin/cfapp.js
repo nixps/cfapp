@@ -64,6 +64,7 @@ const commandLineParser = yargs
     .commandDir('commands') 
     .argv;
 
+
 // Check if the command was parsed correctly
 // if (argv._[0]) {
 //     if (argv._[0] === 'app' && argv._[1]) {

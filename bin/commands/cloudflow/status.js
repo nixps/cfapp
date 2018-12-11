@@ -10,31 +10,12 @@
 
 'use strict';
 
+var cloudflow=require("../../../lib/libcloudflow.js");
+
 module.exports = {
     command: 'status',
     desc: 'Status report',
     builder: {},
-    handler: function() {
-        get_status();
-    }
+    handler: cloudflow.status
 }
 
-function get_status()
-{
-    var systeminfo=require("../../../lib/systeminfo.js");
-    var cloudflow = systeminfo.get_cloudflow_info();
-
-    console.log(JSON.stringify(cloudflow.status, null, 2));
-/*
-    var systeminfo=require("../../../lib/systeminfo.js");
-
-    var os = systeminfo.get_os_info();
-    var cloudflow = systeminfo.get_cloudflow_info(os);
-    var adobe = systeminfo.get_adobe_info(os);
-    return {
-        os: os,
-        cloudflow: cloudflow,
-        adobe: adobe
-    }
- */   
-}

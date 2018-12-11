@@ -10,36 +10,11 @@
 
 'use strict';
 
+var cloudflow=require("../../../lib/libcloudflow.js");
+
 module.exports = {
     command: 'start',
     desc: 'Starts the installed Cloudflow',
     builder: {},
-    handler: function() {
-        var systeminfo=require("../../../lib/systeminfo.js");
-        var cloudflow = systeminfo.get_cloudflow_info();
-
-        console.log("Running " + cloudflow.version);
-        console.log("from "+cloudflow.setup.app_folder);
-
-        const { execSync } = require('child_process'); 
-        try
-        {
-            if (cloudflow.setup.run_as_service)
-            {
-                var command=cloudflow.nucleusd+" --start";
-                console.log(command);
-                let input = execSync(command);
-                console.log(input.toString());
-            } else
-            {
-                var command=cloudflow.nucleusd+cloudflow.setup.cmd;
-                console.log(command);
-                let input = execSync(cloudflow.nucleusd+cloudflow.setup.cmd);
-                console.log(input.toString());
-            }
-        } catch(e)
-        {
-            //console.log(e);
-        }
-    }
+    handler: cloudflow.start
 };

@@ -10,33 +10,11 @@
 
 'use strict';
 
+var cloudflow=require("../../../lib/libcloudflow.js");
+
 module.exports = {
     command: 'stop',
     desc: 'Stops the installed Cloudflow',
     builder: {},
-    handler: function() {
-        var systeminfo=require("../../../lib/systeminfo.js");
-        var cloudflow = systeminfo.get_cloudflow_info();
-
-        console.log("Stopping " + cloudflow.version);
-
-        try
-        {
-            if (cloudflow.setup.run_as_service)
-            {
-                var command=cloudflow.nucleusd+" --stop";
-                console.log(command);
-
-                const { execSync } = require('child_process'); 
-                let input = execSync(command);
-                console.log(input.toString());
-            } else
-            {
-                console.log("Not running as a service, this doesn't do anything...")
-            }
-        } catch(e)
-        {
-            
-        }
-    }
+    handler: cloudflow.stop
 };
