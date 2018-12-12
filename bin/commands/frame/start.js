@@ -13,8 +13,8 @@
 var frame=require("../../../lib/libframe.js");
 
 module.exports = {
-    command: 'install <software_folder>',
-    desc: 'Installs a Frame build',
+    command: 'start',
+    desc: 'Starts the installed frame',
     builder: {},
-    handler: frame.install
+    handler: frame.start
 };

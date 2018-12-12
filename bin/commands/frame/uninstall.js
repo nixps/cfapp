@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) 2018 NiXPS, All rights reserved.
+ *  Copyright (c) 2017 NiXPS, All rights reserved.
  *
  *  This Source Code Form is subject to the terms of the Mozilla Public
  *  License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -8,29 +8,13 @@
  */
 
 
-
 'use strict';
+
+var frame=require("../../../lib/libframe.js");
 
 module.exports = {
     command: 'uninstall',
-    desc: 'Uninstalls frame',
+    desc: 'Uninstalls the installed frame',
     builder: {},
-    handler: function() {
-        uninstall();
-        return;
-    }
+    handler: frame.uninstall
 };
-
-function uninstall()
-{
-    var systeminfo=require("../../../lib/systeminfo.js");
-    
-    if (systeminfo["cloudflow"]["installed"]!=true) {
-        console.error("Frame is not installed");
-        return;
-    }
-
-    console.log("Uninstalling Frame");
-
-    console.log()    
-}
