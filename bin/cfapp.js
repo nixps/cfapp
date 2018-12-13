@@ -11,17 +11,25 @@
 
 'use strict';
 
-console.debug = function (){};
-console.verbose = function (c)
+console._log=console.log;
+console.log= function ()
 {
-    try{
-          throw new Error
-    }catch(d){
-        var my_line=d.stack.split('\n')[2];//.trim().substring(3).replace(__dirname,'').replace(/\s\(./,' at ').replace(/\)/,'');
-        my_line=' (D) '+my_line.substring(7).replace('/Users/nickderoeck/Repos/cfapp/','');    
-        console.log((new Date()).toISOString()+my_line + ': ' + c);
-    }
-}
+    //var caller_line = (new Error).stack.split("\n")[2].split("(")[1].split(")")[0];
+    var caller_line="";   
+
+    Array.prototype.unshift.call(arguments, new Date().toISOString()+" I "+caller_line);
+    console._log.apply(null, arguments);
+};
+
+console._error=console.error;
+console.error= function ()
+{
+    //var caller_line = (new Error).stack.split("\n")[2].split("(")[1].split(")")[0];
+    var caller_line="";   
+
+    Array.prototype.unshift.call(arguments, new Date().toISOString()+" E "+caller_line);
+    console._error.apply(null, arguments);
+};
 
 // Else use it as a command-line app
 const yargs = require('yargs');
@@ -56,7 +64,7 @@ const commandLineParser = yargs
     if (commandLineParser.argv.verbose)
     {
     // enable verbose logging
-    console.debug=console.verbose;
+    //console.debug=console.verbose;
     }
     
     // Parse the command line
