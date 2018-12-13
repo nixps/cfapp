@@ -14,7 +14,7 @@
 console._log=console.log;
 console.log= function ()
 {
-    //var caller_line = (new Error).stack.split("\n")[2].split("(")[1].split(")")[0];
+    //var caller_line = (new Error).stack.split("\n")[3].split("(")[1].split(")")[0];
     var caller_line="";   
 
     Array.prototype.unshift.call(arguments, new Date().toISOString()+" I "+caller_line);
