@@ -11,6 +11,7 @@
 
 'use strict';
 
+/*
 console._log=console.log;
 console.log= function ()
 {
@@ -30,7 +31,7 @@ console.error= function ()
     Array.prototype.unshift.call(arguments, new Date().toISOString()+" E "+caller_line);
     console._error.apply(null, arguments);
 };
-
+*/
 // Else use it as a command-line app
 const yargs = require('yargs');
 const packageJSON = require('../package.json');
