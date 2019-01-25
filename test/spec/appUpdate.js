@@ -347,7 +347,8 @@ function updateTests() {
                 ], 'not all folders were deleted');
                 assert.equal(apiMockDelegate.updatedWhitepapers.length, 1, 'not all whitepapers were updated');
                 assert.equal(apiMockDelegate.updatedWhitepapers[0].name, 'ProcessOrder', 'not all whitepapers were updated');
-                assert.equal(apiMockDelegate.createdWhitepapers.length, 0, 'no new whitepapers should be created');
+                assert.equal(apiMockDelegate.createdWhitepapers.length, 1, 'One whitepaper should be added');
+                assert.equal(apiMockDelegate.createdWhitepapers[0].name, 'CreateOrder', 'not all whitepapers were created');
                 assert.equal(uploadedFiles.length, 4, 'not all files were deleted');
                 assert.includeMembers(uploadedFiles, [
                     'cloudflow://PP_FILE_STORE/DemoApp/images/mac.png',
@@ -389,7 +390,8 @@ function updateTests() {
                 ], 'not all folders were deleted');
                 assert.equal(apiMockDelegate.updatedWhitepapers.length, 1, 'not all whitepapers were uploaded');
                 assert.equal(apiMockDelegate.updatedWhitepapers[0].name, 'ProcessOrder', 'not all whitepapers were uploaded');
-                assert.equal(apiMockDelegate.createdWhitepapers.length, 0, 'no whitepapers should be created');
+                assert.equal(apiMockDelegate.createdWhitepapers.length, 1, 'one whitepaper should be created');
+                assert.equal(apiMockDelegate.createdWhitepapers[0].name, 'CreateOrder', 'not all whitepapers were created');
                 assert.equal(uploadedFiles.length, 4, 'not all files were deleted');
                 assert.includeMembers(uploadedFiles, [
                     'cloudflow://PP_FILE_STORE/DemoApp/images/mac.png',
@@ -477,7 +479,8 @@ function updateTests() {
                 ], 'not all folders were deleted');
                 assert.equal(apiMockDelegate.updatedWhitepapers.length, 1, 'not all whitepapers were uploaded');
                 assert.equal(apiMockDelegate.updatedWhitepapers[0].name, 'ProcessOrder', 'not all whitepapers were uploaded');
-                assert.equal(apiMockDelegate.createdWhitepapers.length, 0, 'no whitepapers should be created');
+                assert.equal(apiMockDelegate.createdWhitepapers.length, 1, 'one whitepaper should be created');
+                assert.equal(apiMockDelegate.createdWhitepapers[0].name, 'CreateOrder', 'not all whitepapers were created');
                 assert.equal(uploadedFiles.length, 4, 'not all files were deleted');
                 assert.includeMembers(uploadedFiles, [
                     'cloudflow://PP_FILE_STORE/DemoApp/images/mac.png',
