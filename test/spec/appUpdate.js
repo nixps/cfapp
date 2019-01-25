@@ -337,6 +337,10 @@ function updateTests() {
                 login: 'admin',
                 password: 'admin'
             }, outputStream).then(function() {
+                assert.equal(apiMockDelegate.deletedApplications.length, 1,  'one application should be deleted');
+                assert.equal(apiMockDelegate.deletedApplications[0], 'DemoAppID', 'the application "DemoAppID" should be deleted');
+                assert.equal(apiMockDelegate.createdApplications.length, 1,  'one application should be created');
+                assert.equal(apiMockDelegate.createdApplications[0].name, 'DemoApp', 'the application "DemoAppID" should be created');
                 assert.equal(apiMockDelegate.deletedWhitepapers.length, 2, 'whitepapers should not be deleted');
                 assert.equal(apiMockDelegate.deletedFiles.length, 1, 'not all files were deleted');
                 assert.includeMembers(apiMockDelegate.deletedFiles, [
@@ -376,6 +380,10 @@ function updateTests() {
                 password: 'admin',
                 force: true
             }, outputStream).then(function() {
+                assert.equal(apiMockDelegate.deletedApplications.length, 1,  'one application should be deleted');
+                assert.equal(apiMockDelegate.deletedApplications[0], 'DemoAppID', 'the application "DemoAppID" should be deleted');
+                assert.equal(apiMockDelegate.createdApplications.length, 1,  'one application should be created');
+                assert.equal(apiMockDelegate.createdApplications[0].name, 'DemoApp', 'the application "DemoAppID" should be created');
                 assert.equal(apiMockDelegate.deletedWhitepapers.length, 2, 'not all whitepapers were deleted');
                 assert.includeMembers(apiMockDelegate.deletedWhitepapers, [
                     'Workflow1',
@@ -465,6 +473,10 @@ function updateTests() {
                 password: 'admin',
                 force: true
             }, outputStream).then(function() {
+                assert.equal(apiMockDelegate.deletedApplications.length, 1,  'one application should be deleted');
+                assert.equal(apiMockDelegate.deletedApplications[0], 'DemoAppID', 'the application "DemoAppID" should be deleted');
+                assert.equal(apiMockDelegate.createdApplications.length, 1,  'one application should be created');
+                assert.equal(apiMockDelegate.createdApplications[0].name, 'DemoApp', 'the application "DemoAppID" should be created');
                 assert.equal(apiMockDelegate.deletedWhitepapers.length, 2, 'not all whitepapers were deleted');
                 assert.includeMembers(apiMockDelegate.deletedWhitepapers, [
                     'Workflow1',
