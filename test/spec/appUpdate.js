@@ -46,10 +46,16 @@ class ExistingSingleAppDelegate extends APIMockDelegate {
 
             whitepapers: [{
                 _id: 'Workflow1',
-                name: 'Workflow1'
+                name: 'Workflow1',
+                save_id: 'Workflow1'
             }, {
                 _id: 'Workflow2',
-                name: 'Workflow2'
+                name: 'Workflow2',
+                save_id: 'Workflow2'
+            }, {
+                _id: 'ProcessOrder',
+                name: 'ProcessOrder',
+                save_id: 'ProcessOrder'
             }],
 
             cfapps: [{
@@ -68,7 +74,8 @@ class ExistingSingleAppDelegate extends APIMockDelegate {
 
                 workflows: [
                     'Workflow1',
-                    'Workflow2'
+                    'Workflow2', 
+                    'ProcessOrder'
                 ]
             }]
 
@@ -250,10 +257,16 @@ class DemoAppNoVersionInstalledDelegate extends ExistingSingleAppDelegate {
 
             whitepapers: [{
                 _id: 'Workflow1',
-                name: 'Workflow1'
+                name: 'Workflow1',
+                save_id: 'Workflow1'
             }, {
                 _id: 'Workflow2',
-                name: 'Workflow2'
+                name: 'Workflow2',
+                save_id: 'Workflow2'
+            }, {
+                _id: 'ProcessOrder',
+                name: 'ProcessOrder',
+                save_id: 'ProcessOrder'
             }],
 
             cfapps: [{
@@ -271,7 +284,8 @@ class DemoAppNoVersionInstalledDelegate extends ExistingSingleAppDelegate {
 
                 workflows: [
                     'Workflow1',
-                    'Workflow2'
+                    'Workflow2',
+                    'ProcessOrder'
                 ]
             }]
 
@@ -323,11 +337,7 @@ function updateTests() {
                 login: 'admin',
                 password: 'admin'
             }, outputStream).then(function() {
-                assert.equal(apiMockDelegate.deletedWhitepapers.length, 2, 'not all whitepapers were deleted');
-                assert.includeMembers(apiMockDelegate.deletedWhitepapers, [
-                    'Workflow1',
-                    'Workflow2'
-                ], 'not all whitepapers were deleted');
+                assert.equal(apiMockDelegate.deletedWhitepapers.length, 2, 'whitepapers should not be deleted');
                 assert.equal(apiMockDelegate.deletedFiles.length, 1, 'not all files were deleted');
                 assert.includeMembers(apiMockDelegate.deletedFiles, [
                     'cloudflow://PP_FILE_STORE/DemoApp/index.html'
@@ -335,8 +345,9 @@ function updateTests() {
                 assert.includeMembers(apiMockDelegate.deletedFolders, [
                     'cloudflow://PP_FILE_STORE/DemoApp/images/'
                 ], 'not all folders were deleted');
-                assert.equal(apiMockDelegate.uploadedWhitepapers.length, 1, 'not all whitepapers were uploaded');
-                assert.equal(apiMockDelegate.uploadedWhitepapers[0].name, 'ProcessOrder', 'not all whitepapers were uploaded');
+                assert.equal(apiMockDelegate.updatedWhitepapers.length, 1, 'not all whitepapers were updated');
+                assert.equal(apiMockDelegate.updatedWhitepapers[0].name, 'ProcessOrder', 'not all whitepapers were updated');
+                assert.equal(apiMockDelegate.createdWhitepapers.length, 0, 'no new whitepapers should be created');
                 assert.equal(uploadedFiles.length, 4, 'not all files were deleted');
                 assert.includeMembers(uploadedFiles, [
                     'cloudflow://PP_FILE_STORE/DemoApp/images/mac.png',
@@ -376,8 +387,9 @@ function updateTests() {
                 assert.includeMembers(apiMockDelegate.deletedFolders, [
                     'cloudflow://PP_FILE_STORE/DemoApp/images/',
                 ], 'not all folders were deleted');
-                assert.equal(apiMockDelegate.uploadedWhitepapers.length, 1, 'not all whitepapers were uploaded');
-                assert.equal(apiMockDelegate.uploadedWhitepapers[0].name, 'ProcessOrder', 'not all whitepapers were uploaded');
+                assert.equal(apiMockDelegate.updatedWhitepapers.length, 1, 'not all whitepapers were uploaded');
+                assert.equal(apiMockDelegate.updatedWhitepapers[0].name, 'ProcessOrder', 'not all whitepapers were uploaded');
+                assert.equal(apiMockDelegate.createdWhitepapers.length, 0, 'no whitepapers should be created');
                 assert.equal(uploadedFiles.length, 4, 'not all files were deleted');
                 assert.includeMembers(uploadedFiles, [
                     'cloudflow://PP_FILE_STORE/DemoApp/images/mac.png',
@@ -463,8 +475,9 @@ function updateTests() {
                 assert.includeMembers(apiMockDelegate.deletedFolders, [
                     'cloudflow://PP_FILE_STORE/DemoApp/images/'
                 ], 'not all folders were deleted');
-                assert.equal(apiMockDelegate.uploadedWhitepapers.length, 1, 'not all whitepapers were uploaded');
-                assert.equal(apiMockDelegate.uploadedWhitepapers[0].name, 'ProcessOrder', 'not all whitepapers were uploaded');
+                assert.equal(apiMockDelegate.updatedWhitepapers.length, 1, 'not all whitepapers were uploaded');
+                assert.equal(apiMockDelegate.updatedWhitepapers[0].name, 'ProcessOrder', 'not all whitepapers were uploaded');
+                assert.equal(apiMockDelegate.createdWhitepapers.length, 0, 'no whitepapers should be created');
                 assert.equal(uploadedFiles.length, 4, 'not all files were deleted');
                 assert.includeMembers(uploadedFiles, [
                     'cloudflow://PP_FILE_STORE/DemoApp/images/mac.png',

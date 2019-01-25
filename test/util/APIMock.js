@@ -10,6 +10,7 @@
 'use strict';
 
 const APIMockDelegate = require('./APIMockDelegate');
+const _ = require('lodash');
 
 /**
  * This class is used to mock the cloudflow-api for testing purposes
@@ -82,6 +83,31 @@ class APIMock {
             },
 
             whitepaper: {
+                get: function(id, cb, errorCb) {
+                    const whitepapers = mockDelegate.existingWhitepapers();
+                    const whitepaper = _.find(whitepapers, function (w) {
+                        return w._id === id;
+                    });
+                    if (whitepaper !== undefined) {
+                        mockDelegate.whitepaperGet(whitepaper);
+                        if (cb) {
+                            cb(whitepaper);
+                        }
+                        return whitepaper;
+                    }
+
+                    const error = {
+                        error: `Object Not Found: type whitepapers, id = ${id}`,
+                        error_code: `unknown`
+                    }
+
+                    if (errorCb) {
+                        errorCb(error);
+                    } else {
+                        throw new Error(error)
+                    }
+                },
+
                 list: function(query, not_used, cb) {
                     const result = {
                         results: mockDelegate.existingWhitepapers(query)
@@ -115,6 +141,22 @@ class APIMock {
                         cb(result);
                     }
                     return result;
+                },
+
+                create: function (whitepaper, cb) {
+                    mockDelegate.whitepaperCreated(whitepaper);
+                    if (cb) {
+                        cb(whitepaper);
+                    }
+                    return whitepaper;
+                },
+
+                update: function (whitepaper, cb) {
+                    mockDelegate.whitepaperUpdated(whitepaper);
+                    if (cb) {
+                        cb(whitepaper);
+                    }
+                    return whitepaper;
                 }
             },
 

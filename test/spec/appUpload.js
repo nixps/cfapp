@@ -20,6 +20,8 @@ const JSONOutputStream = require('../../lib/util/JSONOutputStream');
 class ExistingWhitepapersDelegate extends APIMockDelegate {
     existingWhitepapers() {
         return [ {
+            _id: 'the-id',
+            save_id: 'the-save-id',
             name: 'ProcessOrder'
         }];
     }
@@ -102,10 +104,10 @@ function uploadTests() {
             getFileUploadMock(uploadedFiles, 4);
 
             return cfapp.apps.upload(__dirname + '/resources/DemoApp/', {}, outputStream).then(function() {
-                const uploadedWhitepapers = apiMock.mockDelegate.uploadedWhitepapers;
+                const createdWhitepapers = apiMock.mockDelegate.createdWhitepapers;
                 assert.equal(uploadedFiles.length, 4, 'all files should be uploaded');
-                assert.equal(uploadedWhitepapers.length, 1, 'all whitepapers should be uploaded');
-                assert.equal(uploadedWhitepapers[0].name, 'ProcessOrder', 'whitepaper "ProcessOrder" missing');
+                assert.equal(createdWhitepapers.length, 1, 'all whitepapers should be uploaded');
+                assert.equal(createdWhitepapers[0].name, 'ProcessOrder', 'whitepaper "ProcessOrder" missing');
                 assert.includeMembers(uploadedFiles, [
                     'cloudflow://PP_FILE_STORE/DemoApp/images/linux.jpg',
                     'cloudflow://PP_FILE_STORE/DemoApp/images/mac.png',
@@ -147,10 +149,10 @@ function uploadTests() {
             getFileUploadMock(uploadedFiles, 2);
 
             return cfapp.apps.upload(__dirname + '/resources/DemoApp/', {}, outputStream).then(function() {
-                const uploadedWhitepapers = apiMock.mockDelegate.uploadedWhitepapers;
+                const createdWhitepapers = apiMock.mockDelegate.createdWhitepapers;
                 assert.equal(uploadedFiles.length, 2, 'all files should be uploaded');
-                assert.equal(uploadedWhitepapers.length, 1, 'all whitepapers should be uploaded');
-                assert.equal(uploadedWhitepapers[0].name, 'ProcessOrder', 'whitepaper "ProcessOrder" missing');
+                assert.equal(createdWhitepapers.length, 1, 'all whitepapers should be uploaded');
+                assert.equal(createdWhitepapers[0].name, 'ProcessOrder', 'whitepaper "ProcessOrder" missing');
                 assert.includeMembers(uploadedFiles, [
                     'cloudflow://PP_FILE_STORE/DemoApp/images/linux.jpg',
                     'cloudflow://PP_FILE_STORE/DemoApp/index.html'
@@ -168,10 +170,10 @@ function uploadTests() {
             getFileUploadMock(uploadedFiles, 4);
 
             return cfapp.apps.upload(__dirname + '/resources/DemoAppWithIconAndDocs/', {}, outputStream).then(function() {
-                const uploadedWhitepapers = apiMock.mockDelegate.uploadedWhitepapers;
+                const createdWhitepapers = apiMock.mockDelegate.createdWhitepapers;
                 assert.equal(uploadedFiles.length, 4, 'all files should be uploaded');
-                assert.equal(uploadedWhitepapers.length, 1, 'all whitepapers should be uploaded');
-                assert.equal(uploadedWhitepapers[0].name, 'ProcessOrder', 'whitepaper "ProcessOrder" missing');
+                assert.equal(createdWhitepapers.length, 1, 'all whitepapers should be uploaded');
+                assert.equal(createdWhitepapers[0].name, 'ProcessOrder', 'whitepaper "ProcessOrder" missing');
                 assert.includeMembers(uploadedFiles, [
                     'cloudflow://PP_FILE_STORE/DemoApp/images/linux.jpg',
                     'cloudflow://PP_FILE_STORE/DemoApp/index.html',
@@ -196,12 +198,12 @@ function uploadTests() {
             return cfapp.apps.upload(__dirname + '/resources/DemoApp/', {
                 overwrite: true
             }, outputStream).then(function() {
-                const uploadedWhitepapers = apiMock.mockDelegate.uploadedWhitepapers;
+                const updatedWhitepapers = apiMock.mockDelegate.updatedWhitepapers;
                 const deletedWhitepapers = apiMock.mockDelegate.deletedWhitepapers;
                 assert.equal(uploadedFiles.length, 4, 'all files should be uploaded');
-                assert.equal(deletedWhitepapers.length, 1, 'one whitepaper should be deleted');
-                assert.equal(uploadedWhitepapers.length, 1, 'all whitepapers should be uploaded');
-                assert.equal(uploadedWhitepapers[0].name, 'ProcessOrder', 'whitepaper "ProcessOrder" missing');
+                assert.equal(deletedWhitepapers.length, 0, 'no whitepapers should be removed during the upload, they should be replaced');
+                assert.equal(updatedWhitepapers.length, 1, 'all whitepapers should be uploaded');
+                assert.equal(updatedWhitepapers[0].name, 'ProcessOrder', 'whitepaper "ProcessOrder" missing');
                 assert.includeMembers(uploadedFiles, [
                     'cloudflow://PP_FILE_STORE/DemoApp/images/linux.jpg',
                     'cloudflow://PP_FILE_STORE/DemoApp/images/mac.png',
@@ -223,12 +225,12 @@ function uploadTests() {
             return cfapp.apps.upload(__dirname + '/resources/DemoApp/', {
                 overwrite: true
             }, outputStream).then(function() {
-                const uploadedWhitepapers = apiMock.mockDelegate.uploadedWhitepapers;
+                const createdWhitepapers = apiMock.mockDelegate.createdWhitepapers;
                 const deletedFiles = apiMock.mockDelegate.deletedFiles;
                 assert.equal(deletedFiles.length, 2, '2 files should be deleted');
                 assert.equal(uploadedFiles.length, 4, 'all files should be uploaded');
-                assert.equal(uploadedWhitepapers.length, 1, 'all whitepapers should be uploaded');
-                assert.equal(uploadedWhitepapers[0].name, 'ProcessOrder', 'whitepaper "ProcessOrder" missing');
+                assert.equal(createdWhitepapers.length, 1, 'all whitepapers should be uploaded');
+                assert.equal(createdWhitepapers[0].name, 'ProcessOrder', 'whitepaper "ProcessOrder" missing');
                 assert.includeMembers(uploadedFiles, [
                     'cloudflow://PP_FILE_STORE/DemoApp/images/linux.jpg',
                     'cloudflow://PP_FILE_STORE/DemoApp/images/mac.png',
@@ -250,10 +252,10 @@ function uploadTests() {
             getFileUploadMock(uploadedFiles, 12);
 
             return cfapp.apps.upload(__dirname + '/resources/MultipleApps/', {}, outputStream).then(function() {
-                const uploadedWhitepapers = apiMock.mockDelegate.uploadedWhitepapers;
+                const createdWhitepapers = apiMock.mockDelegate.createdWhitepapers;
                 assert.equal(uploadedFiles.length, 12, 'all files should be uploaded');
-                // assert.equal(uploadedWhitepapers.length, 3, 'all whitepapers should be uploaded');
-                assert.includeMembers(uploadedWhitepapers.map(e => e.name), [
+                // assert.equal(createdWhitepapers.length, 3, 'all whitepapers should be uploaded');
+                assert.includeMembers(createdWhitepapers.map(e => e.name), [
                     'ProcessOrder1',
                     'ProcessOrder2',
                     'ProcessOrder3'
@@ -300,10 +302,10 @@ function uploadTests() {
             return cfapp.apps.upload(__dirname + '/resources/DemoApp/', {
                 overwrite: true
             }, outputStream).then(function() {
-                const uploadedWhitepapers = apiMock.mockDelegate.uploadedWhitepapers;
+                const createdWhitepapers = apiMock.mockDelegate.createdWhitepapers;
                 assert.equal(uploadedFiles.length, 4, 'all files should be uploaded');
-                assert.equal(uploadedWhitepapers.length, 1, 'all whitepapers should be uploaded');
-                assert.equal(uploadedWhitepapers[0].name, 'ProcessOrder', 'whitepaper "ProcessOrder" missing');
+                assert.equal(createdWhitepapers.length, 1, 'all whitepapers should be uploaded');
+                assert.equal(createdWhitepapers[0].name, 'ProcessOrder', 'whitepaper "ProcessOrder" missing');
                 assert.includeMembers(uploadedFiles, [
                     'cloudflow://PP_FILE_STORE/DemoApp/images/linux.jpg',
                     'cloudflow://PP_FILE_STORE/DemoApp/images/mac.png',
@@ -442,9 +444,9 @@ function uploadTests() {
                 });
             }, /^Missing 'project\.cfapp' file/, 'an error should be returned');
 
-            const uploadedWhitepapers = apiMock.mockDelegate.uploadedWhitepapers;
+            const createdWhitepapers = apiMock.mockDelegate.createdWhitepapers;
             assert.equal(uploadedFiles.length, 0, 'no files should be uploaded');
-            assert.equal(uploadedWhitepapers.length, 0, 'no whitepapers should be uploaded');
+            assert.equal(createdWhitepapers.length, 0, 'no whitepapers should be uploaded');
             assert.equal(apiMock.mockDelegate.createdApplications.length, 0, 'no application should be registered');
         });
     });
@@ -458,10 +460,10 @@ function uploadTests() {
             getFileUploadMock(uploadedFiles, 1);
 
             return cfapp.apps.upload(__dirname + '/resources/EscapeApp/', {}, outputStream).then(function() {
-                const uploadedWhitepapers = apiMock.mockDelegate.uploadedWhitepapers;
+                const createdWhitepapers = apiMock.mockDelegate.createdWhitepapers;
                 assert.equal(uploadedFiles.length, 1, 'all files should be uploaded');
-                assert.equal(uploadedWhitepapers.length, 1, 'all whitepapers should be uploaded');
-                assert.equal(uploadedWhitepapers[0].name, 'ProcessOrder', 'whitepaper "ProcessOrder" missing');
+                assert.equal(createdWhitepapers.length, 1, 'all whitepapers should be uploaded');
+                assert.equal(createdWhitepapers[0].name, 'ProcessOrder', 'whitepaper "ProcessOrder" missing');
                 assert.includeMembers(uploadedFiles, [
                     'cloudflow://PP_FILE_STORE/EscapeApp/mg%20eclipse%20750ml%20ex%25E3%25A9%20r%25E2%25B0v%25E2%25B0%20261012.pdf',
                 ], 'the files were not all uploaded');
@@ -480,10 +482,10 @@ function uploadTests() {
             getFileUploadMock(uploadedFiles, 1);
 
             return cfapp.apps.upload(__dirname + '/resources/DemoAppEmptyFolder/', {}, outputStream).then(function() {
-                const uploadedWhitepapers = apiMock.mockDelegate.uploadedWhitepapers;
+                const createdWhitepapers = apiMock.mockDelegate.createdWhitepapers;
                 assert.equal(uploadedFiles.length, 1, 'all files should be uploaded');
-                assert.equal(uploadedWhitepapers.length, 1, 'all whitepapers should be uploaded');
-                assert.equal(uploadedWhitepapers[0].name, 'ProcessOrder', 'whitepaper "ProcessOrder" missing');
+                assert.equal(createdWhitepapers.length, 1, 'all whitepapers should be uploaded');
+                assert.equal(createdWhitepapers[0].name, 'ProcessOrder', 'whitepaper "ProcessOrder" missing');
                 assert.includeMembers(uploadedFiles, [
                     'cloudflow://PP_FILE_STORE/DemoApp/index.html',
                 ], 'the files were not all uploaded');

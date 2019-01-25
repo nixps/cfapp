@@ -15,9 +15,12 @@
 class APIMockDelegate {
     constructor() {
         this._createSessionRequest = null;
+        this.createdWhitepapers = [];
+        this.updatedWhitepapers = [];
         this.uploadedWhitepapers = [];
         this.deletedWhitepapers = [];
         this.downloadedWhitepapers = [];
+        this.downloadedGetWhitepapers = [];
         this.deletedFiles = [];
         this.deletedFolders = [];
         this._host = 'http://localhost:9090';
@@ -42,6 +45,10 @@ class APIMockDelegate {
 
     get address() {
         return `${this._host}/portal.cgi`;
+    }
+
+    whitepaperGet(whitepaper) {
+        this.downloadedGetWhitepapers.push(whitepaper);
     }
 
     whitepaperUploaded(whitepaper) {
@@ -118,6 +125,14 @@ class APIMockDelegate {
 
     folderCreated (folder) {
         this.createdFolders.push(folder);
+    }
+
+    whitepaperCreated (whitepaper) {
+        this.createdWhitepapers.push(JSON.parse(JSON.stringify(whitepaper)));
+    }
+
+    whitepaperUpdated (whitepaper) {
+        this.updatedWhitepapers.push(JSON.parse(JSON.stringify(whitepaper)));
     }
 }
 
