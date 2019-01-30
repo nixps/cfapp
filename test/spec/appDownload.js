@@ -16,6 +16,7 @@ const mkdirp = require('mkdirp');
 const remove = require('remove');
 const streamify = require('stream-array');
 const os = require('os');
+const _ = require('lodash');
 
 const APIMockDelegate = require('../util/APIMockDelegate');
 const cfapp = require('../../lib/cfapp');
@@ -261,8 +262,10 @@ function downloadTests() {
 
         return cfapp.apps.download(__dirname + '/downloadTest/DownloadApp', {}, outputStream).then(function() {
             const mockDelegate = apiMock.mockDelegate;
-            assert.equal(mockDelegate.downloadedWhitepapers.length, 2, 'not all whitepapers were downloaded');
-            assert.includeMembers(mockDelegate.downloadedWhitepapers, [
+            assert.equal(mockDelegate.downloadedGetWhitepapers.length, 2, 'not all whitepapers were downloaded');
+            assert.includeMembers(_.map(mockDelegate.downloadedGetWhitepapers, function (w) {
+                return w.name;
+            }), [
                 'Workflow1',
                 'Workflow2'
             ], 'not all whitepapers were downloaded');
@@ -351,8 +354,10 @@ function downloadTests() {
                 overwrite: true
             }, outputStream).then(function() {
                 const mockDelegate = apiMock.mockDelegate;
-                assert.equal(mockDelegate.downloadedWhitepapers.length, 2, 'not all whitepapers were downloaded');
-                assert.includeMembers(mockDelegate.downloadedWhitepapers, [
+                assert.equal(mockDelegate.downloadedGetWhitepapers.length, 2, 'not all whitepapers were downloaded');
+                assert.includeMembers(_.map(mockDelegate.downloadedGetWhitepapers, function (w) {
+                    return w.name;
+                }), [
                     'Workflow1',
                     'Workflow2'
                 ], 'not all whitepapers were downloaded');
@@ -530,8 +535,10 @@ function downloadTests() {
 
         return cfapp.apps.download(__dirname + '/downloadTest/DownloadApp', {}, outputStream).then(function() {
             const mockDelegate = apiMock.mockDelegate;
-            assert.equal(mockDelegate.downloadedWhitepapers.length, 2, 'not all whitepapers were downloaded');
-            assert.includeMembers(mockDelegate.downloadedWhitepapers, [
+            assert.equal(mockDelegate.downloadedGetWhitepapers.length, 2, 'not all whitepapers were downloaded');
+            assert.includeMembers(_.map(mockDelegate.downloadedGetWhitepapers, function (w) {
+                return w.name;
+            }), [
                 'Workflow1',
                 'Workflow2'
             ], 'not all whitepapers were downloaded');

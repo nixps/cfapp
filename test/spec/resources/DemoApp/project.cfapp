@@ -12,6 +12,7 @@
     ],
 
     "workflows": [
-        "ProcessOrder"
+        "ProcessOrder",
+	"CreateOrder"
     ]
 }
