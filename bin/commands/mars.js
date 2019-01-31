@@ -7,15 +7,16 @@
  *
  */
 
+
 'use strict';
 
-const apps = require('./apps');
-const mars = require('./mars')
-
-/**
- * This is the module that gets exported if used as library
- */
 module.exports = {
-    apps: apps,
-    mars: mars
+    command: 'mars <command>',
+    desc: 'Installs and downloads MARS apps',
+    builder: function(yargs) {
+        return yargs
+            .commandDir('mars')
+            .demand(1);
+    },
+    handler: function() {}
 };

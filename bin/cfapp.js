@@ -68,8 +68,8 @@ const commandLineParser = yargs
     //console.debug=console.verbose;
     }
     
-    // Parse the command line
-    const argv = commandLineParser
+// Parse the command line
+const argv = commandLineParser
     .commandDir('commands') 
     .argv;
 
