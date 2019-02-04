@@ -70,9 +70,8 @@ const argv = commandLineParser
     .commandDir('commands') 
     .argv;
 
-
 // Check if the command was parsed correctly
-if (argv._[0]) {
+if (['app', 'cloudflow', 'frame', 'mars', 'version'].includes(argv._[0]) === false) {
     console.log('Unknown command');
     commandLineParser.showHelp();
     process.exit(1);
