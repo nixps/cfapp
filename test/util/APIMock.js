@@ -45,6 +45,58 @@ class APIMock {
                 }
             },
 
+            database: {
+                document: {
+                    list: function (collection, query) {
+                        if (collection === 'nucleus.config') {
+                            return {
+                                documents: [{
+                                    serial: '123456'
+                                }]
+                            };
+                        }
+                    }
+                }
+            },
+
+            preferences: {
+                get_for_realm: function () {
+                    return {
+                        preferences: {
+                            serverURL: 'http://the-mars-server.com'
+                        }
+                    };
+                }
+            },
+
+            hub: {
+                start_from_whitepaper_with_variables: function (whitepaper, input, variables, cb) {
+                    const workable = mockDelegate.createNewWorkable(whitepaper, input, variables);
+                    if (cb) {
+                        cb(workable);
+                    }
+                    return workable;
+                }
+            },
+
+            workable: {
+                get_progress: function (wpid, cb) {
+                    const result = mockDelegate.getWorkableProgress(wpid)
+                    if (cb) {
+                        cb(result);
+                    }
+                    return result;
+                },
+
+                get: function (wpid, cb) {
+                    const result = mockDelegate.getWorkable(wpid)
+                    if (cb) {
+                        cb(result);
+                    }
+                    return result;
+                }
+            },
+
             file: {
                 delete_file_with_options: function(file, options, cb) {
                     if (cb) {
@@ -215,6 +267,12 @@ class APIMock {
                         if (cb) {
                             cb();
                         }
+                    },
+                    delete_by_query: function(query, cb) {
+                        mockDelegate.applicationDeletedByQuery(query);
+                        if (cb) {
+                            cb();
+                        }
                     }
                 }
             },
@@ -224,6 +282,20 @@ class APIMock {
                     const result = {
                         build: 'cloudflow_version'
                     };
+                    if (cb) {
+                        cb(result);
+                    }
+                    return result;
+                }
+            },
+
+            license: {
+                get: function (cb) {
+                    const result = {
+                        current_site: 'Demo1',
+                        customer_code: 'be-test'
+                    }
+
                     if (cb) {
                         cb(result);
                     }
