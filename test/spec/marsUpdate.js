@@ -16,7 +16,7 @@ const apiMock = require('cloudflow-api');
 const cfapp = require('../../lib/cfapp');
 const JSONOutputStream = require('../../lib/util/JSONOutputStream');
 
-const marsListMock = require('../util/MarsListMock.js');
+const marsListMock = require('../util/MARSListMock.js');
 const marsDetailsMock = require('../util/MARSDetailsMock.js');
 
 class ApplicationSupportDelegate extends APIMockDelegate {
