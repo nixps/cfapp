@@ -1,0 +1,661 @@
+{
+    "results": [
+        {
+            "_id": "5bb3695fcb02001500000e3d",
+            "name": "be-lenna-puppetmaster",
+            "versions": [
+                "0.0.8",
+                "0.0.9",
+                "0.0.10",
+                "0.0.11",
+                "0.1.0",
+                "0.2.0"
+            ],
+            "description": "Puppetmaster workflows and resources",
+            "you_are_owner": false,
+            "owner": "be-lenna",
+            "you_are_sharer": true,
+            "last_version": "0.2.0",
+            "last_version_level": "dev"
+        },
+        {
+            "_id": "5ba2375cf80900cd000007ed",
+            "name": "be-lyder-appwithparameters",
+            "versions": [
+                "0.0.1"
+            ],
+            "description": "Guideline for Application Parameters",
+            "icon": "https://mars.mycloudflow.com/portal.cgi?asset=anonymousDownload&url=cloudflow%3a%2f%2fPP_FILE_STORE%2fcache%2fbe-lyder-appwithparameters%2f0.0.1%2ficon%2fappIcon.jpg&hash=069E7A7DDAC1D67E49160A2B762B0532",
+            "participants": [
+                "be-nick",
+                "be-evyc",
+                "fr-benoi"
+            ],
+            "you_are_owner": true,
+            "owner": "be-lyder",
+            "you_are_sharer": false,
+            "last_version": "0.0.1",
+            "last_version_level": "dev",
+            "mercurial": "hgweb.cgi/b71695d1-2c47-42e6-b9cd-a9f6d5155a11/be-lyder-appwithparameters/"
+        },
+        {
+            "_id": "5bab88ef2c0e00de00002969",
+            "name": "be-lyder-cerm",
+            "versions": [
+                "0.0.1"
+            ],
+            "description": "CERM integration kit",
+            "clone_of": {
+                "name": "cerm",
+                "version": "2.0.3"
+            },
+            "you_are_owner": true,
+            "owner": "be-lyder",
+            "last_version": "0.0.1",
+            "last_version_level": "dev",
+            "mercurial": "hgweb.cgi/998ba360-b759-4623-aefd-1748a2597cd4/be-lyder-cerm/"
+        },
+        {
+            "_id": "5b33473ce80100b90000038a",
+            "name": "be-lyder-cermyuncheng",
+            "versions": [
+                "0.0.1",
+                "0.0.2",
+                "0.0.3"
+            ],
+            "description": "CERM Application for Yuncheng",
+            "clone_of": {
+                "name": "cerm",
+                "version": "0.0.1"
+            },
+            "head_changeset": "814396819e771fe38b09488d632c6fbf7bb21c4a",
+            "you_are_owner": true,
+            "owner": "be-lyder",
+            "last_version": "0.0.3",
+            "last_version_level": "dev",
+            "mercurial": "hgweb.cgi/f6ca2bf3-5d73-4ad9-8187-9213e2b618e1/be-lyder-cermyuncheng/"
+        },
+        {
+            "_id": "5bd838d1e1090032000022db",
+            "name": "co-code-installedapp",
+            "versions": [
+                "0.0.1",
+                "0.0.2"
+            ],
+            "version": "0.0.2",
+            "description": "This is an app from MARS",
+            "you_are_owner": true,
+            "owner": "co-code",
+            "participants": [
+                "ab-partA",
+                "cd-partB",
+                "ef-partC"
+            ],
+            "mercurial": "hgweb.cgi/490509ad-919e-47e0-8f3a-f335bb71f54d/co-code-installedapp/",
+            "head_changeset": "017948b95300ddbba1032c7a80c4e02d6584c628",
+            "you_are_sharer": false,
+            "last_version": "0.0.2",
+            "last_version_level": "dev"
+        },
+        {
+            "_id": "5b3349d3e80100b90000078f",
+            "name": "be-lyder-featureweek",
+            "versions": [
+                "0.0.1",
+                "0.0.2"
+            ],
+            "description": "Test during feature week",
+            "you_are_owner": true,
+            "owner": "be-lyder",
+            "last_version": "0.0.2",
+            "last_version_level": "dev",
+            "mercurial": "hgweb.cgi/71d069f3-bfe0-4c3b-b868-583dcc6c3b05/be-lyder-featureweek/"
+        },
+        {
+            "_id": "5bab8e35d10e00cc00001c4b",
+            "name": "be-lyder-gravureoutput",
+            "versions": [
+                "0.0.3",
+                "0.0.4"
+            ],
+            "description": "Heliodisk Gravure Output",
+            "participants": [
+                "be-evyc",
+                "be-nick",
+                "be-bertv",
+                "be-md",
+                "be-phoeb"
+            ],
+            "you_are_owner": true,
+            "owner": "be-lyder",
+            "you_are_sharer": false,
+            "last_version": "0.0.4",
+            "last_version_level": "dev",
+            "mercurial": "hgweb.cgi/9f92f49e-1e17-4b13-923b-41804f0808f7/be-lyder-gravureoutput/"
+        },
+        {
+            "_id": "5bd03e1af50b009500000a17",
+            "name": "be-lyder-patchplannermaintenance",
+            "versions": [
+                "0.0.1",
+                "0.0.2",
+                "0.0.3"
+            ],
+            "description": "PatchPlanner Maintenance",
+            "participants": [
+                "us-micha"
+            ],
+            "you_are_owner": true,
+            "owner": "be-lyder",
+            "you_are_sharer": false,
+            "last_version": "0.0.3",
+            "last_version_level": "dev",
+            "mercurial": "hgweb.cgi/d9695145-f714-4c38-896d-24f966912496/be-lyder-patchplannermaintenance/"
+        },
+        {
+            "_id": "5bd32bc2f50b009500002669",
+            "name": "be-lyder-ppcproposal",
+            "versions": [
+                "0.0.1",
+                "0.0.2",
+                "0.0.3"
+            ],
+            "description": "Print Production Cockpit",
+            "clone_of": {
+                "name": "de-geoff-ppc",
+                "version": "0.0.6"
+            },
+            "participants": [
+                "de-geoff",
+                "be-nick",
+                "de-pierl",
+                "be-evyc",
+                "de-steph",
+                "be-guill"
+            ],
+            "you_are_owner": true,
+            "owner": "be-lyder",
+            "you_are_sharer": false,
+            "last_version": "0.0.3",
+            "last_version_level": "dev",
+            "mercurial": "hgweb.cgi/814f72b6-f6af-4dc8-8ef7-809d38fd0411/be-lyder-ppcproposal/"
+        },
+        {
+            "_id": "5bd026d2f50b0095000006b4",
+            "name": "be-lyder-supportdebugtools",
+            "versions": [
+                "0.0.1",
+                "0.0.2",
+                "0.0.3"
+            ],
+            "description": "Tools for Support",
+            "participants": [
+                "be-frank",
+                "be-jurge"
+            ],
+            "head_changeset": "66d5f2cc98b2c73a1aafe99745a77f97dc2bbe37",
+            "you_are_owner": true,
+            "owner": "be-lyder",
+            "you_are_sharer": false,
+            "last_version": "0.0.3",
+            "last_version_level": "dev",
+            "mercurial": "hgweb.cgi/2339661a-eb3e-4a9a-a356-562f0f624dcf/be-lyder-supportdebugtools/"
+        },
+        {
+            "_id": "5beea179b20300a2000004db",
+            "name": "be-lyder-test",
+            "versions": [
+                "0.0.1",
+                "0.0.2",
+                "0.0.3"
+            ],
+            "description": "test",
+            "you_are_owner": true,
+            "owner": "be-lyder",
+            "last_version": "0.0.3",
+            "last_version_level": "dev",
+            "mercurial": "hgweb.cgi/4ee948c9-5ab9-42cc-b161-18e8da729eb2/be-lyder-test/"
+        },
+        {
+            "_id": "5bb238490c030005000041e1",
+            "name": "be-lyder-testwithfrank",
+            "versions": [
+                "0.0.1"
+            ],
+            "description": "testje lol",
+            "you_are_owner": true,
+            "owner": "be-lyder",
+            "last_version": "0.0.1",
+            "last_version_level": "dev",
+            "mercurial": "hgweb.cgi/9d726723-0026-43c9-a50d-002e54e1796b/be-lyder-testwithfrank/"
+        },
+        {
+            "_id": "5bbf524a2805008d000012b1",
+            "name": "be-lyder-ui00001mars",
+            "versions": [
+                "0.0.1",
+                "0.0.2",
+                "0.0.3",
+                "0.0.4",
+                "0.0.5",
+                "0.0.6",
+                "0.0.7",
+                "0.0.8",
+                "0.0.9",
+                "0.0.10",
+                "0.0.11"
+            ],
+            "description": "Selenium UI Tests",
+            "participants": [
+                "havana",
+                "be-lenna",
+                "fr-benoi"
+            ],
+            "you_are_owner": true,
+            "owner": "be-lyder",
+            "you_are_sharer": false,
+            "last_version": "0.0.11",
+            "last_version_level": "dev",
+            "mercurial": "hgweb.cgi/59004136-38c7-4bc3-9f17-37b5f5c170d6/be-lyder-ui00001mars/"
+        },
+        {
+            "_id": "5ba892993a0d002300000813",
+            "name": "cerm",
+            "versions": [
+                "2.0.3"
+            ],
+            "description": "CERM integration kit",
+            "you_are_owner": false,
+            "owner": "be-cermb",
+            "last_version": "2.0.3",
+            "last_release": "2.0.3",
+            "last_version_level": "release"
+        },
+        {
+            "_id": "5bd87abee109003200006fce",
+            "name": "cloudflowtools",
+            "versions": [
+                "0.0.1"
+            ],
+            "description": "A utility toolkit for Cloudflow.",
+            "you_are_owner": false,
+            "owner": "gb-thoma",
+            "you_are_sharer": false,
+            "last_version": "0.0.1",
+            "last_release": "0.0.1",
+            "last_version_level": "release"
+        },
+        {
+            "_id": "5ba8e0a13a0d0023000010a9",
+            "name": "cloudflowtransfer",
+            "versions": [
+                "0.0.2"
+            ],
+            "description": "Transfer large files with CloudflowTransfer app",
+            "icon": "https://mars.mycloudflow.com/portal.cgi?asset=anonymousDownload&url=cloudflow%3a%2f%2fPP_FILE_STORE%2fcache%2fcloudflowtransfer%2f0.0.2%2ficon%2fappIcon.jpg&hash=5ECCA226D96FCF081B3CF8ACF7264C47",
+            "head_changeset": "c800debeec6d4ecf96cb3a1f7d56f9ebe728134a",
+            "you_are_owner": false,
+            "owner": "be-bertv",
+            "you_are_sharer": false,
+            "last_version": "0.0.2",
+            "last_release": "0.0.2",
+            "last_version_level": "release"
+        },
+        {
+            "_id": "5c45fae4330000f800001364",
+            "name": "de-geoff-bromb18074",
+            "versions": [
+                "0.0.2"
+            ],
+            "description": "DE-BROMB: 18074",
+            "you_are_owner": false,
+            "owner": "de-geoff",
+            "you_are_sharer": true,
+            "last_version": "0.0.2",
+            "last_version_level": "dev"
+        },
+        {
+            "_id": "5c45fa06b60c007e0000066b",
+            "name": "de-geoff-chpagoa17040",
+            "versions": [
+                "0.0.1"
+            ],
+            "description": "CH-PAGOA: 17040",
+            "you_are_owner": false,
+            "owner": "de-geoff",
+            "you_are_sharer": true,
+            "last_version": "0.0.1",
+            "last_version_level": "dev"
+        },
+        {
+            "_id": "5bab35e8220b000200001262",
+            "name": "fr-benoi-appwithparameters2",
+            "versions": [
+                "0.0.1",
+                "0.0.2",
+                "0.0.3",
+                "0.0.4",
+                "0.0.5",
+                "0.0.6",
+                "0.0.7",
+                "0.0.8",
+                "0.0.9",
+                "0.0.10",
+                "0.0.11",
+                "0.0.12",
+                "0.0.13",
+                "0.0.14"
+            ],
+            "description": "Guideline for Application Parameters - Benoit Modifications",
+            "icon": "https://mars.mycloudflow.com/portal.cgi?asset=anonymousDownload&url=cloudflow%3a%2f%2fPP_FILE_STORE%2fcache%2ffr-benoi-appwithparameters2%2f0.0.14%2ficon%2fappIcon.jpg&hash=50C97EC663687EC92B4D23AE47EBCA37",
+            "clone_of": {
+                "name": "be-lyder-appwithparameters",
+                "version": "0.0.1"
+            },
+            "you_are_owner": false,
+            "owner": "fr-benoi",
+            "you_are_sharer": true,
+            "last_version": "0.0.14",
+            "last_version_level": "dev"
+        },
+        {
+            "_id": "5bc5b716050700b200002482",
+            "name": "fr-benoi-havanamarstest",
+            "versions": [
+                "0.0.1",
+                "0.0.2",
+                "0.0.3"
+            ],
+            "description": "Havana Mars Testers",
+            "you_are_owner": false,
+            "owner": "fr-benoi",
+            "you_are_sharer": true,
+            "last_version": "0.0.3",
+            "last_version_level": "dev"
+        },
+        {
+            "_id": "5b2e453ebf0f00bd000002b1",
+            "name": "fr-benoi-marsrepository",
+            "versions": [
+                "0.3.18",
+                "0.3.20",
+                "0.3.21",
+                "0.3.22",
+                "0.3.23",
+                "0.3.24",
+                "0.3.25",
+                "0.3.26",
+                "0.3.27",
+                "0.3.28",
+                "0.3.29",
+                "0.3.30",
+                "0.3.31",
+                "0.3.32",
+                "0.3.33",
+                "0.3.34",
+                "0.3.35",
+                "0.3.36",
+                "0.3.37",
+                "0.3.38",
+                "1.0.13",
+                "1.0.14",
+                "1.0.15",
+                "1.0.16",
+                "1.0.17",
+                "1.0.18",
+                "1.0.19",
+                "1.0.20",
+                "1.0.21",
+                "1.0.22",
+                "1.0.23",
+                "1.0.24",
+                "1.0.25",
+                "1.0.26",
+                "1.0.27",
+                "1.0.28",
+                "1.0.29",
+                "1.0.30",
+                "1.0.31",
+                "1.0.32",
+                "1.0.33",
+                "1.0.34",
+                "1.0.35",
+                "1.0.36",
+                "1.0.37",
+                "1.0.38",
+                "1.0.39",
+                "1.0.40",
+                "1.0.41"
+            ],
+            "description": "Mars Repository",
+            "icon": "https://mars.mycloudflow.com/portal.cgi?asset=anonymousDownload&url=cloudflow%3a%2f%2fPP_FILE_STORE%2fcache%2ffr-benoi-marsrepository%2f1.0.41%2ficon%2fappIcon.png&hash=B1E83826DEC4ECF87DF2BF527F9F9147",
+            "participants": [
+                "havana"
+            ],
+            "you_are_owner": true,
+            "owner": "fr-benoi",
+            "you_are_sharer": false,
+            "last_version": "1.0.41",
+            "last_version_level": "dev",
+            "mercurial": "hgweb.cgi/963e7333-a3f0-4e41-9760-279d8b380c42/fr-benoi-marsrepository/"
+        },
+        {
+            "_id": "5b2e46c7bf0f00bd00000470",
+            "name": "fr-benoi-marsrights",
+            "versions": [
+                "0.0.6",
+                "0.0.7",
+                "0.0.8",
+                "0.0.9",
+                "0.0.10",
+                "0.0.11",
+                "0.0.12",
+                "0.0.13",
+                "0.0.14",
+                "0.0.15",
+                "0.0.16",
+                "0.0.17"
+            ],
+            "description": "Mars Applications Management",
+            "icon": "https://mars.mycloudflow.com/portal.cgi?asset=anonymousDownload&url=cloudflow%3a%2f%2fPP_FILE_STORE%2fcache%2ffr-benoi-marsrights%2f0.0.17%2ficon%2fappIcon.png&hash=2D1D70F440937CC06B896916FBE7BD56",
+            "participants": [
+                "havana"
+            ],
+            "you_are_owner": true,
+            "owner": "fr-benoi",
+            "you_are_sharer": false,
+            "last_version": "0.0.17",
+            "last_version_level": "dev",
+            "mercurial": "hgweb.cgi/7f57b2a2-a484-488b-9d1d-c485152723b0/fr-benoi-marsrights/"
+        },
+        {
+            "_id": "5bf52f1e4205005d000031b5",
+            "name": "fr-benoi-removeworkflowtest",
+            "versions": [
+                "0.0.1",
+                "0.0.2"
+            ],
+            "description": "Remove Workflow Test",
+            "you_are_owner": false,
+            "owner": "fr-benoi",
+            "you_are_sharer": true,
+            "last_version": "0.0.2",
+            "last_version_level": "dev"
+        },
+        {
+            "_id": "5c17b3c8ed0e001a00003cb8",
+            "name": "fr-benoi-tectonics",
+            "versions": [
+                "0.0.1",
+                "0.0.2",
+                "0.0.3",
+                "0.0.4"
+            ],
+            "description": "Tectonics",
+            "you_are_owner": false,
+            "owner": "fr-benoi",
+            "you_are_sharer": true,
+            "last_version": "0.0.4",
+            "last_version_level": "dev"
+        },
+        {
+            "_id": "5bbcb8e4cb01001f000001c4",
+            "name": "fr-benoi-testshare",
+            "versions": [
+                "0.0.1"
+            ],
+            "description": "Test Share",
+            "you_are_owner": false,
+            "owner": "fr-benoi",
+            "you_are_sharer": true,
+            "last_version": "0.0.1",
+            "last_version_level": "dev"
+        },
+        {
+            "_id": "5badf4722e04003800001657",
+            "name": "gdrive",
+            "versions": [
+                "0.0.2"
+            ],
+            "description": "Workflows to communicate with Google Drive",
+            "you_are_owner": false,
+            "owner": "be-trist",
+            "you_are_sharer": false,
+            "last_version": "0.0.2",
+            "last_release": "0.0.2",
+            "last_version_level": "release"
+        },
+        {
+            "_id": "5c3386ca2a0200f700000a41",
+            "name": "gravureoutput",
+            "versions": [
+                "0.0.2"
+            ],
+            "description": "Gravure Output holding queue",
+            "you_are_owner": false,
+            "owner": "be-pjvc",
+            "last_version": "0.0.2",
+            "last_release": "0.0.2",
+            "last_version_level": "release"
+        },
+        {
+            "_id": "5ba011d3a40d009d00000aa0",
+            "name": "ic3dautomate",
+            "versions": [
+                "1.0.2"
+            ],
+            "description": "iC3D Automate Actions",
+            "you_are_owner": false,
+            "owner": "us-jimsk",
+            "last_version": "1.0.2",
+            "last_release": "1.0.2",
+            "last_version_level": "release"
+        },
+        {
+            "_id": "5b9a73dd470900d600000ca3",
+            "name": "pagebuilderexercise",
+            "versions": [
+                "1.0.0",
+                "2.0.0",
+                "2.1.0",
+                "2.1.1",
+                "2.2.1",
+                "2.2.2",
+                "2.2.3"
+            ],
+            "description": "PAGEBUILDER exercise",
+            "you_are_owner": false,
+            "owner": "us-jimsk",
+            "you_are_sharer": true,
+            "last_version": "2.2.3",
+            "last_release": "2.2.3",
+            "last_version_level": "release"
+        },
+        {
+            "_id": "5baa2590220b0002000001fe",
+            "name": "portalexample",
+            "versions": [
+                "1.0.2"
+            ],
+            "description": "Portal Example",
+            "icon": "https://mars.mycloudflow.com/portal.cgi?asset=anonymousDownload&url=cloudflow%3a%2f%2fPP_FILE_STORE%2fcache%2fportalexample%2f1.0.2%2ficon%2fportalexample.png&hash=8260C3656E974A29DA0D9BD6ADF47ABB",
+            "you_are_owner": false,
+            "owner": "de-pierl",
+            "last_version": "1.0.2",
+            "last_release": "1.0.2",
+            "last_version_level": "release"
+        },
+        {
+            "_id": "5bbbb243550a00f30000259d",
+            "name": "ppc",
+            "versions": [
+                "0.0.25"
+            ],
+            "description": "Cockpit",
+            "you_are_owner": false,
+            "owner": "de-geoff",
+            "you_are_sharer": false,
+            "last_version": "0.0.25",
+            "last_release": "0.0.25",
+            "last_version_level": "release"
+        },
+        {
+            "_id": "5baa03c2100f009700001fca",
+            "name": "preflightwithtranslatedreport",
+            "versions": [
+                "0.0.1",
+                "0.0.2",
+                "0.0.3",
+                "0.0.4",
+                "0.0.5",
+                "0.0.6",
+                "0.0.7",
+                "1.0.0",
+                "1.0.1",
+                "1.0.2"
+            ],
+            "description": "Preflight with translated report in German",
+            "icon": "https://mars.mycloudflow.com/portal.cgi?asset=anonymousDownload&url=cloudflow%3a%2f%2fPP_FILE_STORE%2fcache%2fpreflightwithtranslatedreport%2f1.0.2%2ficon%2fpreflight_de.svg&hash=B664A75FB2692CCE7A29F0298E3CADA5",
+            "you_are_owner": false,
+            "owner": "de-pierl",
+            "you_are_sharer": true,
+            "last_version": "1.0.2",
+            "last_release": "1.0.2",
+            "last_version_level": "release"
+        },
+        {
+            "_id": "5b913dc20a08006500000561",
+            "name": "quickbenchmark",
+            "versions": [
+                "1.0.1",
+                "1.0.2",
+                "1.0.3"
+            ],
+            "description": "Quick Benchmark",
+            "icon": "https://mars.mycloudflow.com/portal.cgi?asset=anonymousDownload&url=cloudflow%3a%2f%2fPP_FILE_STORE%2fcache%2fquickbenchmark%2f1.0.3%2ficon%2fspeedometer.png&hash=61B2C13D3A8A6E7296346E676B5DA3C7",
+            "participants": [
+                "be-marc2"
+            ],
+            "you_are_owner": true,
+            "owner": "be-lyder",
+            "you_are_sharer": false,
+            "last_version": "1.0.3",
+            "last_version_level": "dev",
+            "mercurial": "hgweb.cgi/7b60baf3-df28-43a2-973d-5f0ee86f0715/quickbenchmark/"
+        },
+        {
+            "_id": "5bf55cd6eb0b0044000002a8",
+            "name": "us-micha-patchplannerautoraster",
+            "versions": [
+                "0.0.1",
+                "0.0.2"
+            ],
+            "description": "Automatically set up Patchplanner Jobs from incoming PDF or TIFF-LEN Files",
+            "you_are_owner": false,
+            "owner": "us-micha",
+            "you_are_sharer": true,
+            "last_version": "0.0.2",
+            "last_version_level": "dev"
+        }
+    ]
+}

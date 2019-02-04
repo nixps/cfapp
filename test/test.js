@@ -31,4 +31,10 @@ describe('cfapp tests', function() {
         describe('init', require('./spec/appInit'));
         describe('project.cfapp validation', require('./spec/projectValidation'));
     });
+
+    describe('cfapp mars module', function() {
+        describe('install', require('./spec/marsInstall'));
+        describe('update', require('./spec/marsUpdate'));
+        describe('remove', require('./spec/marsRemove'));
+    });
 });

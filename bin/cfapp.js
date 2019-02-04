@@ -50,6 +50,10 @@ const commandLineParser = yargs
     }, function(yargs) {
         console.log(`use app download "${yargs.directory ? yargs.directory : ''}" instead`);
     })
+    .command('app', 'Installs and downloads Cloudflow Apps', function() {}, function() {})
+    .command('cloudflow', 'Manages Cloudflow installations', function() {}, function() {})
+    .command('frame', 'Manages Frame installations', function() {}, function() {})
+    .command('mars', 'Installs and downloads MARS apps', function() {}, function() {})
     .command('version', 'shows the version of the cfapp tool', function() {
     }, function(/*yargs*/) {
         console.log(packageJSON.version);
@@ -59,15 +63,8 @@ const commandLineParser = yargs
     .alias('v', 'verbose')
     .describe('v', 'Verbose logging')
     .alias('h','help')
-    .demandCommand()
-    .help();
+    .demandCommand();
 
-    if (commandLineParser.argv.verbose)
-    {
-    // enable verbose logging
-    //console.debug=console.verbose;
-    }
-    
 // Parse the command line
 const argv = commandLineParser
     .commandDir('commands') 
@@ -75,22 +72,8 @@ const argv = commandLineParser
 
 
 // Check if the command was parsed correctly
-// if (argv._[0]) {
-//     if (argv._[0] === 'app' && argv._[1]) {
-//         const subcommand = argv._[1];
-//         if (['download', 'upload', 'list', 'init', 'remove', 'update'].indexOf(subcommand) < 0) {
-//             // If we arrive here, the command was not processed, unknown command
-//             console.log('Unknown command');
-//             commandLineParser.showHelp();
-//             process.exit(1);
-//         }
-//     }
-//     else if (argv._[0] === 'install' || argv._[0] === 'upload'  || argv._[0] === 'download') {
-//         // This is already caught elsewere
-//     }
-//     else {
-//         console.log('Unknown command');
-//         commandLineParser.showHelp();
-//         process.exit(1);
-//     }
-// }
+if (argv._[0]) {
+    console.log('Unknown command');
+    commandLineParser.showHelp();
+    process.exit(1);
+}
