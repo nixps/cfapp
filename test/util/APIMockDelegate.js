@@ -28,6 +28,7 @@ class APIMockDelegate {
 
         this.createdApplications = [];
         this.deletedApplications = [];
+        this.deletedApplicationsByQuery = [];
         this.createdFolders = [];
     }
 
@@ -116,6 +117,14 @@ class APIMockDelegate {
         this.deletedApplications.push(appID);
     }
 
+    applicationDeletedByQuery(query) {
+        if (! this.supportsApplications) {
+            throw new Error('Unknown command');
+        }
+
+        this.deletedApplicationsByQuery.push(query);
+    }
+
     sessionCreated(login, password) {
         this.createdSessions.push({
             login: login,
@@ -133,6 +142,26 @@ class APIMockDelegate {
 
     whitepaperUpdated (whitepaper) {
         this.updatedWhitepapers.push(JSON.parse(JSON.stringify(whitepaper)));
+    }
+
+    createNewWorkable (whitepaper, input, variables) {
+        return {
+            workable_id: 'success'
+        }
+    }
+
+    getWorkableProgress (workableId) {
+        return {
+            done: true
+        };
+    }
+
+    getWorkable (workableId) {
+        return {
+            state: 'success',
+            log: [],
+            variables: {}
+        };
     }
 }
 

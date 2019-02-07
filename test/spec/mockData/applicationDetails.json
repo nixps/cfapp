@@ -1,0 +1,25 @@
+{
+    "data": {
+        "name": "co-code-installedapp",
+        "version": "0.0.2",
+        "description": "This is an app from MARS",
+        "files": [
+            "cloudflow://PP_FILE_STORE/installedapp/"
+        ],
+        "workflows": [],
+        "level": "dev",
+        "you_are_owner": true,
+        "owner": "co-code",
+        "participants": [
+            "ab-partA",
+            "cd-partB",
+            "ef-partC"
+        ],
+        "project_cfapp_name": "installedapp",
+        "mercurial": "hgweb.cgi/490509ad-919e-47e0-8f3a-f335bb71f54d/co-code-installedapp/",
+        "tagged": true,
+        "changeset": "0.0.2",
+        "download_url": "hgweb.cgi/490509ad-919e-47e0-8f3a-f335bb71f54d/co-code-installedapp/archive/v0.0.2.zip"
+    }
+}
+

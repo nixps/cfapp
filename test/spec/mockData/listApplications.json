@@ -1,0 +1,40 @@
+{
+    "results": [
+        {
+            "_id": "5bd838d1e1090032000022db",
+            "name": "co-code-installedapp",
+            "versions": [
+                "0.0.1",
+                "0.0.2"
+            ],
+            "version": "0.0.2",
+            "description": "This is an app from MARS",
+            "you_are_owner": true,
+            "owner": "co-code",
+            "participants": [
+                "ab-partA",
+                "cd-partB",
+                "ef-partC"
+            ],
+            "mercurial": "hgweb.cgi/490509ad-919e-47e0-8dea-f335bb71f54d/co-code-installedapp/",
+            "head_changeset": "017948b95300ddbba1032c7a80c4e02d6584c628",
+            "you_are_sharer": false,
+            "last_version": "0.0.2",
+            "last_version_level": "dev"
+        },
+        {
+            "_id": "5b3349d3e80100b90000078f",
+            "name": "be-lyder-featureweek",
+            "versions": [
+                "0.0.1",
+                "0.0.2"
+            ],
+            "description": "Test during feature week",
+            "you_are_owner": true,
+            "owner": "be-lyder",
+            "last_version": "0.0.2",
+            "last_version_level": "dev",
+            "mercurial": "hgweb.cgi/71d069f3-bfe0-4abb-b868-583dcc6c3b05/be-lyder-featureweek/"
+        }
+    ]
+}
