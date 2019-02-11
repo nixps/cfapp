@@ -163,6 +163,10 @@ class APIMockDelegate {
             variables: {}
         };
     }
+
+    listWorkables (query, fields) {
+        return [];
+    }
 }
 
 module.exports = APIMockDelegate;

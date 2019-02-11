@@ -94,6 +94,17 @@ class APIMock {
                         cb(result);
                     }
                     return result;
+                },
+
+                list: function (query, fields, cb) {
+                    const result = mockDelegate.listWorkables(query, fields)
+                    const response = { 
+                        results: result 
+                    };
+                    if (cb) {
+                        cb(response);
+                    }
+                    return response;
                 }
             },
 

@@ -431,6 +431,17 @@ class NoInstalledAppsDelegate extends APIMockDelegate {
     }
 }
 
+class ExistingSingleAppWithWorkablesDelegate extends ExistingSingleAppDelegate {
+    listWorkables (query, fields) {
+        return [{
+            id: 'hi',
+            whitepaper_name: 'Workflow1'
+        }, {
+            id: 'hello',
+            whitepaper_name: 'Workflow1'
+        }]
+    }
+}
 
 function removeTests() {
     describe('default parameters', function() {
@@ -529,6 +540,59 @@ function removeTests() {
             }, 'application DownloadApp is not installed', 'should show an appropriate error message');
         });
 
+        it('not remove the workflows with running workables', function() {
+            const outputStream = new JSONOutputStream();
+            const apiMockDelegate = new ExistingSingleAppWithWorkablesDelegate();
+            apiMock.mockDelegate = apiMockDelegate;
+
+            return cfapp.apps.remove('DownloadApp', {
+                host: 'http://localhost:9090',
+                login: 'admin',
+                password: 'admin'
+            }, outputStream).then(function() {
+                assert.includeMembers(apiMockDelegate.deletedFiles, [
+                    'cloudflow://PP_FILE_STORE/DownloadApp/index.html'
+                ], 'not all the installed files were removed');
+                assert.includeMembers(apiMockDelegate.deletedFolders, [
+                    'cloudflow://PP_FILE_STORE/DownloadApp/images/'
+                ], 'not all the installed folders were removed');
+                assert.equal(apiMockDelegate.deletedWhitepapers.length, 1, 'only Workflow2 should be removed')
+                assert.includeMembers(apiMockDelegate.deletedWhitepapers, [
+                    'Workflow2'
+                ], 'not all the installed workflows were removed');
+                assert.includeMembers(apiMockDelegate.deletedApplications, [
+                    'DownloadAppID'
+                ], 'the app was not removed from the application registry');
+            });
+        });
+
+        it('remove the workflows with running workables when force-remove-workflows is passed', function() {
+            const outputStream = new JSONOutputStream();
+            const apiMockDelegate = new ExistingSingleAppWithWorkablesDelegate();
+            apiMock.mockDelegate = apiMockDelegate;
+
+            return cfapp.apps.remove('DownloadApp', {
+                host: 'http://localhost:9090',
+                login: 'admin',
+                password: 'admin',
+                forceRemoveWorkflows: true
+            }, outputStream).then(function() {
+                assert.includeMembers(apiMockDelegate.deletedFiles, [
+                    'cloudflow://PP_FILE_STORE/DownloadApp/index.html'
+                ], 'not all the installed files were removed');
+                assert.includeMembers(apiMockDelegate.deletedFolders, [
+                    'cloudflow://PP_FILE_STORE/DownloadApp/images/'
+                ], 'not all the installed folders were removed');
+                assert.equal(apiMockDelegate.deletedWhitepapers.length, 2, 'both workflows should be removed')
+                assert.includeMembers(apiMockDelegate.deletedWhitepapers, [
+                    'Workflow1',
+                    'Workflow2'
+                ], 'not all the installed workflows were removed');
+                assert.includeMembers(apiMockDelegate.deletedApplications, [
+                    'DownloadAppID'
+                ], 'the app was not removed from the application registry');
+            });
+        });
     });
 }
 

@@ -47,6 +47,10 @@ module.exports = {
             })
             .option('session', {
                 describe: 'the session key that is used for the cloudflow api calls, when passed it overrides login and password'
+            })
+            .option('force-remove-workflows', {
+                describe: 'force remove the workflows that still have running workables and are not part anymore of the new version of the app',
+                default: false
             });
     },
     handler: function(argv) {
@@ -54,7 +58,8 @@ module.exports = {
             host: argv.host,
             login: argv.login,
             password: argv.password,
-            session: argv.session
+            session: argv.session,
+            forceRemoveWorkflows: argv.forceRemoveWorkflows
         };
 
         const serverURL = argv.host || 'http://localhost:9090';

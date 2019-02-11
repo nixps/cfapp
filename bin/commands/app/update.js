@@ -24,6 +24,14 @@ module.exports = {
                 describe: 'forces updating in case of downgrade or no version is specified',
                 default: false
             })
+            .option('force-update-workflows', {
+                describe: 'forces the update of existing workflows even if the workables will break',
+                default: false
+            })
+            .option('force-remove-workflows', {
+                describe: 'force remove the workflows that still have running workables and are not part anymore of the new version of the app',
+                default: false
+            })
             .option('host', {
                 describe: 'overrides the host address of the project.cfapp file'
             })
@@ -45,6 +53,8 @@ module.exports = {
     handler: function(argv) {
         const options = {
             force: argv.force,
+            forceUpdateWorkflows: argv.forceUpdateWorkflows,
+            forceRemoveWorkflows: argv.forceRemoveWorkflows,
             host: argv.host,
             login: argv.login,
             password: argv.password,
