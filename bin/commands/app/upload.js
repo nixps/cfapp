@@ -81,12 +81,15 @@ module.exports = {
                         lines: outputStream.outputLines
                     }));
                 }
+                process.exit(0);
             }).catch(function(error) {
                 catchError(error, outputStream, argv.json);
+                process.exit(1);
             });
         }
         catch(error) {
             catchError(error, outputStream, argv.json);
+            process.exit(1);
         }
     }
 };

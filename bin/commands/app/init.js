@@ -41,5 +41,6 @@ module.exports = {
             name,
             version
         });
+        process.exit(0);
     }
 };

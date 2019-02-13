@@ -65,6 +65,7 @@ module.exports = {
                     lines: outputStream.outputLines
                 }));
             }
+            process.exit(0);
         }).catch(function(error) {
             if (argv.json === true) {
                 console.log(JSON.stringify({
@@ -78,6 +79,7 @@ module.exports = {
             else {
                 console.log(error.stack);
             }
+            process.exit(1);
         });
     }
 };

@@ -83,9 +83,11 @@ module.exports = {
                     description: { maxWidth: 50 }
                 }
             }));
+            process.exit(0);
         }
         catch(error) {
             console.log(error);
+            process.exit(1);
         }
     }
 };
