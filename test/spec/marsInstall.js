@@ -73,6 +73,14 @@ class MARSApplicationInstalled extends ApplicationSupportDelegate {
     }
 }
 
+class MARSWorkableNeverFinishes extends ApplicationSupportDelegate {
+    getWorkableProgress (workableId) {
+        return {
+            done: false
+        };
+    }
+}
+
 function marsInstallTests() {
     describe('default parameters', function () {
         it('should install a mars application', function () {
@@ -127,6 +135,28 @@ function marsInstallTests() {
             }).catch(function (error) {
                 assert.notEqual('the installation should not succeed', error.message);
                 assert.equal('CFAPPERR002', error.errorCode);
+            });
+        });
+    });
+
+    describe('custom timeout', function () {
+        it('throws a CFAPPERR500 when the MARS operation took longer than the timeout limit', function () {
+            const outputStream = new JSONOutputStream();
+            apiMock.mockDelegate = new MARSWorkableNeverFinishes();
+            
+            marsListMock(require('./mockData/listApplications.json'));
+            marsDetailsMock(require('./mockData/applicationDetails.json'));
+    
+            return cfapp.mars.install('co-code-installedapp', {
+                host: 'http://localhost:9090',
+                login: 'admin',
+                password: 'admin',
+                timeout: 1
+            }, outputStream).then(function () {
+                assert.fail(undefined, undefined, 'the command should throw an error');
+            }).catch(function (error) {
+                assert.equal('Timeout while waiting on operation completion (CFAPPERR500)', error.message);
+                assert.equal('CFAPPERR500', error.errorCode);
             });
         });
     });

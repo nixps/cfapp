@@ -36,6 +36,10 @@ module.exports = {
                 describe: 'removes the assets and workflows',
                 default: false
             })
+            .option('timeout', {
+                describe: 'the time in seconds cfapp should wait on the MARS server till an operation completes',
+                default: 300
+            })
             .option('json', {
                 describe: 'outputs the result as JSON',
                 default: false
@@ -51,7 +55,8 @@ module.exports = {
             host: argv.host,
             login: argv.login,
             password: argv.password,
-            session: argv.session
+            session: argv.session,
+            timeout: argv.timeout
         };
 
         let outputStream = new ConsoleOutputStream();

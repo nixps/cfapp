@@ -38,6 +38,10 @@ module.exports = {
             .option('forceversion', {
                 describe: 'will install the specified version'
             })
+            .option('timeout', {
+                describe: 'the time in seconds cfapp should wait on the MARS server till an operation completes',
+                default: 300
+            })
             .option('json', {
                 describe: 'outputs the result as JSON',
                 default: false
@@ -54,7 +58,8 @@ module.exports = {
             password: argv.password,
             session: argv.session,
             marsurl: argv.marsurl,
-            forceversion: argv.forceversion
+            forceversion: argv.forceversion,
+            timeout: argv.timeout
         };
 
         let outputStream = new ConsoleOutputStream();
