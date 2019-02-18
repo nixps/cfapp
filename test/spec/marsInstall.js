@@ -29,7 +29,36 @@ class ApplicationSupportDelegate extends APIMockDelegate {
     }
 }
 
-class MARSWorkableFailedDelegate extends ApplicationSupportDelegate {
+class ClientReadyDelegate extends ApplicationSupportDelegate {
+    existingWhitepapers(query) {
+        if (query[2] === 'Mars Client Flow') {
+            return [{
+                _id: 'the mars client flow id',
+                nodes: [{
+                    collar: 'collar1',
+                },{
+                    collar: 'collar1',
+                },{
+                    collar: 'collar2',
+                }]
+            }]
+        }
+
+        return [];
+    }
+
+    getBlueCollarDefinitions(query) {
+        return [{
+            identifier: 'collar1',
+        },{
+            identifier: 'collar1',
+        },{
+            identifier: 'collar2',
+        }];
+    }
+}
+
+class MARSWorkableFailedDelegate extends ClientReadyDelegate {
     getWorkable (workableId) {
         return {
             state: 'error',
@@ -45,7 +74,7 @@ class MARSWorkableFailedDelegate extends ApplicationSupportDelegate {
     }
 }
 
-class MARSApplicationInstalled extends ApplicationSupportDelegate {
+class MARSApplicationInstalled extends ClientReadyDelegate {
     applicationList(query) {
         if (query[2] !== 'co-code-installedapp') {
             return [];
@@ -73,7 +102,7 @@ class MARSApplicationInstalled extends ApplicationSupportDelegate {
     }
 }
 
-class MARSWorkableNeverFinishes extends ApplicationSupportDelegate {
+class MARSWorkableNeverFinishes extends ClientReadyDelegate {
     getWorkableProgress (workableId) {
         return {
             done: false
@@ -85,7 +114,7 @@ function marsInstallTests() {
     describe('default parameters', function () {
         it('should install a mars application', function () {
             const outputStream = new JSONOutputStream();
-            apiMock.mockDelegate = new ApplicationSupportDelegate();
+            apiMock.mockDelegate = new ClientReadyDelegate();
 
             marsListMock(require('./mockData/listApplications.json'));
             marsDetailsMock(require('./mockData/applicationDetails.json'));
@@ -95,7 +124,8 @@ function marsInstallTests() {
                 login: 'admin',
                 password: 'admin'
             }, outputStream).then(function () {
-            }).catch(function () {
+            }).catch(function (error) {
+                console.log(error)
                 assert.fail(undefined, undefined, 'the installation should not fail');
             });
         });
@@ -157,6 +187,23 @@ function marsInstallTests() {
             }).catch(function (error) {
                 assert.equal('Timeout while waiting on operation completion (CFAPPERR500)', error.message);
                 assert.equal('CFAPPERR500', error.errorCode);
+            });
+        });
+
+        it('throws a CFAPPERR508 when Cloudflow is still not ready after passed timeout', function () {
+            const outputStream = new JSONOutputStream();
+            apiMock.mockDelegate = new ApplicationSupportDelegate();
+            
+            return cfapp.mars.install('co-code-installedapp', {
+                host: 'http://localhost:9090',
+                login: 'admin',
+                password: 'admin',
+                timeout: 1
+            }, outputStream).then(function () {
+                assert.fail(undefined, undefined, 'the command should throw an error');
+            }).catch(function (error) {
+                assert.equal('Timeout while waiting on Cloudflow to be ready for MARS requests (CFAPPERR508)', error.message);
+                assert.equal('CFAPPERR508', error.errorCode);
             });
         });
     });

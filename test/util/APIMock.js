@@ -79,6 +79,20 @@ class APIMock {
                 }
             },
 
+            bluecollardefinition: {
+                list: function (query, fields, cb, cberr) {
+                    const result = mockDelegate.getBlueCollarDefinitions(query)
+                    if (cb) {
+                        cb({
+                            results: result
+                        });
+                    }
+                    return {
+                        results: result
+                    };
+                }
+            },
+
             workable: {
                 get_progress: function (wpid, cb) {
                     const result = mockDelegate.getWorkableProgress(wpid)

@@ -167,6 +167,10 @@ class APIMockDelegate {
     listWorkables (query, fields) {
         return [];
     }
+
+    getBlueCollarDefinitions (query) {
+        return [];
+    }
 }
 
 module.exports = APIMockDelegate;
