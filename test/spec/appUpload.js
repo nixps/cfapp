@@ -22,7 +22,27 @@ class ExistingWhitepapersDelegate extends APIMockDelegate {
         return [ {
             _id: 'the-id',
             save_id: 'the-save-id',
-            name: 'ProcessOrder'
+            name: 'ProcessOrder',
+            nodes: [{
+                id: 'd68fb55b-2432-84f2-56ae-627bab2b0125'
+            }, {
+                id:	'82b646d5-b60c-bcd8-dd7b-5607b45a82ac'
+            }]
+        }];
+    }
+}
+
+class ConflictingWhitepapersDelegate extends APIMockDelegate {
+    existingWhitepapers() {
+        return [ {
+            _id: 'the-id',
+            save_id: 'the-save-id',
+            name: 'ProcessOrder 2',
+            nodes: [{
+                id: 'd68fb55b-2432-84f2-56ae-627bab2b0125'
+            }, {
+                id:	'82b646d5-b60c-bcd8-dd7b-5607b45a82ac'
+            }]
         }];
     }
 }
@@ -503,6 +523,28 @@ function uploadTests() {
             });
         });
     });
+
+    describe('conflicting whitepapers', function () {
+        it('should not allow to install when a workflow with a different name and same node-ids is present', function () {
+            const outputStream = new JSONOutputStream();
+            apiMock.mockDelegate = new ConflictingWhitepapersDelegate();
+
+            const uploadedFiles = [];
+            getFileUploadMock(uploadedFiles, 0);
+
+            return cfapp.apps.upload(__dirname + '/resources/DemoApp/', {}, outputStream).then(function() {
+                assert.isNotOk(true, 'this function should have failed');
+            }).catch(function(error) {
+                assert.match(error, /^Error: Cannot add these workflows/, 'an error should be returned');
+                assert.equal(error.errorCode, 'CFAPPERR020', 'the right error code should be returned');
+
+                const uploadedWhitepapers = apiMock.mockDelegate.uploadedWhitepapers;
+                assert.equal(uploadedFiles.length, 0, 'no files should be uploaded');
+                assert.equal(uploadedWhitepapers.length, 0, 'no whitepapers should be uploaded');
+                assert.equal(apiMock.mockDelegate.createdApplications.length, 0, 'no application should be registered');
+            });
+        });
+    })
 }
 
 module.exports = uploadTests;
