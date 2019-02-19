@@ -202,7 +202,6 @@ function downloadTests() {
         }
     }
 
-
     class AssetDoesExistThrowsErrorAppDelegate extends APIMockDelegate {
         doesExist() {
             throw new Error('Parameter Error');
@@ -609,6 +608,53 @@ function downloadTests() {
             assert.equal(projectCFApp.files[1], 'cloudflow://PP_FILE_STORE/DownloadApp/index.html');
         });
     });
+
+    it('should not download template workflows', function () {
+        class TemplateWhitepapers extends APIMockDelegate {
+            existingWhitepapers() {
+                return [ {
+                    _id: 'Workflow1',
+                    name: 'Workflow1',
+                    template: {}
+                }, {
+                    _id: 'Workflow2',
+                    name: 'Workflow2'
+                }];
+            }
+        }
+    
+        const projectCFApp = {
+            name: 'DownloadApp',
+            host: 'http://localhost:9090',
+            login: 'admin',
+            password: 'admin',
+            description: 'A test for downloading an application',
+            files: [],
+            workflows: [
+                'Workflow1',
+                'Workflow2'                
+            ]
+        };
+
+        const outputStream = new JSONOutputStream();
+        apiMock.mockDelegate = new TemplateWhitepapers();
+
+        const downloadedFiles = [];
+        getFileDownloadMock(downloadedFiles, 0);
+
+        if (fs.existsSync(__dirname + '/downloadTest') === true) {
+            remove.removeSync(__dirname + '/downloadTest');
+        }
+        mkdirp.sync(__dirname + '/downloadTest/DownloadApp');
+        fs.writeFileSync(__dirname + '/downloadTest/DownloadApp/project.cfapp', JSON.stringify(projectCFApp));
+
+        return cfapp.apps.download(__dirname + '/downloadTest/DownloadApp', {}, outputStream).then(function() {
+            assert.isNotOk(true, 'this function should have failed');
+        }).catch(function (error) {
+            assert.equal(error.errorCode, 'CFAPPERR018');
+            assert.equal(error.message, 'Specified workflow "Workflow1" does not exist on the remote Cloudflow');
+        });
+    })
 }
 
 module.exports = downloadTests;
