@@ -281,7 +281,7 @@ class DemoApp002InstalledDelegate extends APIMockDelegate {
     }
 }
 
-class ConflictingWhitepapersDelegate extends ExistingSingleAppDelegate {
+class RenamedWhitepapersDelegate extends ExistingSingleAppDelegate {
     constructor () {
         super();
         this.mockData.cfapps = [{
@@ -299,6 +299,8 @@ class ConflictingWhitepapersDelegate extends ExistingSingleAppDelegate {
             ],
 
             workflows: [
+                'Workflow1',
+                'Workflow2',
                 'CreateOrder',
                 'ProcessOrder'
             ]
@@ -717,7 +719,7 @@ function updateTests() {
 
                 assert(nock.isDone(), 'expected requests not performed');
             }).catch(function (error) {
-                assert.isNotOk(true, 'forcing the cfapp update should have worked');
+                assert.isNotOk(true, error);
             });
         });
 
@@ -807,28 +809,50 @@ function updateTests() {
         });
 
         describe('conflicting whitepapers', function () {
-            it('should not allow to update when a workflow with a different name and same node-ids is present', function () {
+            it('should update the name of the workflow when it is present with a different name and same node-ids on the remote system', function () {
                 const outputStream = new JSONOutputStream();
-                const apiMockDelegate = new ConflictingWhitepapersDelegate();
+                const apiMockDelegate = new RenamedWhitepapersDelegate();
                 apiMock.mockDelegate = apiMockDelegate;
     
                 const uploadedFiles = [];
-                getFileUploadMock(uploadedFiles, 0, 'session_admin_admin');
+                getFileUploadMock(uploadedFiles, 4, 'session_admin_admin');
     
                 return cfapp.apps.update(`${__dirname}/resources/DemoApp`, {
                     host: 'http://localhost:9090',
                     login: 'admin',
                     password: 'admin'
                 }, outputStream).then(function () {
-                    assert.isNotOk(true, 'this should not work')
-                }).catch(function (error) {
-                    assert.match(error, /^Error: Cannot add these workflows/, 'an error should be returned');
-                    assert.equal(error.errorCode, 'CFAPPERR020', 'the right error code should be returned');
+                    console.log(apiMockDelegate.deletedWhitepapers);
+                    assert.equal(apiMockDelegate.deletedWhitepapers.length, 2, 'Workflow1 and Workflow2 should be deleted');
+                    assert.includeMembers(apiMockDelegate.deletedWhitepapers, [
+                        'Workflow1', 'Workflow2'
+                    ], 'Workflow1 and Workflow2 should be deleted');
+                    assert.equal(apiMockDelegate.deletedApplications.length, 1,  'one application should be deleted');
+                    assert.equal(apiMockDelegate.deletedApplications[0], 'DemoAppID', 'the application "DemoAppID" should be deleted');
+                    assert.equal(apiMockDelegate.createdApplications.length, 1,  'one application should be created');
+                    assert.equal(apiMockDelegate.createdApplications[0].name, 'DemoApp', 'the application "DemoAppID" should be created');
+                    assert.equal(apiMockDelegate.deletedFiles.length, 1, 'not all files were deleted');
+                    assert.includeMembers(apiMockDelegate.deletedFiles, [
+                        'cloudflow://PP_FILE_STORE/DemoApp/index.html'
+                    ], 'not all files were deleted');
+                    assert.includeMembers(apiMockDelegate.deletedFolders, [
+                        'cloudflow://PP_FILE_STORE/DemoApp/images/'
+                    ], 'not all folders were deleted');
+                    assert.equal(apiMockDelegate.updatedWhitepapers.length, 1, 'not all whitepapers were uploaded');
+                    assert.equal(apiMockDelegate.updatedWhitepapers[0].name, 'ProcessOrder', 'not all whitepapers were uploaded');
+                    assert.equal(apiMockDelegate.createdWhitepapers.length, 1, 'one whitepaper should be created');
+                    assert.equal(apiMockDelegate.createdWhitepapers[0].name, 'CreateOrder', 'not all whitepapers were created');
+                    assert.equal(uploadedFiles.length, 4, 'not all files were deleted');
+                    assert.includeMembers(uploadedFiles, [
+                        'cloudflow://PP_FILE_STORE/DemoApp/images/mac.png',
+                        'cloudflow://PP_FILE_STORE/DemoApp/images/win.png',
+                        'cloudflow://PP_FILE_STORE/DemoApp/images/linux.jpg',
+                        'cloudflow://PP_FILE_STORE/DemoApp/index.html'
+                    ], 'not all files were deleted');
     
-                    const uploadedWhitepapers = apiMock.mockDelegate.uploadedWhitepapers;
-                    assert.equal(uploadedFiles.length, 0, 'no files should be uploaded');
-                    assert.equal(uploadedWhitepapers.length, 0, 'no whitepapers should be uploaded');
-                    assert.equal(apiMock.mockDelegate.createdApplications.length, 0, 'no application should be registered');
+                    assert(nock.isDone(), 'expected requests not performed');
+                }).catch(function (error) {
+                    assert.isNotOk(true, error);
                 });
             });
         });
