@@ -19,7 +19,7 @@ const JSONOutputStream = require('../../lib/util/JSONOutputStream');
 
 class ExistingWhitepapersDelegate extends APIMockDelegate {
     existingWhitepapers() {
-        return [ {
+        return [{
             _id: 'the-id',
             save_id: 'the-save-id',
             name: 'ProcessOrder',
@@ -544,7 +544,7 @@ function uploadTests() {
                 assert.equal(apiMock.mockDelegate.createdApplications.length, 0, 'no application should be registered');
             });
         });
-    })
+    });
 }
 
 module.exports = uploadTests;

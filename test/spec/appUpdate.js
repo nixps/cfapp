@@ -279,9 +279,58 @@ class DemoApp002InstalledDelegate extends APIMockDelegate {
             ]
         }];
     }
-
 }
 
+class ConflictingWhitepapersDelegate extends ExistingSingleAppDelegate {
+    constructor () {
+        super();
+        this.mockData.cfapps = [{
+            _id: 'DemoAppID',
+            name: 'DemoApp',
+            host: 'http://localhost:9090',
+            version: '0.0.1',
+            login: 'admin',
+            password: 'admin',
+            description: 'A test for downloading an application',
+
+            files: [
+                'cloudflow://PP_FILE_STORE/DemoApp/images/',
+                'cloudflow://PP_FILE_STORE/DemoApp/index.html',
+            ],
+
+            workflows: [
+                'CreateOrder',
+                'ProcessOrder'
+            ]
+        }];
+
+        this.mockData.whitepapers = [{
+            _id: 'Workflow1',
+            name: 'Workflow1',
+            save_id: 'Workflow1',
+            nodes: []
+        }, {
+            _id: 'Workflow2',
+            name: 'Workflow2',
+            save_id: 'Workflow2',
+            nodes: []
+        }, {
+            _id: 'ProcessOrder',
+            name: 'ProcessOrder 2',
+            save_id: 'ProcessOrder',
+            nodes: [{
+                "title":	"Unhandled Problem",
+                "id":	"d68fb55b-2432-84f2-56ae-627bab2b0125"
+            }, {
+                "title":	"Start From Form",
+                "id":	"82b646d5-b60c-bcd8-dd7b-5607b45a82ac"
+            }, {
+                "title":	"End",
+                "id":	"584223c5-ebad-fca3-2fc9-b266c5f60044"
+            }]
+        }]
+    }
+}
 
 class DemoAppNoVersionInstalledDelegate extends ExistingSingleAppDelegate {
     constructor() {
@@ -756,7 +805,35 @@ function updateTests() {
                 assert.isNotOk(true, 'cfapp update should work, skipping whitepaper deletion');
             });
         });
-   });
+
+        describe('conflicting whitepapers', function () {
+            it('should not allow to update when a workflow with a different name and same node-ids is present', function () {
+                const outputStream = new JSONOutputStream();
+                const apiMockDelegate = new ConflictingWhitepapersDelegate();
+                apiMock.mockDelegate = apiMockDelegate;
+    
+                const uploadedFiles = [];
+                getFileUploadMock(uploadedFiles, 0, 'session_admin_admin');
+    
+                return cfapp.apps.update(`${__dirname}/resources/DemoApp`, {
+                    host: 'http://localhost:9090',
+                    login: 'admin',
+                    password: 'admin'
+                }, outputStream).then(function () {
+                    assert.isNotOk(true, 'this should not work')
+                }).catch(function (error) {
+                    assert.match(error, /^Error: Cannot add these workflows/, 'an error should be returned');
+                    assert.equal(error.errorCode, 'CFAPPERR020', 'the right error code should be returned');
+    
+                    const uploadedWhitepapers = apiMock.mockDelegate.uploadedWhitepapers;
+                    assert.equal(uploadedFiles.length, 0, 'no files should be uploaded');
+                    assert.equal(uploadedWhitepapers.length, 0, 'no whitepapers should be uploaded');
+                    assert.equal(apiMock.mockDelegate.createdApplications.length, 0, 'no application should be registered');
+                });
+            });
+        });
+    });
+   
 }
 
 module.exports = updateTests;
