@@ -12,6 +12,7 @@
 const { apps } = require('../../../lib/cfapp');
 const ConsoleOutputStream = require('../../../lib/util/ConsoleOutputStream');
 const JSONOutputStream = require('../../../lib/util/JSONOutputStream');
+const flushWriteLine = require('../../../lib/util/flushWriteLine');
 
 function catchError(error, outputStream, jsonFormat) {
     if (jsonFormat === true) {
@@ -72,11 +73,14 @@ module.exports = {
         // parse and stringify to get rid of 'undefined' values
         apps.download(directory, JSON.parse(JSON.stringify(options)), outputStream).then(function () {
             if (argv.json === true) {
-                console.log(JSON.stringify({
+                flushWriteLine(JSON.stringify({
                     lines: outputStream.outputLines
-                }));
+                })).then(function () {
+                    process.exit(0);
+                });
+            } else {
+                process.exit(0);
             }
-            process.exit(0);
         }).catch(function(error) {
             catchError(error, outputStream, argv.json);
             process.exit(1);
