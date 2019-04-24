@@ -1,6 +1,6 @@
 {
   "name": "cfapp",
-  "version": "0.3.52",
+  "version": "0.3.53",
   "description": "A command line tool to install and download Cloudflow Applications",
   "main": "lib/cfapp.js",
   "bin": {
