@@ -52,7 +52,7 @@ const commandLineParser = yargs
     })
     .command('app', 'Installs and downloads Cloudflow Apps', function() {}, function() {})
     .command('cloudflow', 'Manages Cloudflow installations', function() {}, function() {})
-    .command('frame', 'Manages Frame installations', function() {}, function() {})
+    .command('frame', 'Manages Cloudflow Plug-in Suite installations', function() {}, function() {})
     .command('mars', 'Installs and downloads MARS apps', function() {}, function() {})
     .command('version', 'shows the version of the cfapp tool', function() {
     }, function(/*yargs*/) {
