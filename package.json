@@ -14,6 +14,7 @@
   "author": "Hybrid Software",
   "license": "MPL-2.0",
   "dependencies": {
+    "adm-zip": "^0.4.13",
     "async": "^2.1.5",
     "cloudflow-api": "^1.2.5",
     "columnify": "^1.5.4",
