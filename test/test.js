@@ -36,5 +36,7 @@ describe('cfapp tests', function() {
         describe('install', require('./spec/marsInstall'));
         describe('update', require('./spec/marsUpdate'));
         describe('remove', require('./spec/marsRemove'));
+        describe('list', require('./spec/marsList'));
+        describe('download', require('./spec/marsDownload'));
     });
 });

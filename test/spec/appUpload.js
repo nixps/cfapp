@@ -545,6 +545,46 @@ function uploadTests() {
             });
         });
     });
+
+    describe('MARS integration', function () {
+        it('should upload an application and keep the mars name and changeset', function() {
+            const outputStream = new JSONOutputStream();
+            class ApplicationSupportDelegate extends APIMockDelegate {
+                get supportsApplications() {
+                    return true;
+                }
+
+                applicationList() {
+                    return [];
+                }
+            }
+            const mockDelegate = new ApplicationSupportDelegate();
+            apiMock.mockDelegate = mockDelegate;
+
+            const uploadedFiles = [];
+            getFileUploadMock(uploadedFiles, 4);
+
+            return cfapp.apps.upload(__dirname + '/resources/DemoAppWithMarsData/', {}, outputStream).then(function() {
+                const createdWhitepapers = apiMock.mockDelegate.createdWhitepapers;
+                assert.equal(uploadedFiles.length, 4, 'all files should be uploaded');
+                assert.equal(createdWhitepapers.length, 2, 'all whitepapers should be uploaded');
+                assert.equal(createdWhitepapers[0].name, 'ProcessOrder', 'whitepaper "ProcessOrder" missing');
+                assert.includeMembers(uploadedFiles, [
+                    'cloudflow://PP_FILE_STORE/DemoApp/images/linux.jpg',
+                    'cloudflow://PP_FILE_STORE/DemoApp/images/mac.png',
+                    'cloudflow://PP_FILE_STORE/DemoApp/images/win.png',
+                    'cloudflow://PP_FILE_STORE/DemoApp/index.html'
+                ], 'the files were not all uploaded');
+
+                assert(nock.isDone(), 'expected requests not performed');
+
+                const apps = mockDelegate.createdApplications;
+                assert.equal(apps.length, 1, 'One application should be installed');
+                assert.equal(apps[0].name, 'co-code-installedapp', 'The name of the app should be the mars name');
+                assert.equal(apps[0].changeset, '0.0.2', 'The changeset of the app should be filled in correctly');
+            });
+        });
+    })
 }
 
 module.exports = uploadTests;
