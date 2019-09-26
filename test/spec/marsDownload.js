@@ -64,9 +64,9 @@ class ClientReadyDelegate extends ApplicationSupportDelegate {
 
 function marsDownloadTests () {
     after(function() {
-        // if (fs.existsSync(__dirname + '/downloadTest')) {
-        //     remove.removeSync(__dirname + '/downloadTest');
-        // }
+        if (fs.existsSync(__dirname + '/downloadTest')) {
+            remove.removeSync(__dirname + '/downloadTest');
+        }
     });
 
     describe('default parameters', function () {
