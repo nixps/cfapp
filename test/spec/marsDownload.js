@@ -21,6 +21,7 @@ const marsDownloadUrlMock = require('../util/MARSDownloadUrlMock.js');
 
 const fs = require('fs');
 const remove = require('remove');
+const path = require('path');
 
 class ApplicationSupportDelegate extends APIMockDelegate {
     get supportsApplications() {
@@ -63,9 +64,9 @@ class ClientReadyDelegate extends ApplicationSupportDelegate {
 
 function marsDownloadTests () {
     after(function() {
-        if (fs.existsSync(__dirname + '/downloadTest')) {
-            remove.removeSync(__dirname + '/downloadTest');
-        }
+        // if (fs.existsSync(__dirname + '/downloadTest')) {
+        //     remove.removeSync(__dirname + '/downloadTest');
+        // }
     });
 
     describe('default parameters', function () {
@@ -96,6 +97,41 @@ function marsDownloadTests () {
             assert.isObject(contents.mars, 'The mars object is missing');
             assert.equal(contents.mars.name, 'co-code-installedapp', 'The name in the mars dictionary is not correct');
             assert.equal(contents.mars.changeset, '0.0.2', 'The changeset in the mars dictionary is not correct');
+        });
+
+        it('should download a public app correctly', async function () {
+            const archiveDirectory = __dirname + '/downloadTest/DownloadApp';
+            const cfappFile = `${archiveDirectory}/project.cfapp`;
+
+            const outputStream = new JSONOutputStream();
+            apiMock.mockDelegate = new ClientReadyDelegate();
+
+            marsListMock(require('./mockData/listApplications.json'));
+            marsDetailsMock(require('./mockData/publicApplicationDetails.json'));
+            marsDownloadUrlMock('anonymousDownload', __dirname + '/resources/DemoAppPublic.zip');
+
+            await cfapp.mars.download('demoapppublic', {
+                host: 'http://localhost:9090',
+                login: 'admin',
+                password: 'admin',
+                directory: archiveDirectory
+            }, outputStream).then(function () {
+            }).catch(function (error) {
+                console.log(error)
+                assert.fail(undefined, undefined, 'the installation should not fail');
+            });
+
+            // Check the project.cfapp
+            const contents = JSON.parse(fs.readFileSync(cfappFile, 'utf8'));
+            assert.isObject(contents.mars, 'The mars object is missing');
+            assert.equal(contents.mars.name, 'demoapppublic', 'The name in the mars dictionary is not correct');
+            assert.equal(contents.mars.changeset, '0.0.2', 'The changeset in the mars dictionary is not correct');
+            
+            // check the files directory
+            assert.isTrue(fs.existsSync(path.join(archiveDirectory, 'files')), 'there should be a files directory');
+
+            // check the workflows directory
+            assert.isTrue(fs.existsSync(path.join(archiveDirectory, 'workflows')), 'there should be a workflows directory');
         });
     });
 }

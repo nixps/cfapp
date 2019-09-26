@@ -7,10 +7,10 @@ const nock = require('nock');
  * @param {*} filePath the file that will be downloaded
  */
 function marsDownloadUrlMock (downloadUrl, filePath) {
-    const appListRegex = new RegExp(downloadUrl)
+    const downloadUrlRegex = new RegExp(downloadUrl)
 
     nock('http://the-mars-server.com')
-        .get(appListRegex, function(body) {
+        .get(downloadUrlRegex, function(body) {
             return true;
         })
         .times(1)

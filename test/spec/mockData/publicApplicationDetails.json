@@ -1,0 +1,28 @@
+{
+    "data": {
+        "name": "demoapppublic",
+        "version": "0.0.2",
+        "description": "A public demo application",
+        "files": [
+            "cloudflow://PP_FILE_STORE/DemoApp/images/",
+            "cloudflow://PP_FILE_STORE/DemoApp/index.html"
+        ],
+        "workflows": [
+            "ProcessOrder",
+            "CreateOrder"
+        ],
+        "icon": "https://mars.mycloudflow.com/portal.cgi?asset=anonymousDownload&url=cloudflow%3a%2f%2fPP_FILE_STORE%2fcache%2fdemopublicapp%2f0.0.2%2ficon%2fapp_icon.svg&hash=4D33FCA6E574AECFFE0D826E0B8684D8",
+        "level": "release",
+        "you_are_owner": false,
+        "owner": "be-blibli",
+        "owners": [
+            "be-blibli"
+        ],
+        "project_cfapp_name": "demoapppublic",
+        "tagged": true,
+        "changeset": "0.0.2",
+        "download_url": "portal.cgi?asset=anonymousDownload&url=cloudflow%3a%2f%2fPP_FILE_STORE%2fcache%2fdemopublicapp%2fdemopublicapp-0.0.2.zip&hash=1C796EA7454C4D0B743CDCDBFEAB57F0",
+        "readme": "https://mars.mycloudflow.com/portal.cgi?asset=anonymousDownload&url=cloudflow%3a%2f%2fPP_FILE_STORE%2fcache%2fdemopublicapp%2f0.0.2%2fdocumentation%2fREADME.md&hash=18B858D9C147522F46F687B1ABA5FAA4",
+        "changelog": "https://mars.mycloudflow.com/portal.cgi?asset=anonymousDownload&url=cloudflow%3a%2f%2fPP_FILE_STORE%2fcache%2fdemopublicapp%2f0.0.2%2fdocumentation%2fchangelog.md&hash=8E2F78DE2E2108967C692C1CCC83F9D9"
+    }
+}

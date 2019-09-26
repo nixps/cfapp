@@ -35,6 +35,27 @@
             "last_version": "0.0.2",
             "last_version_level": "dev",
             "mercurial": "hgweb.cgi/71d069f3-bfe0-4abb-b868-583dcc6c3b05/be-lyder-featureweek/"
-        }
+        },
+        {
+            "_id": "5cc319213d08006600000e73",
+            "name": "demoapppublic",
+            "versions": [
+              "0.0.2"
+            ],
+            "description": "A public demo application",
+            "icon": "http://pathtoicon/image.png",
+            "owners": [
+              "be-blibli"
+            ],
+            "modification_date": "2019-07-03T14:33:05.677Z",
+            "versions_modification_date": "2019-07-03T14:33:05.677Z",
+            "you_are_owner": false,
+            "owner": "be-blibli",
+            "you_are_sharer": false,
+            "last_version": "0.0.2",
+            "last_release": "0.0.2",
+            "last_dev": "0.0.1",
+            "last_version_level": "release"
+          }        
     ]
 }
