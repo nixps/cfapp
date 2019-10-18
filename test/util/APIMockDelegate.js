@@ -171,6 +171,13 @@ class APIMockDelegate {
     getBlueCollarDefinitions (query) {
         return [];
     }
+
+    getLicense () {
+        return {
+            current_site: 'Demo1',
+            customer_code: 'be-test'
+        };
+    }
 }
 
 module.exports = APIMockDelegate;

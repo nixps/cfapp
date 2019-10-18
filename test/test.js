@@ -30,6 +30,8 @@ describe('cfapp tests', function() {
         describe('update', require('./spec/appUpdate'));
         describe('init', require('./spec/appInit'));
         describe('project.cfapp validation', require('./spec/projectValidation'));
+        describe('check license code', require('./spec/checkCode'));
+        describe('check demo license', require('./spec/checkDemoLicense'));
     });
 
     describe('cfapp mars module', function() {

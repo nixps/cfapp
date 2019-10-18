@@ -17,6 +17,7 @@ const apiMock = require('cloudflow-api');
 const cfapp = require('../../lib/cfapp');
 const JSONOutputStream = require('../../lib/util/JSONOutputStream');
 
+
 class ExistingWhitepapersDelegate extends APIMockDelegate {
     existingWhitepapers() {
         return [{
@@ -584,7 +585,133 @@ function uploadTests() {
                 assert.equal(apps[0].changeset, '0.0.2', 'The changeset of the app should be filled in correctly');
             });
         });
-    })
+    });
+
+    describe('licensing', function () {
+        const offsetToday = require('../util/offsetToday');
+
+        describe('mars licenses', function () {
+            it('should not upload an application if Cloudflow does not have the needed license', function() {
+                const outputStream = new JSONOutputStream();
+                class ApplicationSupportDelegate extends APIMockDelegate {
+                    get supportsApplications() {
+                        return true;
+                    }
+
+                    applicationList() {
+                        return [];
+                    }
+
+                    getLicense () {
+                        const productBCLicense = require('./mockData/productBCLicense.js');
+                        const license = productBCLicense(offsetToday(-5), offsetToday(5));
+                        return license;
+                    }
+                }
+                const mockDelegate = new ApplicationSupportDelegate();
+                apiMock.mockDelegate = mockDelegate;
+
+                const uploadedFiles = [];
+                getFileUploadMock(uploadedFiles, 0);
+                
+                return cfapp.apps.upload(__dirname + '/resources/DemoAppWithMarsDataAndLicense/', {}, outputStream).then(function () {
+                    assert.isNotOk(true, 'this function should have failed');
+                }).catch(function (error) {
+                    assert.match(error, /^Error: The version .* of ".*" cannot be installed because .* is missing/, 'an error should be returned');
+                    assert.equal(error.errorCode, 'CFAPPERR021', 'the right error code should be returned');
+                });
+            });
+
+            it('should upload an application if Cloudflow does have the needed license', function() {
+                const outputStream = new JSONOutputStream();
+                class ApplicationSupportDelegate extends APIMockDelegate {
+                    get supportsApplications() {
+                        return true;
+                    }
+
+                    applicationList() {
+                        return [];
+                    }
+
+                    getLicense () {
+                        const productABLicense = require('./mockData/productABLicense.js');
+                        const license = productABLicense(offsetToday(-5), offsetToday(5));
+                        return license;
+                    }
+                }
+                const mockDelegate = new ApplicationSupportDelegate();
+                apiMock.mockDelegate = mockDelegate;
+
+                const uploadedFiles = [];
+                getFileUploadMock(uploadedFiles, 4);
+                
+                return cfapp.apps.upload(__dirname + '/resources/DemoAppWithMarsData/', {}, outputStream).then(function() {
+                    assert(nock.isDone(), 'expected requests not performed');
+                });
+            });
+        });
+
+        describe('mars licenses', function () {
+            it('should not upload a demo application if Cloudflow does not have the needed demo license', function() {
+                const outputStream = new JSONOutputStream();
+                class ApplicationSupportDelegate extends APIMockDelegate {
+                    get supportsApplications() {
+                        return true;
+                    }
+    
+                    applicationList() {
+                        return [];
+                    }
+    
+                    getLicense () {
+                        const productABLicense = require('./mockData/productABLicense.js');
+                        const license = productABLicense(offsetToday(-5), offsetToday(5));
+                        return license;
+                    }
+                }
+                const mockDelegate = new ApplicationSupportDelegate();
+                apiMock.mockDelegate = mockDelegate;
+    
+                const uploadedFiles = [];
+                getFileUploadMock(uploadedFiles, 0);
+                
+                return cfapp.apps.upload(__dirname + '/resources/DemoAppWithMarsDataAndDemoLicense/', {}, outputStream).then(function () {
+                    assert.isNotOk(true, 'this function should have failed');
+                }).catch(function (error) {
+                    assert.match(error, /^Error: The version .* of ".*" cannot be installed because .* is missing/, 'an error should be returned');
+                    assert.equal(error.errorCode, 'CFAPPERR021', 'the right error code should be returned');
+                });
+            });
+    
+            it('should upload a demo application if Cloudflow does have the demo license', function() {
+                const outputStream = new JSONOutputStream();
+                class ApplicationSupportDelegate extends APIMockDelegate {
+                    get supportsApplications() {
+                        return true;
+                    }
+    
+                    applicationList() {
+                        return [];
+                    }
+    
+                    getLicense () {
+                        const demoLicense = require('./mockData/demoLicense.js');
+                        const license = demoLicense(offsetToday(-5), offsetToday(5));
+                        return license;
+                    }
+                }
+                const mockDelegate = new ApplicationSupportDelegate();
+                apiMock.mockDelegate = mockDelegate;
+    
+                const uploadedFiles = [];
+                getFileUploadMock(uploadedFiles, 4);
+                
+                return cfapp.apps.upload(__dirname + '/resources/DemoAppWithMarsDataAndDemoLicense/', {}, outputStream).then(function() {
+                    assert(nock.isDone(), 'expected requests not performed');
+                });
+            });
+        });
+    });
 }
 
 module.exports = uploadTests;

@@ -316,15 +316,12 @@ class APIMock {
 
             license: {
                 get: function (cb) {
-                    const result = {
-                        current_site: 'Demo1',
-                        customer_code: 'be-test'
-                    }
+                    const license = mockDelegate.getLicense();
 
                     if (cb) {
-                        cb(result);
+                        cb(license);
                     }
-                    return result;
+                    return license;
                 }
             }
         };

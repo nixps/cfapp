@@ -857,7 +857,120 @@ function updateTests() {
             });
         });
     });
-   
+
+    describe('licensing', function() {
+        const offsetToday = require('../util/offsetToday');
+
+        describe('mars licenses', function () {
+            it('should be able to update an app for which Cloudflow has a license', function() {
+                const outputStream = new JSONOutputStream();
+                class ApplicationSupportDelegate extends ExistingSingleAppDelegate {
+                    getLicense () {
+                        const productABLicense = require('./mockData/productABLicense.js');
+                        const license = productABLicense(offsetToday(-5), offsetToday(5));
+                        return license;
+                    }
+                }
+
+                const uploadedFiles = [];
+                getFileUploadMock(uploadedFiles, 4);
+    
+                const apiMockDelegate = new ApplicationSupportDelegate();
+                apiMock.mockDelegate = apiMockDelegate;
+    
+                return cfapp.apps.update(`${__dirname}/resources/DemoAppWithMarsDataAndLicense`, {
+                    host: 'http://localhost:9090',
+                    login: 'admin',
+                    password: 'admin'
+                }, outputStream).then(function() {
+                    assert(nock.isDone(), 'expected requests not performed');
+                });
+            });
+    
+            it('should not be able to update an app for which Cloudflow does not have license', function() {
+                const outputStream = new JSONOutputStream();
+                class ApplicationSupportDelegate extends ExistingSingleAppDelegate {
+                    getLicense () {
+                        const productBCLicense = require('./mockData/productBCLicense.js');
+                        const license = productBCLicense(offsetToday(-5), offsetToday(5));
+                        return license;
+                    }
+                }
+
+                const uploadedFiles = [];
+                getFileUploadMock(uploadedFiles, 0);
+    
+                const apiMockDelegate = new ApplicationSupportDelegate();
+                apiMock.mockDelegate = apiMockDelegate;
+    
+                return cfapp.apps.update(__dirname + '/resources/DemoAppWithMarsDataAndLicense/', {
+                    host: 'http://localhost:9090',
+                    login: 'admin',
+                    password: 'admin'
+                }, outputStream).then(function () {
+                    assert.isNotOk(true, 'this function should have failed');
+                }).catch(function (error) {
+                    assert.match(error, /^Error: The version .* of ".*" cannot be installed because .* is missing/, 'an error should be returned');
+                    assert.equal(error.errorCode, 'CFAPPERR021', 'the right error code should be returned');
+                });
+            });
+        });
+
+        describe('demo apps', function () {
+            it('should be able to update a demo app for which Cloudflow has a demo license', function() {
+                const outputStream = new JSONOutputStream();
+                class ApplicationSupportDelegate extends ExistingSingleAppDelegate {
+                    getLicense () {
+                        const demoLicense = require('./mockData/demoLicense.js');
+                        const license = demoLicense(offsetToday(-5), offsetToday(5));
+                        return license;
+                    }
+                }
+
+                const uploadedFiles = [];
+                getFileUploadMock(uploadedFiles, 4);
+    
+                const apiMockDelegate = new ApplicationSupportDelegate();
+                apiMock.mockDelegate = apiMockDelegate;
+    
+                return cfapp.apps.update(`${__dirname}/resources/DemoAppWithMarsDataAndDemoLicense`, {
+                    host: 'http://localhost:9090',
+                    login: 'admin',
+                    password: 'admin'
+                }, outputStream).then(function() {
+                    assert(nock.isDone(), 'expected requests not performed');
+                });
+            });
+    
+            it('should not be able to update a demo app for which Cloudflow does not have a demo license', function() {
+                const outputStream = new JSONOutputStream();
+                class ApplicationSupportDelegate extends ExistingSingleAppDelegate {
+                    getLicense () {
+                        const productABLicense = require('./mockData/productABLicense.js');
+                        const license = productABLicense(offsetToday(-5), offsetToday(5));
+                        return license;
+                    }
+                }
+
+                const uploadedFiles = [];
+                getFileUploadMock(uploadedFiles, 0);
+    
+                const apiMockDelegate = new ApplicationSupportDelegate();
+                apiMock.mockDelegate = apiMockDelegate;
+
+                return cfapp.apps.update(__dirname + '/resources/DemoAppWithMarsDataAndDemoLicense/', {
+                    host: 'http://localhost:9090',
+                    login: 'admin',
+                    password: 'admin'
+                }, outputStream).then(function () {
+                    assert.isNotOk(true, 'this function should have failed');
+                }).catch(function (error) {
+                    assert.match(error, /^Error: The version .* of ".*" cannot be installed because .* is missing/, 'an error should be returned');
+                    assert.equal(error.errorCode, 'CFAPPERR021', 'the right error code should be returned');
+                });
+            });
+        });
+    });
 }
 
 module.exports = updateTests;
