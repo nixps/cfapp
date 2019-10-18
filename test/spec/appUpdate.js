@@ -865,6 +865,11 @@ function updateTests() {
             it('should be able to update an app for which Cloudflow has a license', function() {
                 const outputStream = new JSONOutputStream();
                 class ApplicationSupportDelegate extends ExistingSingleAppDelegate {
+                    constructor () {
+                        super();
+                        this.mockData.cfapps[0].name = 'co-code-installedapp';
+                    }
+
                     getLicense () {
                         const productABLicense = require('./mockData/productABLicense.js');
                         const license = productABLicense(offsetToday(-5), offsetToday(5));
@@ -890,6 +895,11 @@ function updateTests() {
             it('should not be able to update an app for which Cloudflow does not have license', function() {
                 const outputStream = new JSONOutputStream();
                 class ApplicationSupportDelegate extends ExistingSingleAppDelegate {
+                    constructor () {
+                        super();
+                        this.mockData.cfapps[0].name = 'co-code-installedapp';
+                    }
+
                     getLicense () {
                         const productBCLicense = require('./mockData/productBCLicense.js');
                         const license = productBCLicense(offsetToday(-5), offsetToday(5));
@@ -920,6 +930,11 @@ function updateTests() {
             it('should be able to update a demo app for which Cloudflow has a demo license', function() {
                 const outputStream = new JSONOutputStream();
                 class ApplicationSupportDelegate extends ExistingSingleAppDelegate {
+                    constructor () {
+                        super();
+                        this.mockData.cfapps[0].name = 'co-code-installedapp';
+                    }
+
                     getLicense () {
                         const demoLicense = require('./mockData/demoLicense.js');
                         const license = demoLicense(offsetToday(-5), offsetToday(5));
@@ -945,6 +960,11 @@ function updateTests() {
             it('should not be able to update a demo app for which Cloudflow does not have a demo license', function() {
                 const outputStream = new JSONOutputStream();
                 class ApplicationSupportDelegate extends ExistingSingleAppDelegate {
+                    constructor () {
+                        super();
+                        this.mockData.cfapps[0].name = 'co-code-installedapp';
+                    }
+
                     getLicense () {
                         const productABLicense = require('./mockData/productABLicense.js');
                         const license = productABLicense(offsetToday(-5), offsetToday(5));

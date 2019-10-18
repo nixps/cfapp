@@ -585,6 +585,39 @@ function uploadTests() {
                 assert.equal(apps[0].changeset, '0.0.2', 'The changeset of the app should be filled in correctly');
             });
         });
+
+        it('should not upload if there is already an application registered', function() {
+            const outputStream = new JSONOutputStream();
+            class ApplicationSupportDelegate extends APIMockDelegate {
+                applicationList(query) {
+                    if (query[2] === 'co-code-installedapp') {
+                        return [{
+                            name: 'co-code-installedapp',
+                            version: '0.0.2'
+                        }];
+                    }
+                    
+                    return [];
+                }
+            }
+
+            apiMock.mockDelegate = new ApplicationSupportDelegate();
+
+            const uploadedFiles = [];
+            getFileUploadMock(uploadedFiles, 0);
+
+            return cfapp.apps.upload(__dirname + '/resources/DemoAppWithMarsData/', {
+                overwrite: true
+            }, outputStream).then(function() {
+                assert.isNotOk(true, 'this function should have failed');
+            }).catch(function(error) {
+                assert.match(error, /The application co-code-installedapp is already installed/, 'an error should be returned');
+                const uploadedWhitepapers = apiMock.mockDelegate.uploadedWhitepapers;
+                assert.equal(uploadedFiles.length, 0, 'no files should be uploaded');
+                assert.equal(uploadedWhitepapers.length, 0, 'no whitepapers should be uploaded');
+                assert.equal(apiMock.mockDelegate.createdApplications.length, 0, 'no application should be registered');
+            });
+        });
     });
 
     describe('licensing', function () {
