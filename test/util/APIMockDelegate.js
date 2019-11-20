@@ -32,6 +32,15 @@ class APIMockDelegate {
         this.createdFolders = [];
     }
 
+    getVersion () {
+        return {
+            build: 'cloudflow_version',
+            major: 19,
+            minor: 2,
+            rev: 2
+        };
+    }
+
     get supportsApplications() {
         return false;
     }

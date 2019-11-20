@@ -33,6 +33,10 @@ module.exports = {
                 describe: 'force remove the workflows that still have running workables and are not part anymore of the new version of the app',
                 default: false
             })
+            .option('force-cloudflow-version', {
+                describe: 'skips the Cloudflow version check when installing the app',
+                default: false
+            })
             .option('host', {
                 describe: 'overrides the host address of the project.cfapp file'
             })
@@ -56,6 +60,7 @@ module.exports = {
             force: argv.force,
             forceUpdateWorkflows: argv.forceUpdateWorkflows,
             forceRemoveWorkflows: argv.forceRemoveWorkflows,
+            forceCloudflowVersion: argv.forceCloudflowVersion,
             host: argv.host,
             login: argv.login,
             password: argv.password,

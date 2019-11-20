@@ -1,0 +1,19 @@
+{
+    "name": "DemoApp",
+    "version": "0.0.2",
+    "host": "http://localhost:9090/",
+    "login": "admin",
+    "password": "admin",
+    "description": "A demo application",
+    "icon": "cloudflow://PP_FILE_STORE/DemoApp/icon.png",
+    "documentation": "cloudflow://PP_FILE_STORE/DemoApp/docs/",
+    "minCloudflowVersion": "20.2.1",
+    "files": [
+        "cloudflow://PP_FILE_STORE/DemoApp/images/",
+        "cloudflow://PP_FILE_STORE/DemoApp/index.html"
+    ],
+
+    "workflows": [
+        "ProcessOrder"
+    ]
+}

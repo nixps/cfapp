@@ -7,7 +7,7 @@
     "cfapp": "bin/cfapp.js"
   },
   "scripts": {
-    "test": "mocha --inspect ./test",
+    "test": "mocha ./test",
     "preversion": "npm test",
     "postversion": "git push && git push --tags"
   },

@@ -32,6 +32,7 @@ describe('cfapp tests', function() {
         describe('project.cfapp validation', require('./spec/projectValidation'));
         describe('check license code', require('./spec/checkCode'));
         describe('check demo license', require('./spec/checkDemoLicense'));
+        describe('CloudflowVersion', require('./spec/CloudflowVersion'));
     });
 
     describe('cfapp mars module', function() {

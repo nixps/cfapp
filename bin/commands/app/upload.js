@@ -53,6 +53,10 @@ module.exports = {
             .option('session', {
                 describe: 'the session key that is used for the cloudflow api calls, when passed it overrides login and password'
             })
+            .option('force-cloudflow-version', {
+                describe: 'skips the Cloudflow version check when installing the app',
+                default: false
+            })
             .option('json', {
                 describe: 'outputs the result as JSON',
                 default: false
@@ -60,6 +64,7 @@ module.exports = {
     },
     handler: function(argv) {
         const options = {
+            forceCloudflowVersion: argv.forceCloudflowVersion,
             overwrite: argv.overwrite,
             host: argv.host,
             login: argv.login,

@@ -304,9 +304,7 @@ class APIMock {
 
             portal: {
                 version: function(cb) {
-                    const result = {
-                        build: 'cloudflow_version'
-                    };
+                    const result = mockDelegate.getVersion();
                     if (cb) {
                         cb(result);
                     }

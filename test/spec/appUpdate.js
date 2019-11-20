@@ -232,7 +232,8 @@ function getFileUploadMock(uploadedFiles, expected, session = 'session_admin_adm
                 // The Cloudflow URIs are URI encoded in the upload URL
                 uploadedFiles.push(decodeURIComponent(matches[1]));
             }
-        });
+        })
+        //.log((data) => console.log(data));
 }
 
 class NoInstalledAppsDelegate extends APIMockDelegate {
@@ -988,6 +989,116 @@ function updateTests() {
                     assert.match(error, /^Error: The version .* of ".*" cannot be installed because .* is missing/, 'an error should be returned');
                     assert.equal(error.errorCode, 'CFAPPERR021', 'the right error code should be returned');
                 });
+            });
+        });
+    });
+
+    describe('minimum Cloudflow version', function () {
+        it('should not update in case the version of Cloudflow is too old', function() {
+            const outputStream = new JSONOutputStream();
+            apiMock.mockDelegate = new ExistingSingleAppDelegate();
+
+            const uploadedFiles = [];
+            getFileUploadMock(uploadedFiles, 0);
+
+            return cfapp.apps.update(__dirname + '/resources/DemoAppWithMinCloudflowVersion/', {}, outputStream).then(function() {
+                assert.isNotOk(true, 'the update resolved while it should not');
+            }).catch(function (error) {
+                assert.equal(error.errorCode, 'CFAPPERR024', 'expected to get the right error code')
+                assert.match(error, /The application "DemoApp" cannot be installed on Cloudflow "19.2 update 2", it requires at least "20.2 update 1"/, 'the error message is not correct');
+            });
+        });
+
+        it('should update in case the version of Cloudflow is too old and forced is passed', function() {
+            const outputStream = new JSONOutputStream();
+            apiMock.mockDelegate = new ExistingSingleAppDelegate();
+
+            const uploadedFiles = [];
+            getFileUploadMock(uploadedFiles, 4);
+
+            return cfapp.apps.update(__dirname + '/resources/DemoAppWithMinCloudflowVersion/', { forceCloudflowVersion: true }, outputStream).then(function() {
+                const updatedWhitepapers = apiMock.mockDelegate.updatedWhitepapers;
+                assert.equal(uploadedFiles.length, 4, 'all files should be uploaded');
+                assert.equal(updatedWhitepapers.length, 1, 'all whitepapers should be uploaded');
+                assert.equal(updatedWhitepapers[0].name, 'ProcessOrder', 'whitepaper "ProcessOrder" missing');
+                assert.includeMembers(uploadedFiles, [
+                    'cloudflow://PP_FILE_STORE/DemoApp/images/linux.jpg',
+                    'cloudflow://PP_FILE_STORE/DemoApp/index.html',
+                    'cloudflow://PP_FILE_STORE/DemoApp/docs/readme.md',
+                    'cloudflow://PP_FILE_STORE/DemoApp/icon.png'
+                ], 'the files were not all uploaded');
+
+                assert(nock.isDone(), 'expected requests not performed');
+            });
+        });
+
+        it('should upload in case the version of Cloudflow is ok', function() {
+            const outputStream = new JSONOutputStream();
+            apiMock.mockDelegate = new class extends ExistingSingleAppDelegate {
+                getVersion() {
+                    return {
+                        build: 'cloudflow_version',
+                        major: 20,
+                        minor: 2,
+                        rev: 1                     
+                    }
+                }
+            };
+
+            const uploadedFiles = [];
+            getFileUploadMock(uploadedFiles, 4);
+
+            return cfapp.apps.update(__dirname + '/resources/DemoAppWithMinCloudflowVersion/', {}, outputStream).then(function() {
+                const updatedWhitepapers = apiMock.mockDelegate.updatedWhitepapers;
+                assert.equal(uploadedFiles.length, 4, 'all files should be uploaded');
+                assert.equal(updatedWhitepapers.length, 1, 'all whitepapers should be uploaded');
+                assert.equal(updatedWhitepapers[0].name, 'ProcessOrder', 'whitepaper "ProcessOrder" missing');
+                assert.includeMembers(uploadedFiles, [
+                    'cloudflow://PP_FILE_STORE/DemoApp/images/linux.jpg',
+                    'cloudflow://PP_FILE_STORE/DemoApp/index.html',
+                    'cloudflow://PP_FILE_STORE/DemoApp/docs/readme.md',
+                    'cloudflow://PP_FILE_STORE/DemoApp/icon.png'
+                ], 'the files were not all uploaded');
+
+                assert(nock.isDone(), 'expected requests not performed');
+            });
+        });
+
+        it('should not upload in case the version specified in the project.cfapp is invalid', function() {
+            const outputStream = new JSONOutputStream();
+            apiMock.mockDelegate = new ExistingSingleAppDelegate();
+
+            const uploadedFiles = [];
+            getFileUploadMock(uploadedFiles, 0);
+
+            return cfapp.apps.update(__dirname + '/resources/DemoAppWithWrongMinCloudflowVersion/', {}, outputStream).then(function() {
+                assert.isNotOk(true, 'the upload resolved while it should not');
+            }).catch(function (error) {
+                assert.equal(error.errorCode, 'CFAPPERR023', 'expected to get the right error code')
+                assert.match(error, /The application "DemoApp" requires a minimum Cloudflow version "blibli", which is not a valid Cloufdlow version number/, 'the error message is not correct');
+            });
+        });
+
+        it('should upload in case the version specified in the project.cfapp is invalid and force is passed', function() {
+            const outputStream = new JSONOutputStream();
+            apiMock.mockDelegate = new ExistingSingleAppDelegate();
+
+            const uploadedFiles = [];
+            getFileUploadMock(uploadedFiles, 4);
+
+            return cfapp.apps.update(__dirname + '/resources/DemoAppWithWrongMinCloudflowVersion/', { forceCloudflowVersion: true }, outputStream).then(function() {
+                const updatedWhitepapers = apiMock.mockDelegate.updatedWhitepapers;
+                assert.equal(uploadedFiles.length, 4, 'all files should be uploaded');
+                assert.equal(updatedWhitepapers.length, 1, 'all whitepapers should be uploaded');
+                assert.equal(updatedWhitepapers[0].name, 'ProcessOrder', 'whitepaper "ProcessOrder" missing');
+                assert.includeMembers(uploadedFiles, [
+                    'cloudflow://PP_FILE_STORE/DemoApp/images/linux.jpg',
+                    'cloudflow://PP_FILE_STORE/DemoApp/index.html',
+                    'cloudflow://PP_FILE_STORE/DemoApp/docs/readme.md',
+                    'cloudflow://PP_FILE_STORE/DemoApp/icon.png'
+                ], 'the files were not all uploaded');
+
+                assert(nock.isDone(), 'expected requests not performed');
             });
         });
     });
