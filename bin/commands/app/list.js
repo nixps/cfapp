@@ -32,9 +32,21 @@ module.exports = {
             .option('json', {
                 describe: 'returns a json representation of the list of cfapps',
                 default: false
+            })
+            .option('force-ssl-certificate', {
+                describe: 'forces the acceptance of the SSL certificate',
+                default: false
             });
     },
     handler: function(argv) {
+        // Show the help if --help is supplied
+        const yargs = require('yargs');
+        if (argv.help) {
+            yargs.showHelp();
+            process.exit(0);
+            return;
+        }
+
         const options = {
             host: argv.host,
             login: argv.login,
@@ -44,6 +56,11 @@ module.exports = {
         };
 
         const serverURL = argv.host || 'http://localhost:9090';
+
+        // Force SSL certificate when the option is passed
+        if (argv.forceSslCertificate) {
+            process.env["NODE_TLS_REJECT_UNAUTHORIZED"] = 0;
+        }
 
         // Check if we can list applications
         const api = cloudflowAPI.getSyncAPI(serverURL);

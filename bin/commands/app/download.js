@@ -52,9 +52,21 @@ module.exports = {
             })
             .option('session', {
                 describe: 'the session key that is used for the cloudflow api calls, when passed it overrides login and password'
+            })
+            .option('force-ssl-certificate', {
+                describe: 'forces the acceptance of the SSL certificate',
+                default: false
             });
     },
     handler: function(argv) {
+        // Show the help if --help is supplied
+        const yargs = require('yargs');
+        if (argv.help) {
+            yargs.showHelp();
+            process.exit(0);
+            return;
+        }
+
         const options = {
             overwrite: argv.overwrite,
             host: argv.host,
@@ -65,6 +77,11 @@ module.exports = {
 
         const directory = argv.directory || '.';
 
+        // Force SSL certificate when the option is passed
+        if (argv.forceSslCertificate) {
+            process.env["NODE_TLS_REJECT_UNAUTHORIZED"] = 0;
+        }
+        
         let outputStream = new ConsoleOutputStream();
         if (argv.json === true) {
             outputStream = new JSONOutputStream();

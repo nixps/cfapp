@@ -60,9 +60,21 @@ module.exports = {
             .option('json', {
                 describe: 'outputs the result as JSON',
                 default: false
+            })
+            .option('force-ssl-certificate', {
+                describe: 'forces the acceptance of the SSL certificate',
+                default: false
             });
     },
     handler: function(argv) {
+        // Show the help if --help is supplied
+        const yargs = require('yargs');
+        if (argv.help) {
+            yargs.showHelp();
+            process.exit(0);
+            return;
+        }
+
         const options = {
             forceCloudflowVersion: argv.forceCloudflowVersion,
             overwrite: argv.overwrite,
@@ -73,6 +85,11 @@ module.exports = {
         };
 
         const directory = argv.directory || '.';
+
+        // Force SSL certificate when the option is passed
+        if (argv.forceSslCertificate) {
+            process.env["NODE_TLS_REJECT_UNAUTHORIZED"] = 0;
+        }
 
         let outputStream = new ConsoleOutputStream();
         if (argv.json === true) {
