@@ -19,7 +19,8 @@
             "mercurial": "hgweb.cgi/490509ad-919e-47e0-8dea-f335bb71f54d/co-code-installedapp/",
             "head_changeset": "017948b95300ddbba1032c7a80c4e02d6584c628",
             "you_are_sharer": false,
-            "last_version": "0.0.2",
+            "last_release": "0.0.2",
+            "last_version": "0.0.3",
             "last_version_level": "dev"
         },
         {
@@ -52,7 +53,7 @@
             "you_are_owner": false,
             "owner": "be-blibli",
             "you_are_sharer": false,
-            "last_version": "0.0.2",
+            "last_version": "0.0.3",
             "last_release": "0.0.2",
             "last_dev": "0.0.1",
             "last_version_level": "release"

@@ -193,6 +193,45 @@ function marsUpdateTests() {
                 assert.equal('CFAPPERR505', error.errorCode);
             });
         });
+
+        it('should update to the last available version if forcelastversion is passed', function () {
+            const outputStream = new JSONOutputStream();
+            apiMock.mockDelegate = new MARSApplicationInstalled();
+            var mockDelegate = apiMock.mockDelegate;
+
+            marsListMock(require('./mockData/listApplications.json'));
+            marsDetailsMock(require('./mockData/applicationDetails.json'));
+
+            return cfapp.mars.update('co-code-installedapp', {
+                host: 'http://localhost:9090',
+                login: 'admin',
+                password: 'admin',
+                forcelastversion: true
+            }, outputStream).then(function (result) {        
+                assert.lengthOf(mockDelegate.createdWorkables, 1, 'a workable should have been created');
+                var {variables} = mockDelegate.createdWorkables[0];
+                assert.equal(variables.appVersion, '0.0.3', 'the mars install flow does not install the last available version');
+            });
+        });
+
+        it('should update to the last released version if forcelastversion is not passed', function () {
+            const outputStream = new JSONOutputStream();
+            apiMock.mockDelegate = new MARSApplicationInstalled();
+            var mockDelegate = apiMock.mockDelegate;
+
+            marsListMock(require('./mockData/listApplications.json'));
+            marsDetailsMock(require('./mockData/applicationDetails.json'));
+
+            return cfapp.mars.update('co-code-installedapp', {
+                host: 'http://localhost:9090',
+                login: 'admin',
+                password: 'admin',
+            }, outputStream).then(function (result) {        
+                assert.lengthOf(mockDelegate.createdWorkables, 1, 'a workable should have been created');
+                var {variables} = mockDelegate.createdWorkables[0];
+                assert.equal(variables.appVersion, '0.0.2', 'the mars install flow does not install the last available version');
+            });
+        });
     });
 
     describe('custom timeout', function () {

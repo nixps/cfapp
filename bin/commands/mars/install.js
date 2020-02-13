@@ -38,6 +38,9 @@ module.exports = {
             .option('forceversion', {
                 describe: 'will install the specified version'
             })
+            .option('forcelastversion', {
+                describe: 'will install the last version instead of the last released version'
+            })
             .option('timeout', {
                 describe: 'the time in seconds cfapp should wait on the MARS server till an operation completes',
                 default: 300
@@ -59,6 +62,7 @@ module.exports = {
             session: argv.session,
             marsurl: argv.marsurl,
             forceversion: argv.forceversion,
+            forcelastversion: argv.forcelastversion,
             timeout: argv.timeout
         };
 

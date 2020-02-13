@@ -25,6 +25,7 @@ class APIMockDelegate {
         this.deletedFolders = [];
         this._host = 'http://localhost:9090';
         this.createdSessions = [];
+        this.createdWorkables = [];
 
         this.createdApplications = [];
         this.deletedApplications = [];
@@ -153,7 +154,16 @@ class APIMockDelegate {
         this.updatedWhitepapers.push(JSON.parse(JSON.stringify(whitepaper)));
     }
 
+    workableCreated(whitepaper, input, variables) {
+        this.createdWorkables.push(JSON.parse(JSON.stringify({
+            whitepaper,
+            input,
+            variables
+        })));
+    }
+
     createNewWorkable (whitepaper, input, variables) {
+        this.workableCreated(whitepaper, input, variables);
         return {
             workable_id: 'success'
         }

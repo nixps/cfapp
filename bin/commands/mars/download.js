@@ -54,6 +54,7 @@ module.exports = {
             session: argv.session,
             marsurl: argv.marsurl,
             forceversion: argv.version,
+            forcelastversion: argv.forcelastversion,
             directory: argv.directory || '.'
         };
 
