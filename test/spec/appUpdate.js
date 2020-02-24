@@ -176,6 +176,20 @@ class ExistingSingleAppDelegate extends APIMockDelegate {
     }
 }
 
+class CannotDeleteFileError extends ExistingSingleAppDelegate {
+    fileDeletedError (file) {
+        return {
+            'error_code': 'Delete folder failed',
+            'error': `Delete of folder ${file} failed. Macintosh Error: -47`,
+            'messages': [{
+                'severity':'error',
+                'type': 'Delete folder failed',
+                'description': `Delete of folder ${file} failed. Macintosh Error: -47`
+            }]
+        }
+    }
+}
+
 class NonUpdateableExistingSingleAppDelegate extends ExistingSingleAppDelegate {
     constructor () {
         super();
@@ -671,11 +685,28 @@ function updateTests() {
             return cfapp.apps.update(__dirname + '/resources/DemoApp/', {}, outputStream).then(function () {
                 assert.isNotOk(true, 'cfapp update should have thrown an error when the workflows are not updateable');
             }).catch(function (error) {
-                assert.match(error, /Updating workflow\(s\) \"ProcessOrder\" will break running workables/, 'should show an appropriate error message');
+                assert.match(error, /Updating workflow\(s\) "ProcessOrder" will break running workables/, 'should show an appropriate error message');
                 assert.equal(apiMockDelegate.deletedWhitepapers.length, 0, 'no whitepaper should be deleted');
                 assert.equal(apiMockDelegate.deletedFiles.length, 0, 'no files should be deleted');
                 assert.equal(apiMockDelegate.uploadedWhitepapers.length, 0, 'no whitepaper should be uploaded');
                 assert.equal(uploadedFiles.length, 0, 'no files should be uploaded');
+            });
+        });
+
+        it('will throw a CFAPPERR026 when the update fails to remove the old files', function() {
+            const outputStream = new JSONOutputStream();
+            const apiMockDelegate = new CannotDeleteFileError();
+            apiMock.mockDelegate = apiMockDelegate;
+
+            const uploadedFiles = [];
+            getFileUploadMock(uploadedFiles, 0, 'session_admin_admin');
+
+            return cfapp.apps.update(__dirname + '/resources/DemoApp/', {}, outputStream).then(function () {
+                assert.isNotOk(true, 'cfapp update should have thrown an error when files of the previous version could not be removed');
+            }).catch(function (error) {
+                assert.match(error, /Could not remove the files of/, 'should show an appropriate error message');
+                assert.equal(uploadedFiles.length, 0, 'no files should be uploaded');
+                assert.match(error.errorCode, /CFAPPERR026/, 'should show an appropriate error code');
             });
         });
 

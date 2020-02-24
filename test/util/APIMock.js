@@ -123,21 +123,27 @@ class APIMock {
             },
 
             file: {
-                delete_file_with_options: function(file, options, cb) {
+                delete_file_with_options: function(file, options, cb, errorcb) {
+                    const error = mockDelegate.fileDeletedError(file);
+                    if (error) {
+                        errorcb(error);
+                        return;
+                    }
+
                     if (cb) {
                         cb();
                     }
                     mockDelegate.fileDeleted(file);
                 },
 
-                does_exist: function(url, cb) {
+                does_exist: function(url, cb, errorcb) {
                     if (cb) {
                         cb(mockDelegate.doesExist(url));
                     }
                     return mockDelegate.doesExist(url);
                 },
 
-                delete_folder_with_options: function(url, options, cb) {
+                delete_folder_with_options: function(url, options, cb, errorcb) {
                     if (cb) {
                         cb();
                     }

@@ -113,7 +113,7 @@ module.exports = {
                 }));
             }
             else {
-                console.log(error.stack);
+                console.log(error);
             }
             process.exit(1);
         });

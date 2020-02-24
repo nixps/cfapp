@@ -95,6 +95,10 @@ class APIMockDelegate {
         this.deletedFiles.push(file);
     }
 
+    fileDeletedError(file) {
+        return false;
+    }
+
     folderDeleted(url) {
         this.deletedFolders.push(url);
     }

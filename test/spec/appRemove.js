@@ -443,6 +443,21 @@ class ExistingSingleAppWithWorkablesDelegate extends ExistingSingleAppDelegate {
     }
 }
 
+class ExistingAppCannotDeleteFiles extends ExistingSingleAppDelegate {
+    fileDeletedError (file) {
+        return {
+            'error_code': 'Delete folder failed',
+            'error': `Delete of folder ${file} failed. Macintosh Error: -47`,
+            'messages': [{
+                'severity':'error',
+                'type': 'Delete folder failed',
+                'description': `Delete of folder ${file} failed. Macintosh Error: -47`
+            }]
+        };
+    }
+}
+
+
 function removeTests() {
     describe('default parameters', function() {
         it('should remove an existing app', function() {
@@ -591,6 +606,22 @@ function removeTests() {
                 assert.includeMembers(apiMockDelegate.deletedApplications, [
                     'DownloadAppID'
                 ], 'the app was not removed from the application registry');
+            });
+        });
+
+        it('should show an error when some files cannot be removed', function() {
+            const outputStream = new JSONOutputStream();
+            const apiMockDelegate = new ExistingAppCannotDeleteFiles();
+            apiMock.mockDelegate = apiMockDelegate;
+
+            cfapp.apps.remove('DownloadApp', {
+                host: 'http://localhost:9090',
+                login: 'admin',
+                password: 'admin'
+            }, outputStream).then(function () {
+                assert.isNotOk(true, 'this action should not succeed');
+            }).catch(function (error) {
+                assert.equal(error.errorCode, 'CFAPPERR026', 'the error code is not correct');
             });
         });
     });
