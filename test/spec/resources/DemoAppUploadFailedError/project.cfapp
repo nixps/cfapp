@@ -1,0 +1,14 @@
+{
+    "name": "UploadFailedApp",
+    "version": "0.0.1",
+    "host": "http://localhost:9090/",
+    "login": "admin",
+    "password": "admin",
+    "description": "A wrong file store demo application",
+
+    "files": [
+        "cloudflow://WRONG_FILE_STORE/DemoApp/index.html"
+    ],
+
+    "workflows": []
+}

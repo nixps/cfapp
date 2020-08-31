@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<script src='/3rdParty/jquery-1.8.3.min.js'></script>
+	<script src='/portal.cgi?api=js'></script>
+	<script>
+		function submitToWorkflow() {
+			api_async.hub.start_from_whitepaper_with_variables("ProcessOrder", "input", {
+			}, function(pResult) {
+				alert("Submitted: " + JSON.stringify(pResult));
+			});
+		}
+
+		$(function() {
+			$(".submit").on('click', function() {
+				submitToWorkflow();
+			});
+		});
+	</script>
+</head>
+<body>
+<h1>Demo Application</h1>
+<br>
+<button class="submit">Submit to workflow</button>
+</body>
+</html>

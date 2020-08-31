@@ -452,6 +452,69 @@ function uploadTests() {
             });
         });
 
+        it('should show error code CFAPPERR025 when a file could not be uploaded', function() {
+            const outputStream = new JSONOutputStream();
+            class WrongFileStoreDelegate extends APIMockDelegate {
+                doesExist() {
+                    return {
+                        "error_code": "No file store mapping found",
+                        "error": "Could not convert cloudflow://WRONG_FILE_STORE/DemoApp/index.html to usable format",
+                        "messages":[{
+                            "severity": "error", 
+                            "type": "No file store mapping found",
+                            "description": "Could not convert cloudflow://WRONG_FILE_STORE/DemoApp/index.html to usable format"
+                        }]
+                    };
+                }
+            }
+
+            apiMock.mockDelegate = new WrongFileStoreDelegate();
+
+            const uploadedFiles = [];
+            getFileUploadMock(uploadedFiles, 0);
+            
+            return cfapp.apps.upload(__dirname + '/resources/DemoAppUploadFailedError/', {}, outputStream).then(function() {
+                assert.isNotOk(true, 'this function should have failed');
+            }).catch(function(error) {
+                assert.equal(error.errorCode, 'CFAPPERR025', 'the right error code should be returned');
+                assert.equal(error.message, 'The file "cloudflow://WRONG_FILE_STORE/DemoApp/index.html" could not be uploaded: (Could not convert cloudflow://WRONG_FILE_STORE/DemoApp/index.html to usable format)', 'the right error message should be returned');
+                
+                const uploadedWhitepapers = apiMock.mockDelegate.uploadedWhitepapers;
+                assert.equal(uploadedFiles.length, 0, 'no files should be uploaded');
+                assert.equal(uploadedWhitepapers.length, 0, 'no whitepapers should be uploaded');
+                assert.equal(apiMock.mockDelegate.createdApplications.length, 0, 'no application should be registered');
+            });
+        });
+
+        it('should show stringify error code CFAPPERR025 when a file could not be uploaded', function() {
+            const outputStream = new JSONOutputStream();
+            const errorMessage = {
+                error: "Could not convert cloudflow://WRONG_FILE_STORE/DemoApp/index.html to usable format"
+            };
+            class WrongFileStoreDelegate extends APIMockDelegate {
+                doesExist() {
+                    return errorMessage;
+                }
+            }
+
+            apiMock.mockDelegate = new WrongFileStoreDelegate();
+
+            const uploadedFiles = [];
+            getFileUploadMock(uploadedFiles, 0);
+            
+            return cfapp.apps.upload(__dirname + '/resources/DemoAppUploadFailedError/', {}, outputStream).then(function() {
+                assert.isNotOk(true, 'this function should have failed');
+            }).catch(function(error) {
+                assert.equal(error.errorCode, 'CFAPPERR025', 'the right error code should be returned');
+                assert.equal(error.message, 'The file "cloudflow://WRONG_FILE_STORE/DemoApp/index.html" could not be uploaded: (' + JSON.stringify(errorMessage) + ')', 'the right error message should be returned');
+                
+                const uploadedWhitepapers = apiMock.mockDelegate.uploadedWhitepapers;
+                assert.equal(uploadedFiles.length, 0, 'no files should be uploaded');
+                assert.equal(uploadedWhitepapers.length, 0, 'no whitepapers should be uploaded');
+                assert.equal(apiMock.mockDelegate.createdApplications.length, 0, 'no application should be registered');
+            });
+        });
+
         it('should show an appropriate error code when no project.cfapp file is found', function() {
             const outputStream = new JSONOutputStream();
             apiMock.mockDelegate = new APIMockDelegate();

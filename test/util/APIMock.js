@@ -137,10 +137,13 @@ class APIMock {
                 },
 
                 does_exist: function(url, cb, errorcb) {
-                    if (cb) {
-                        cb(mockDelegate.doesExist(url));
+                    const result = mockDelegate.doesExist(url);
+                    if (cb && result.error === undefined) {
+                        cb(result);
+                    } else  if (errorcb && result.error !== undefined) {
+                        errorcb(result);
                     }
-                    return mockDelegate.doesExist(url);
+                    return result;
                 },
 
                 delete_folder_with_options: function(url, options, cb, errorcb) {
