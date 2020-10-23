@@ -17,7 +17,7 @@
   "dependencies": {
     "adm-zip": "^0.4.13",
     "async": "^2.1.5",
-    "cloudflow-api": "^1.2.5",
+    "cloudflow-api": "^1.2.6",
     "columnify": "^1.5.4",
     "fs-extra": "^7.0.1",
     "lodash": "^4.17.11",

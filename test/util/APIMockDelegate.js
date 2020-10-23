@@ -201,6 +201,14 @@ class APIMockDelegate {
             customer_code: 'be-test'
         };
     }
+
+    getFileStoreMappings (workserver) {
+        return {
+            mappings: {
+                file_store: "PP_FILE_STORE"
+            }
+        };
+    }
 }
 
 module.exports = APIMockDelegate;

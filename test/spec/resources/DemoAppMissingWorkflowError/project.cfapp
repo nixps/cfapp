@@ -1,13 +1,11 @@
 {
-    "name": "MissingFileApp",
+    "name": "MissingWorkflowApp",
     "version": "0.0.1",
     "host": "http://localhost:9090/",
     "login": "admin",
     "password": "admin",
     "description": "A missing workflow demo application",
-
     "files": [],
-
     "workflows": [
         "MissingWorkflow"
     ]

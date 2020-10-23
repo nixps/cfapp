@@ -1,4 +1,4 @@
-/*
+/**
  *  Copyright (c) 2017 NiXPS, All rights reserved.
  *
  *  This Source Code Form is subject to the terms of the Mozilla Public
@@ -6,7 +6,6 @@
  *  file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
  */
-
 'use strict';
 
 const { apps } = require('../../../lib/cfapp');

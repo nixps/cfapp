@@ -537,6 +537,28 @@ function uploadTests() {
         });
     });
 
+    describe('Missing fire store error', function() {
+        it('should show error code CFAPPERR027 when a fire store is missing on the server', function() {
+            const outputStream = new JSONOutputStream();
+            apiMock.mockDelegate = new APIMockDelegate();
+
+            const uploadedFiles = [];
+            getFileUploadMock(uploadedFiles, 0);
+
+            return cfapp.apps.upload(__dirname + '/resources/DemoAppMissingFileStoreError/', {}, outputStream).then(function() {
+                assert.isNotOk(true, 'this function should have failed');
+            }).catch(function(error) {
+                assert.match(error, /^Error: Filestores ".*" aren't found/, 'an error should be returned');
+                assert.equal(error.errorCode, 'CFAPPERR027', 'the right error code should be returned');
+
+                const uploadedWhitepapers = apiMock.mockDelegate.uploadedWhitepapers;
+                assert.equal(uploadedFiles.length, 0, 'no files should be uploaded');
+                assert.equal(uploadedWhitepapers.length, 0, 'no whitepapers should be uploaded');
+                assert.equal(apiMock.mockDelegate.createdApplications.length, 0, 'no application should be registered');
+            });
+        });
+    });
+
     describe('escaped characters', function () {
         it('should upload the files with the correct encoding', function () {
             const outputStream = new JSONOutputStream();

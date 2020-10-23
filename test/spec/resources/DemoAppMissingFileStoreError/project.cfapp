@@ -1,0 +1,10 @@
+{
+    "name": "MissingFireStoreApp",
+    "version": "0.0.1",
+    "host": "http://localhost:9090/",
+    "login": "admin",
+    "password": "admin",
+    "description": "A missing firstore demo application",
+    "files": ["cloudflow://NON_EXISTENT_FIRE_STORE/file.html"],
+    "workflows": []
+}
