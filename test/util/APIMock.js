@@ -313,7 +313,7 @@ class APIMock {
 
             portal: {
                 get_file_store_mappings: function(workServer, cb) {
-                    const result = mockDelegate.getFileStoreMapping(workServer);
+                    const result = mockDelegate.getFileStoreMappings(workServer);
                     if(cb) {
                         cb(result);
                     }

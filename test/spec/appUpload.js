@@ -78,14 +78,7 @@ class ExistingFilesDelegate extends APIMockDelegate {
                 url: url,
                 is_valid: true
             };
-        } else if (url === 'cloudflow://PP_FILE_STORE/DemoApp/images/mac.png') {
-            return {
-                exists: true,
-                is_folder: false,
-                url: url,
-                is_valid: true
-            };
-        } else if (url === 'cloudflow://PP_FILE_STORE/DemoApp/images/win.png') {
+        } else if (url === 'cloudflow://PP_FILE_STORE/DemoApp/images/mac.png' || url === 'cloudflow://PP_FILE_STORE/DemoApp/images/win.png') {
             return {
                 exists: true,
                 is_folder: false,
@@ -457,14 +450,22 @@ function uploadTests() {
             class WrongFileStoreDelegate extends APIMockDelegate {
                 doesExist() {
                     return {
-                        "error_code": "No file store mapping found",
-                        "error": "Could not convert cloudflow://WRONG_FILE_STORE/DemoApp/index.html to usable format",
+                        "error_code": "File store not mounted",
+                        "error": "Could not convert cloudflow://UNMOUNTED_FILE_STORE/DemoApp/index.html to usable format",
                         "messages":[{
                             "severity": "error", 
                             "type": "No file store mapping found",
-                            "description": "Could not convert cloudflow://WRONG_FILE_STORE/DemoApp/index.html to usable format"
+                            "description": "Could not convert cloudflow://UNMOUNTED_FILE_STORE/DemoApp/index.html to usable format"
                         }]
                     };
+                }
+                
+                getFileStoreMappings() {
+                    return {
+                        mappings: [{
+                            file_store: "UNMOUNTED_FILE_STORE"
+                        }]
+                    }
                 }
             }
 
@@ -477,7 +478,7 @@ function uploadTests() {
                 assert.isNotOk(true, 'this function should have failed');
             }).catch(function(error) {
                 assert.equal(error.errorCode, 'CFAPPERR025', 'the right error code should be returned');
-                assert.equal(error.message, 'The file "cloudflow://WRONG_FILE_STORE/DemoApp/index.html" could not be uploaded: (Could not convert cloudflow://WRONG_FILE_STORE/DemoApp/index.html to usable format)', 'the right error message should be returned');
+                assert.equal(error.message, 'The file "cloudflow://UNMOUNTED_FILE_STORE/DemoApp/index.html" could not be uploaded: (Could not convert cloudflow://UNMOUNTED_FILE_STORE/DemoApp/index.html to usable format)', 'the right error message should be returned');
                 
                 const uploadedWhitepapers = apiMock.mockDelegate.uploadedWhitepapers;
                 assert.equal(uploadedFiles.length, 0, 'no files should be uploaded');
@@ -489,11 +490,19 @@ function uploadTests() {
         it('should show stringify error code CFAPPERR025 when a file could not be uploaded', function() {
             const outputStream = new JSONOutputStream();
             const errorMessage = {
-                error: "Could not convert cloudflow://WRONG_FILE_STORE/DemoApp/index.html to usable format"
+                error: "Could not convert cloudflow://UNMOUNTED_FILE_STORE/DemoApp/index.html to usable format"
             };
             class WrongFileStoreDelegate extends APIMockDelegate {
                 doesExist() {
                     return errorMessage;
+                }
+
+                getFileStoreMappings() {
+                    return {
+                        mappings: [{
+                            file_store: "UNMOUNTED_FILE_STORE"
+                        }]
+                    }
                 }
             }
 
@@ -506,7 +515,7 @@ function uploadTests() {
                 assert.isNotOk(true, 'this function should have failed');
             }).catch(function(error) {
                 assert.equal(error.errorCode, 'CFAPPERR025', 'the right error code should be returned');
-                assert.equal(error.message, 'The file "cloudflow://WRONG_FILE_STORE/DemoApp/index.html" could not be uploaded: (' + JSON.stringify(errorMessage) + ')', 'the right error message should be returned');
+                assert.equal(error.message, 'The file "cloudflow://UNMOUNTED_FILE_STORE/DemoApp/index.html" could not be uploaded: (' + JSON.stringify(errorMessage) + ')', 'the right error message should be returned');
                 
                 const uploadedWhitepapers = apiMock.mockDelegate.uploadedWhitepapers;
                 assert.equal(uploadedFiles.length, 0, 'no files should be uploaded');

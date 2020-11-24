@@ -7,8 +7,8 @@
     "cfapp": "bin/cfapp.js"
   },
   "scripts": {
-    "test": "mocha ./test --grep /.*CFAPPERR027.*/",
-    "test:inspect": "mocha ./test --grep /.*CFAPPERR027.*/",
+    "test": "mocha ./test",
+    "test:inspect": "mocha ./test --inspect-brk",
     "preversion": "npm test",
     "postversion": "git push && git push --tags"
   },

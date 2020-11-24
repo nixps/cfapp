@@ -7,7 +7,7 @@
     "description": "A wrong file store demo application",
 
     "files": [
-        "cloudflow://WRONG_FILE_STORE/DemoApp/index.html"
+        "cloudflow://UNMOUNTED_FILE_STORE/DemoApp/index.html"
     ],
 
     "workflows": []

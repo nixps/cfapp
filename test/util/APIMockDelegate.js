@@ -198,15 +198,18 @@ class APIMockDelegate {
     getLicense () {
         return {
             current_site: 'Demo1',
-            customer_code: 'be-test'
+            customer_code: 'be-test',
+            machines: [{
+                name: "pp_work_server"
+            }]
         };
     }
 
     getFileStoreMappings (workserver) {
         return {
-            mappings: {
+            mappings: [{
                 file_store: "PP_FILE_STORE"
-            }
+            }]
         };
     }
 }
