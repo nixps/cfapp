@@ -16,7 +16,7 @@
   "license": "MPL-2.0",
   "dependencies": {
     "adm-zip": "^0.4.13",
-    "async": "^2.1.5",
+    "async": "^3.2.2",
     "cloudflow-api": "^1.2.6",
     "columnify": "^1.5.4",
     "fs-extra": "^7.0.1",
