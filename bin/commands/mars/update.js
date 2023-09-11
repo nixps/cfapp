@@ -41,6 +41,10 @@ module.exports = {
             .option('forcelastversion', {
                 describe: 'will install the last version instead of the last released version'
             })
+            .option('force-update-workflows', {
+              describe: 'forces the update of existing workflows even if the workables will break',
+              default: false
+            })
             .option('timeout', {
                 describe: 'the time in seconds cfapp should wait on the MARS server till an operation completes',
                 default: 300
@@ -63,6 +67,7 @@ module.exports = {
             marsurl: argv.marsurl,
             forceversion: argv.forceversion,
             forcelastversion: argv.forcelastversion,
+            forceupdateworkflows: argv.forceUpdateWorkflows,
             timeout: argv.timeout
         };
 
